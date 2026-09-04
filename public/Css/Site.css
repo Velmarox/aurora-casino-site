@@ -104,11 +104,13 @@ section.block{padding:56px 0}
 .week{display:grid;gap:10px;grid-template-columns:1fr}
 /* Banner rows. The promo photo sits behind the copy, held well back and covered by a
    horizontal scrim, so text contrast never depends on which image is in play. */
-.day{position:relative;isolation:isolate;overflow:hidden;min-height:196px;padding:28px 30px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;gap:8px;transition:border-color var(--dur-hover),transform var(--dur-hover)}
+.day{position:relative;isolation:isolate;overflow:hidden;min-height:196px;padding:28px 30px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;gap:14px;transition:border-color var(--dur-hover),transform var(--dur-hover)}
 .day .bg{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:78% 50%;opacity:.45}
 .day::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.94) 40%,rgba(18,18,18,.72) 68%,rgba(18,18,18,.32) 100%)}
 .day::before{content:"";position:absolute;left:0;top:0;bottom:0;z-index:1;width:2px;background:var(--line2)}
-.day .title,.day .desc{max-width:min(68ch,74%)}
+.day .body{display:block}
+.day .copy{display:flex;flex-direction:column;gap:8px;min-width:0}
+.day .title,.day .desc{max-width:44ch}
 .day.today{border-color:rgba(53,224,161,.45)}
 .day.today::before{background:var(--grad)}
 .day .top{display:flex;align-items:center;gap:10px}
@@ -117,12 +119,14 @@ section.block{padding:56px 0}
 .day.today .d{background:var(--jade)}
 /* Offer chips carry the promo instead of a sentence. Solid fills mean they stay
    legible wherever they land over the photo, so they can run wider than the copy. */
-.day .tags{display:flex;flex-wrap:wrap;gap:7px;max-width:min(80ch,88%)}
+/* Chips sit in the open middle of the banner — between the copy and the time —
+   rather than stacked in the text column. */
+.day .tags{position:absolute;left:44%;right:20%;top:50%;transform:translateY(-50%);display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-content:center}
 .day .tag{font-family:var(--font-display);font-weight:800;font-size:var(--text-sm);letter-spacing:var(--tracking-button);text-transform:uppercase;color:#121212;padding:8px 12px;border-radius:var(--r-chip);white-space:nowrap}
 .day .tag.j{background:var(--jade)}
 .day .tag.m{background:var(--magenta-hi)}
 .day .tag.p{background:rgba(245,242,234,.10);color:var(--text);border:1px solid var(--line3);font-weight:700}
-.day .t{margin-left:auto;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text2);white-space:nowrap}
+.day .t{margin-left:auto;font-family:var(--font-mono);font-weight:700;font-size:clamp(15px,1.35vw,19px);color:var(--text);white-space:nowrap;text-shadow:0 1px 4px rgba(18,18,18,.9)}
 .day .title{font-family:var(--font-display);font-weight:700;font-size:clamp(19px,1.9vw,24px);letter-spacing:var(--tracking-display)}
 .day .desc{font-size:var(--text-md);color:var(--text2);line-height:1.55}
 .day .draw{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:var(--text-sm);font-weight:700;letter-spacing:.06em;color:var(--jade)}
@@ -218,7 +222,10 @@ footer .meta{font-family:var(--font-mono);font-size:11px;color:var(--dim)}
 
 /* ---- promo banners: narrow screens leave less room beside the image ---- */
 @media (max-width:700px){
-  .day{min-height:168px;padding:20px 20px}
+  .day{min-height:168px;padding:20px 20px;gap:12px}
+  .day .body{grid-template-columns:minmax(0,1fr);gap:12px}
+  .day .tags{position:static;transform:none;justify-content:flex-start}
+  .day .title,.day .desc{max-width:none}
   .day .bg{opacity:.34;object-position:72% 50%}
   .day::after{background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.94) 52%,rgba(18,18,18,.74) 100%)}
   .day .title,.day .desc{max-width:none}

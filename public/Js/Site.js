@@ -68,10 +68,14 @@
         '<img class="bg" src="' + p.img + '" alt="" loading="lazy" decoding="async">' +
         '<div class="top"><span class="d">' + (today ? 'Today · ' + p.d : p.d) + '</span>' +
         '<span class="t">' + p.t + '</span></div>' +
-        '<div class="title">' + p.title + '</div>' +
-        '<div class="tags">' + tags + '</div>' +
-        '<p class="desc">' + p.note + '</p>' +
-        (p.draws.length ? '<div class="draw">Drawings <span class="mono">' + p.draws.map(fmtHour).join(' · ') + '</span></div>' : '') +
+        '<div class="body">' +
+          '<div class="copy">' +
+            '<div class="title">' + p.title + '</div>' +
+            '<p class="desc">' + p.note + '</p>' +
+            (p.draws.length ? '<div class="draw">Drawings <span class="mono">' + p.draws.map(fmtHour).join(' · ') + '</span></div>' : '') +
+          '</div>' +
+          '<div class="tags">' + tags + '</div>' +
+        '</div>' +
         '</article>';
     }
     week.innerHTML = html;
