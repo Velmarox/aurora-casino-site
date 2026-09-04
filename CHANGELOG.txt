@@ -31,8 +31,10 @@ v0.0.3-alpha (2026-09-04)
   matters here: Facebook is where the promos actually get posted.
 - FIXED: index.html was inheriting Firebase's one-hour default Cache-Control, so a promo
   or hours change could take an hour to reach a returning visitor. firebase.json now
-  sends no-cache for html/css/js. Images and video keep the one-year max-age, which is
-  safe only because promo art is renamed by content rather than overwritten in place.
+  sends no-cache for html/css/js, and '/' is listed as its own source: cleanUrls means the
+  root request path is '/', which no *.html glob matches, so the homepage itself kept the
+  one-hour default until that rule was added. Images and video keep the one-year max-age,
+  which is safe only because promo art is renamed by content rather than overwritten.
 - Added meta robots noindex, pre-launch only and commented as such in <head>.
   auroracasinomt.com still serves the old Wix site, so an indexed copy at the hosting URL
   would compete with the business's own listing. Delete that line at cutover.
