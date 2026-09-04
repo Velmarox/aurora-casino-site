@@ -16,6 +16,80 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.0.2-alpha (2026-09-04)
+- Copy pass across the whole homepage to strip the tells that make writing read as
+  machine-generated. Zero em dashes left in any visible string (they were in the title,
+  the hero, the club pitch, both legal blocks and two promo descriptions); en dashes are
+  kept where they belong, in time ranges. Also gone: the unearned superlatives ('the best
+  snacks on Grand Avenue', 'the most underrated players club in town', 'a players club
+  nobody talks about enough'), the contrast-fragment headline 'Newly renovated. Still your
+  neighborhood spot.', the vague 'the good kind. Ask.' / 'the good stuff', and the closing
+  flourish 'you're leaving money on the floor'. Every replacement states something checkable
+  or says nothing.
+- Removed 'Come see us - ask for anyone on the floor by name.' from the hero at the
+  owner's request.
+- 'player's club' corrected to 'players club', which is how the rest of the page spells it.
+- FIXED: the drawing countdown ran on the wrong side of midnight. Between 12 AM and 2 AM
+  the casino day is still yesterday's, but the clock had rolled over, so every drawing
+  time still read as later today. At 1 AM Saturday the hero advertised 'Next drawing in
+  18h' for drawings that had finished four hours earlier. Guarded on afterMidnight.
+- FIXED: '.facts div' also matched '.facts > .wrap', which is a div and a first child, so
+  the strip's cell padding overrode the page gutter. The four facts sat 18px left of every
+  other section at phone widths and 4px right of it on desktop. All cell rules now use
+  '.facts .wrap > div'.
+- FIXED: '.nav + .head-call{margin-left:6px}' applied at every width, because an adjacent
+  sibling selector does not care that '.nav' is display:none. Below 900px nothing carried
+  margin-left:auto, so the call button and the menu button bunched against the wordmark
+  with the right half of the header empty. The auto now lives on '.head-call' and only
+  moves to the nav at 900px.
+- FIXED: the gallery left two dead 269x220 cells in the second row above 900px. Four
+  items with span-2 and span-2-rows auto-flowed into a 4x2 grid and could not fill it.
+  Placement is now explicit: the floor 2x2, the bar 1x2, the other two stacked at the right.
+- FIXED: three offer chips overflowed their column. The chip column is a fixed width so all
+  five banners share a right edge, but the chip type was clamp(12px,1.05vw,14.5px) and at
+  wide viewports '$1,000 year-end drawing' needed 254px of a 232px column. Chip type is a
+  flat 13px and the column is 236px, 244px past 1200px.
+- FIXED: the rules above the promo house rules and the footer legal block were drawn on the
+  text itself, so they stopped at the 78ch measure and read as unfinished. They are now
+  drawn on the block above, full container width, with the text still set narrow.
+- Hero 'tonight' line pulled out of the hero and rebuilt as a full-bleed band between the
+  hero and the facts strip, with a gradient hairline, the promo, the time, the countdown and
+  a link into the week. It ships hidden and Site.js only reveals it once it has real content,
+  so a weekend or a JS failure no longer paints a row of placeholder dashes.
+- Hero height 92svh -> 86svh so that band breaks the fold and invites the scroll.
+- Section rhythm centralised on --sec-pad / --sec-gap / --grid-gap instead of per-section
+  numbers, and the two inline style attributes on #room and #club moved into .tight-top
+  and .banded.
+- Open/closed sign runs as a row above 560px instead of stacking, which buys the hero
+  headline a line of vertical space. Headline set to text-wrap:balance so it no longer
+  orphans 'up right.' on its own line.
+- Facts strip, section heads, visit panel and footer reworked to use the full width:
+  facts are flush to the container edges with hairline dividers, every section head is a
+  headline-left / supporting-line-right row, the visit panel's hours read as a ruled
+  spec table, and the footer is three columns (brand / nav / contact) instead of one
+  narrow stack.
+- Webfonts moved out of Aurora_Tokens.css into index.html with preconnect. An @import
+  inside a stylesheet cannot start downloading until that stylesheet has parsed, which
+  serialised two round trips before any text could paint. Unused weights dropped as well:
+  Sora 400 and Manrope 500 were requested and never used.
+- Added: skip link, canonical, Open Graph and Twitter tags, and Casino JSON-LD with the
+  address, phone, hours and social profiles. Promo titles are h3 elements rather than divs,
+  the hero is labelled by its own h1, and the menu button relabels itself when open.
+- Removed dead CSS: .sr-only, .nav a.soon, .mobile-nav a span, and the ::selection and
+  :focus-visible duplicates that Aurora_Tokens.css already binds. The shimmer stagger no
+  longer injects a <style> element at runtime; the rule lives in Site.css and Site.js only
+  sets --sweep.
+- Site.css given a table of contents and section banners; Site.js given a header comment,
+  a numbered run order and one EDIT ME block holding the hours and the whole week.
+- Canonical, og:url, og:image and the JSON-LD url/image/logo now point at
+  aurora-casino-site.web.app. auroracasinomt.com still resolves to the old Wix site, so
+  pointing them there told search engines and every link preview that the real page was
+  the Wix one. Flip all of them the day the domain cuts over.
+- Archiving note: no copy was written to _version_archive/. The build root is itself the
+  git repo, so a full tree copy would commit the 9.3 MB hero mp4 a second time on every
+  bump. The outgoing version is tagged v0.0.1-alpha instead; `git worktree add` or
+  `git archive` against that tag reproduces it byte for byte.
+
 v0.0.1-alpha (2026-09-04)
 - Weekday tag moved inside the copy column. It had been its own row above a vertically
   centred body, so a tall banner left a visible gap between the tag and the content.

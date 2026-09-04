@@ -12,7 +12,7 @@ desktop.ini
 .vscode/
 .idea/
 
-# Never expected here (no build step) — present as a guard
+# Never expected here (no build step); present as a guard
 node_modules/
 .env
 .env.*

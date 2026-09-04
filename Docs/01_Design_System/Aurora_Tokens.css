@@ -1,14 +1,19 @@
-/* Aurora Casino — design tokens
+/* Aurora Casino - design tokens.
    Source: digital business card index.html (v0.2.0-alpha). Values marked [card] are verbatim.
-   Values marked [proposed] are cleanups where the card was inconsistent — see Design_Tokens doc. */
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap");
+   Values marked [proposed] are cleanups where the card was inconsistent; see Design_Tokens doc.
+
+   The webfonts are NOT imported here. An @import inside a stylesheet cannot start
+   downloading until this file itself has parsed, which serialises two round trips
+   before any text can paint. index.html loads them with preconnect + <link> instead,
+   and requests only the weights the site actually uses:
+     Sora 600/700/800 · Manrope 400/600/700 · JetBrains Mono 500/700 */
 
 :root{
   /* ---- surfaces [card] ---- */
   --bg:#121212; --panel:#17171a; --panel2:#1e1e22; --panel3:#26262b;
   --panel4:#2c2c32;                 /* [proposed] control hover fill; card used --panel3 on hover of --panel2 items */
   --line:#2e2e34; --line2:#3d3d45;
-  --line3:#4a4a54;                  /* [proposed] the card hard-codes #4a4a54 on every control border — now a token */
+  --line3:#4a4a54;                  /* [proposed] the card hard-codes #4a4a54 on every control border; now a token */
 
   /* ---- text [card] ---- */
   --text:#f5f2ea; --text2:#d6d2ca; --muted:#a8a5a0; --dim:#6f6d6a;
@@ -16,7 +21,7 @@
   /* ---- accents [card] ---- */
   --magenta:#e13ec4; --magenta-hi:#f265d6;
   --jade:#35e0a1;
-  --gold:var(--jade);               /* [card] legacy alias — the "gold" role was always jade. Prefer --jade. */
+  --gold:var(--jade);               /* [card] legacy alias. The "gold" role was always jade; prefer --jade. */
   --violet:#8b5cc8;
   --red:#ff5468; --cyan:#3fd8f0;    /* [card] declared, never used */
 
@@ -40,7 +45,7 @@
   --font-display:"Sora",ui-sans-serif,system-ui,sans-serif;
   --font-body:"Manrope",ui-sans-serif,system-ui,sans-serif;
   --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  /* [proposed] scale — the card uses 16 distinct px sizes; these are the 8 that carry a role */
+  /* [proposed] scale. The card uses 16 distinct px sizes; these are the 8 that carry a role */
   --text-xs:9px; --text-sm:11.5px; --text-base:13.5px; --text-md:15px;
   --text-lg:20px; --text-xl:28px; --text-2xl:34px; --text-3xl:44px;
   --leading-tight:1.08; --leading-snug:1.3; --leading-body:1.55;
@@ -65,8 +70,9 @@
 }
 
 /* ---- breakpoints (can't be tokens in CSS; documented here, used verbatim) ----
-   [proposed] 3 breakpoints:  ≥560px  two-up grids  |  ≥820px  tablet / scrollbars  |  ≥900px  two-column layout
-   [card]     also had 520 and 720 one-offs — dropped. */
+   [proposed] 520px header call label | 560px grids | 700px promo banner columns |
+                 820px two-column layout | 900px desktop nav | 1000px wide banners
+   [card]     also had 520 and 720 one-offs, dropped. */
 
 @keyframes au-glowpulse{0%,100%{box-shadow:var(--shadow-float),0 0 0 0 rgba(225,62,196,0)}50%{box-shadow:var(--shadow-float),0 0 16px 3px rgba(225,62,196,.4)}}
 @keyframes au-ring{0%{transform:scale(.9);opacity:.55}100%{transform:scale(1.55);opacity:0}}
@@ -74,7 +80,7 @@
 @keyframes au-showA{0%,50%,100%{opacity:0}25%{opacity:1}}
 @keyframes au-showB{0%,50%,100%{opacity:0}75%{opacity:1}}
 
-/* ---- semantic layer [Aurora Design Scheme.zip → design-system/tokens/colors.css] ----
+/* ---- semantic layer [Aurora Design Scheme.zip -> design-system/tokens/colors.css] ----
    Role-based aliases over the raw tokens above. Prefer these in new component CSS;
    the raw --magenta / --panel3 names stay valid for the rules that already use them. */
 :root{

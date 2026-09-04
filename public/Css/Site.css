@@ -1,20 +1,54 @@
-/* Aurora Casino — site styles. Tokens live in Aurora_Tokens.css. Mobile-first; breakpoints 560 / 820 / 900. */
+/* ============================================================================
+   Aurora Casino - site styles.  Tokens live in Aurora_Tokens.css.
+   Mobile first. Breakpoints: 520 header call label / 560 grids /
+   700 banner padding / 820 two-column layout / 900 desktop nav and
+   three-up banners / 1200 wide banners.
+
+   Contents
+     01  Reset and page defaults
+     02  Type helpers and layout primitives
+     03  Controls: buttons, chips, panels
+     04  Header and navigation
+     05  Hero
+     06  Running-today band
+     07  Facts strip
+     08  Section furniture
+     09  Weekly promo banners
+     10  The room gallery
+     11  Players club
+     12  Visit
+     13  Footer
+     14  Mobile action bar
+     15  Breakpoints
+     16  Reduced motion
+   ========================================================================= */
+
+
+/* -- 01  Reset and page defaults ------------------------------------------ */
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font:var(--weight-body,400) var(--text-md)/var(--leading-body) var(--font-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
-::selection{background:rgba(225,62,196,.4)}
-:focus-visible{outline:2px solid var(--magenta);outline-offset:2px}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* type helpers */
+/* Section rhythm. One knob per breakpoint, so every band on the page moves together. */
+:root{--sec-pad:56px;--sec-gap:26px;--grid-gap:12px}
+
+/* Keyboard users land here first; it only appears once it has focus. */
+.skip{position:absolute;left:-9999px;top:0;z-index:100}
+.skip:focus{left:10px;top:10px;padding:11px 15px;background:var(--panel3);border:1px solid var(--magenta);border-radius:var(--r-ctl);font-weight:700}
+
+
+/* -- 02  Type helpers and layout primitives -------------------------------- */
 .display{font-family:var(--font-display);font-weight:800;letter-spacing:var(--tracking-display);line-height:var(--leading-tight);text-wrap:pretty}
-.eyebrow{font-size:var(--text-sm);font-weight:700;letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--muted)}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:var(--text-sm);font-weight:700;letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--muted)}
+.eyebrow::before{content:"";flex:none;width:18px;height:2px;background:var(--grad)}
 .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.nb{white-space:nowrap}   /* phone numbers and short ranges that must not break */
 .wrap{max-width:var(--content-max);margin:0 auto;padding-left:var(--gutter);padding-right:max(18px,env(safe-area-inset-right))}
 
-/* ---- controls ---- */
+
+/* -- 03  Controls: buttons, chips, panels ---------------------------------- */
 .btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:13px 18px;border-radius:var(--r-ctl);
   font-family:var(--font-display);font-weight:700;font-size:var(--text-md);letter-spacing:var(--tracking-display);color:var(--text);
   background:var(--panel3);border:1px solid var(--line3);box-shadow:var(--shadow-control);cursor:pointer;
@@ -25,46 +59,61 @@ a{color:inherit;text-decoration:none}
 .btn.positive{background:var(--jade);color:#121212;border-color:transparent;box-shadow:0 8px 20px -8px rgba(0,0,0,.9),0 0 22px -8px rgba(53,224,161,.5)}
 .btn.positive svg{stroke:#121212}
 .btn.positive:hover{transform:none;filter:brightness(1.08);border-color:transparent;box-shadow:0 10px 24px -8px rgba(0,0,0,.9),0 0 28px -6px rgba(53,224,161,.65)}
-.btn.shimmer::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.22) 50%,transparent 60%);background-size:250% 100%;background-position:130% 0;animation:au-shimmer var(--shimmer) ease-in-out infinite}
+/* Sheen sweep. Site.js staggers --sweep so buttons never flash in unison. */
+.btn.shimmer::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.22) 50%,transparent 60%);background-size:250% 100%;background-position:130% 0;animation:au-shimmer var(--shimmer) ease-in-out infinite;animation-delay:var(--sweep,0s)}
+
 .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r-chip);border:1px solid var(--line2);font-size:var(--text-sm);font-weight:700;letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .chip.jade{color:var(--jade);border-color:rgba(53,224,161,.45)}
 .chip.magenta{color:var(--magenta);border-color:rgba(225,62,196,.45)}
+
 .panel{position:relative;border-radius:var(--radius);background:var(--grad-tile),var(--panel);border:1px solid var(--line);box-shadow:var(--shadow-card)}
 .panel.accent::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--grad);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
 
-/* ---- header ---- */
+
+/* -- 04  Header and navigation --------------------------------------------- */
 .site-head{position:sticky;top:0;z-index:50;background:rgba(18,18,18,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.site-head .wrap{display:flex;align-items:center;gap:12px;min-height:64px}
+.site-head .wrap{display:flex;align-items:center;gap:10px;min-height:66px}
+
 .brand{display:flex;align-items:center;gap:11px}
 .brand img{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 1px var(--line2)}
 .brand b{display:block;font-family:var(--font-display);font-weight:800;letter-spacing:var(--tracking-brand);font-size:13px;line-height:1.1}
 .brand small{display:block;font-size:var(--text-xs);letter-spacing:var(--tracking-brand);color:var(--jade);font-weight:600;margin-top:3px;text-transform:uppercase}
-.nav{display:none;margin-left:auto;gap:4px}
+
+/* Hidden until 900px, where the desktop rule also hands it the margin-left:auto
+   that otherwise belongs to the call button. */
+.nav{display:none;gap:4px}
 .nav a{padding:10px 12px;border-radius:var(--r-ctl);font-size:var(--text-base);font-weight:700;color:var(--text2);border:1px solid transparent;transition:color var(--dur-hover),border-color var(--dur-hover)}
 .nav a:hover{color:var(--text);border-color:var(--line3)}
-.nav a.soon{color:var(--muted)}
-.nav a.soon::after{content:"soon";margin-left:6px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--magenta)}
+
 .head-call{margin-left:auto;min-height:44px;padding:10px 14px;font-size:var(--text-base)}
-.nav + .head-call{margin-left:6px}
+.head-call .num{display:none}          /* icon only until there is room for the number */
+
 .menu-btn{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:var(--r-ctl);background:var(--panel3);border:1px solid var(--line3);box-shadow:var(--shadow-control);cursor:pointer;color:var(--text)}
 .menu-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round}
+
 .mobile-nav{display:none;border-top:1px solid var(--line);background:var(--panel)}
 .mobile-nav.open{display:block}
-.mobile-nav a{display:flex;align-items:center;justify-content:space-between;padding:15px var(--gutter);font-weight:700;font-size:var(--text-md);border-bottom:1px solid var(--line)}
-.mobile-nav a span{font-size:var(--text-xs);letter-spacing:.16em;text-transform:uppercase;color:var(--magenta)}
+.mobile-nav a{display:flex;align-items:center;padding:15px var(--gutter);font-weight:700;font-size:var(--text-md);border-bottom:1px solid var(--line)}
+.mobile-nav a:last-child{border-bottom:0}
 
-/* ---- hero ---- */
-.hero{position:relative;min-height:min(92svh,820px);display:flex;align-items:flex-end;overflow:hidden;border-bottom:1px solid var(--line)}
+
+/* -- 05  Hero -------------------------------------------------------------- */
+.hero{position:relative;min-height:min(86svh,780px);display:flex;align-items:flex-end;overflow:hidden}
 .hero .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;transform:scale(1.02)}
-/* the video sits over the poster still and cross-fades in once it can actually play.
-   Site.js only ever gives it a src on wide screens — phones keep the still. */
+/* The video sits over the poster still and cross-fades in once it can actually play.
+   Site.js only ever gives it a src on wide screens, so phones keep the still. */
 .hero video.bg{opacity:0;transition:opacity .7s var(--ease)}
 .hero video.bg.is-ready{opacity:1}
 .hero .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,18,18,.35) 0%,rgba(18,18,18,.15) 35%,rgba(18,18,18,.96) 100%)}
 .hero .wm{position:absolute;right:-6%;top:6%;width:min(58vw,520px);opacity:.06;pointer-events:none;filter:grayscale(1) brightness(3)}
-.hero .wrap{position:relative;z-index:2;width:100%;padding-top:96px;padding-bottom:36px;display:flex;flex-direction:column;gap:18px}
-/* neon sign */
-.sign{display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;align-self:flex-start;--tube:var(--jade);--tube-rgb:53,224,161}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-top:104px;padding-bottom:44px;display:flex;flex-direction:column;gap:20px}
+.hero h1{font-size:clamp(38px,7.6vw,72px);max-width:15ch;text-wrap:balance}
+.hero p{font-size:clamp(15px,1.7vw,18px);color:var(--text2);max-width:54ch}
+.hero .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:520px}
+.hero .actions .btn:first-child{grid-column:1/-1}
+
+/* Neon open/closed sign. --tube drives both the stroke and every glow layer. */
+.sign{display:inline-flex;flex-direction:column;align-items:flex-start;gap:8px;align-self:flex-start;--tube:var(--jade);--tube-rgb:53,224,161}
 .sign.closed{--tube:var(--magenta);--tube-rgb:225,62,196}
 .sign .tube{position:relative;display:inline-block;padding:8px 18px;border:2px solid var(--tube);border-radius:6px;
   font-family:var(--font-display);font-weight:800;font-size:clamp(22px,3.4vw,30px);letter-spacing:.26em;text-transform:uppercase;line-height:1;color:#fff;
@@ -76,95 +125,127 @@ a{color:inherit;text-decoration:none}
 .sign .until{font-family:var(--font-mono);font-size:var(--text-sm);font-weight:500;letter-spacing:.06em;color:var(--text2);padding-left:2px}
 .sign .until b{font-weight:700;color:var(--text)}
 @keyframes au-neon{0%,18%,22%,24%,55%,57%,100%{opacity:1}19%,23%{opacity:.62}56%{opacity:.8}}
-.hero h1{font-size:clamp(38px,7.6vw,72px);max-width:14ch}
-.hero p{font-size:clamp(15px,1.7vw,18px);color:var(--text2);max-width:52ch}
-.hero .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:520px}
-.hero .actions .btn:first-child{grid-column:1/-1}
-.hero .tonight{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:var(--text-base);color:var(--text2)}
-.hero .tonight b{color:var(--text)}
 
-/* ---- facts strip ---- */
-.facts{border-bottom:1px solid var(--line);background:var(--panel)}
-.facts .wrap{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.facts div{padding:18px 0;display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--line)}
-.facts div:nth-child(odd){padding-right:16px;border-right:1px solid var(--line)}
-.facts div:nth-child(even){padding-left:16px}
-.facts div:nth-child(n+3){border-bottom:0}
-.facts b{font-family:var(--font-display);font-weight:800;font-size:28px;letter-spacing:var(--tracking-display);line-height:1}
-.facts span{font-size:var(--text-sm);color:var(--muted);letter-spacing:.04em}
 
-/* ---- sections ---- */
-section.block{padding:56px 0}
-.sec-head{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-.sec-head h2{font-size:clamp(28px,4vw,34px)}
-.sec-head p{color:var(--text2);max-width:56ch}
-.sec-head .row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+/* -- 06  Running-today band ------------------------------------------------ */
+/* Full-bleed strip between the hero and the facts. Site.js unhides it once it has
+   something real to say, so it never renders empty. */
+.now{position:relative;background:var(--panel2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.now::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--grad)}
+.now .wrap{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;min-height:62px;padding-top:13px;padding-bottom:13px}
+.now .what{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;min-width:0;color:var(--text2);font-size:var(--text-base)}
+.now .what b{font-family:var(--font-display);font-weight:700;font-size:var(--text-md);letter-spacing:var(--tracking-display);color:var(--text)}
+.now .when::before{content:"·";margin-right:10px;color:var(--dim)}
+.now .more{display:none;margin-left:auto;font-size:var(--text-base);font-weight:700;color:var(--text2);border-bottom:1px solid var(--line3);padding-bottom:2px;transition:color var(--dur-hover),border-color var(--dur-hover)}
+.now .more::after{content:" \2192"}
+.now .more:hover{color:var(--text);border-color:var(--magenta)}
 
-/* week */
-.week{display:grid;gap:10px;grid-template-columns:1fr}
+
+/* -- 07  Facts strip ------------------------------------------------------- */
+.facts{background:var(--panel);border-bottom:1px solid var(--line)}
+.facts .wrap{display:grid}
+.facts .wrap>div{display:flex;flex-direction:column;gap:4px}
+.facts b{font-family:var(--font-display);font-weight:800;font-size:clamp(24px,2.4vw,30px);letter-spacing:var(--tracking-display);line-height:1}
+.facts span{font-size:var(--text-sm);color:var(--muted);letter-spacing:.04em;text-wrap:pretty}
+
+/* 2 x 2 on phones: a hairline between the columns and one under the first row. */
+@media (max-width:559px){
+  .facts .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts .wrap>div{padding:18px 0}
+  .facts .wrap>div:nth-child(odd){padding-right:16px}
+  .facts .wrap>div:nth-child(even){padding-left:16px;border-left:1px solid var(--line)}
+  .facts .wrap>div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+
+
+/* -- 08  Section furniture ------------------------------------------------- */
+section.block{padding:var(--sec-pad) 0}
+section.block.tight-top{padding-top:calc(var(--sec-pad) * .55)}
+section.block.banded{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sec-head{display:flex;flex-direction:column;gap:10px;margin-bottom:var(--sec-gap)}
+.sec-head h2{font-size:clamp(28px,4vw,36px);max-width:20ch}
+.sec-head p{color:var(--text2);max-width:46ch;font-size:var(--text-base)}
+.sec-head .row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 32px;flex-wrap:wrap}
+
+
+/* -- 09  Weekly promo banners ---------------------------------------------- */
+.week{display:grid;gap:var(--grid-gap);grid-template-columns:1fr;padding-bottom:24px;border-bottom:1px solid var(--line)}
 /* Banner rows. The promo photo sits behind the copy, held well back and covered by a
    horizontal scrim, so text contrast never depends on which image is in play. */
-.day{position:relative;isolation:isolate;overflow:hidden;min-height:196px;padding:28px 30px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;gap:14px;transition:border-color var(--dur-hover),transform var(--dur-hover)}
-.day .bg{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:78% 50%;opacity:.45}
-.day::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.95) 46%,rgba(18,18,18,.86) 70%,rgba(18,18,18,.44) 100%)}
+/* Narrow screens leave less clear space beside the photo, so it is held further
+   back and the scrim runs heavier. Both loosen at 700px. */
+.day{position:relative;isolation:isolate;overflow:hidden;min-height:172px;padding:22px 22px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;transition:border-color var(--dur-hover),transform var(--dur-hover)}
+.day .bg{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:72% 50%;opacity:.34}
+.day::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.94) 52%,rgba(18,18,18,.74) 100%)}
 .day::before{content:"";position:absolute;left:0;top:0;bottom:0;z-index:1;width:2px;background:var(--line2)}
-.day .body{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr) minmax(0,auto);align-items:center;gap:26px}
-.day .copy{display:flex;flex-direction:column;align-items:flex-start;gap:11px;min-width:0}
-.day .title{max-width:none}
-.day .desc{font-size:var(--text-md);color:var(--text2);line-height:1.5;min-width:0}
 .day.today{border-color:rgba(53,224,161,.45)}
 .day.today::before{background:var(--grad)}
-.day .top{display:flex;align-items:center;gap:10px}
-/* Day tag: light box, black bold caps — same device as the printed promo sheet. */
+
+/* Three columns: name and title | description | offer chips. The chip column is a
+   fixed width so all five banners share one right-hand edge. */
+.day .body{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;gap:14px}
+.day .copy{display:flex;flex-direction:column;align-items:flex-start;gap:11px;min-width:0}
+.day .top{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.day .desc{font-size:var(--text-md);color:var(--text2);line-height:1.5;min-width:0}
+.day .title{font-family:var(--font-display);font-weight:700;font-size:clamp(24px,2.7vw,36px);letter-spacing:var(--tracking-display);line-height:1.12}
+.day .draw{display:flex;align-items:center;gap:8px;margin-top:2px;font-size:var(--text-sm);font-weight:700;letter-spacing:.06em;color:var(--jade)}
+.day .draw .mono{font-weight:700}
+
+/* Day tag: light box, black bold caps, the same device as the printed promo sheet. */
 .day .d{font-family:var(--font-display);font-weight:800;font-size:clamp(13px,1.15vw,16px);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:#121212;background:var(--text);padding:9px 15px;border-radius:var(--r-chip);white-space:nowrap}
 .day.today .d{background:var(--jade)}
-/* Offer chips carry the promo instead of a sentence. Solid fills mean they stay
-   legible wherever they land over the photo, so they can run wider than the copy. */
-/* Chips sit in the open middle of the banner — between the copy and the time —
-   rather than stacked in the text column. */
-.day .tags{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:0}
-.day .tag{font-family:var(--font-display);font-weight:800;font-size:clamp(12px,1.05vw,14.5px);letter-spacing:var(--tracking-button);text-transform:uppercase;color:#121212;padding:10px 16px;border-radius:var(--r-chip);white-space:nowrap;text-align:center}
+
+/* Offer chips carry the promo instead of a sentence. Solid fills keep them legible
+   wherever they land over the photo. */
+.day .tags{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0}
+.day .tag{font-family:var(--font-display);font-weight:800;font-size:13px;letter-spacing:var(--tracking-button);text-transform:uppercase;color:#121212;padding:10px 16px;border-radius:var(--r-chip);white-space:nowrap;text-align:center}
 .day .tag.j{background:var(--jade)}
 .day .tag.m{background:var(--magenta-hi)}
 .day .tag.p{background:rgba(245,242,234,.10);color:var(--text);border:1px solid var(--line3);font-weight:700}
-.day .title{font-family:var(--font-display);font-weight:700;font-size:clamp(24px,2.7vw,36px);letter-spacing:var(--tracking-display);line-height:1.12}
-.day .draw{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:var(--text-sm);font-weight:700;letter-spacing:.06em;color:var(--jade)}
-.day .draw .mono{font-weight:700}
-.fine{font-size:var(--text-sm);color:var(--muted);line-height:1.6;margin-top:18px;max-width:70ch}
 
-/* room */
-.room{display:grid;gap:10px;grid-template-columns:1fr 1fr;grid-auto-rows:170px}
+.fine{font-size:var(--text-sm);color:var(--muted);line-height:1.6;margin-top:22px;max-width:74ch;text-wrap:pretty}
+
+
+/* -- 10  The room gallery -------------------------------------------------- */
+.room{display:grid;gap:var(--grid-gap);grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:170px}
 .shot{position:relative;overflow:hidden;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel)}
 .shot img{width:100%;height:100%;object-fit:cover;transition:transform 6s ease}
 .shot:hover img{transform:scale(1.05)}
-.shot .cap{position:absolute;inset:auto 0 0 0;padding:34px 14px 12px;background:var(--grad-scrim);display:flex;flex-direction:column;gap:1px}
+.shot .cap{position:absolute;inset:auto 0 0 0;padding:38px 15px 13px;background:var(--grad-scrim);display:flex;flex-direction:column;gap:2px}
 .shot .cap b{font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:var(--tracking-display)}
 .shot .cap span{font-size:var(--text-sm);color:var(--text2)}
-.shot.wide{grid-column:1/-1}
+.shot.wide{grid-column:span 2}
 .shot.tall{grid-row:span 2}
 
-/* club */
-.club{display:grid;gap:22px;grid-template-columns:1fr}
-.club .pitch{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
-.club .pitch h2{font-size:clamp(28px,4vw,40px);max-width:16ch}
-.club .pitch p{color:var(--text2);max-width:48ch}
-.club ol{list-style:none;counter-reset:s;display:grid;gap:9px}
-.club li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-radius:var(--r-ctl);background:var(--panel2);border:1px solid var(--line)}
-.club li::before{content:counter(s,decimal-leading-zero);flex:none;font:800 13px/1.4 var(--font-display);letter-spacing:.04em;color:var(--magenta);padding-top:1px}
-.club li b{display:block;font-family:var(--font-display);font-weight:700;font-size:var(--text-md);letter-spacing:var(--tracking-display)}
-.club li span{display:block;font-size:var(--text-base);color:var(--text2);margin-top:2px;line-height:1.5}
 
-/* visit */
-.visit{display:grid;gap:10px;grid-template-columns:1fr}
+/* -- 11  Players club ------------------------------------------------------ */
+.club{display:grid;gap:26px;grid-template-columns:1fr}
+.club .pitch{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.club .pitch h2{font-size:clamp(28px,4vw,40px);max-width:16ch}
+.club .pitch p{color:var(--text2);max-width:52ch}
+.perks{list-style:none;display:flex;flex-wrap:wrap;gap:7px}
+.perks li{font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;letter-spacing:var(--tracking-button);text-transform:uppercase;color:var(--text2);background:var(--panel3);border:1px solid var(--line3);border-radius:var(--r-chip);padding:7px 11px}
+
+.steps{list-style:none;counter-reset:s;display:grid;gap:10px}
+.steps li{counter-increment:s;display:flex;gap:13px;align-items:flex-start;padding:15px 16px;border-radius:var(--r-ctl);background:var(--panel2);border:1px solid var(--line)}
+.steps li::before{content:counter(s,decimal-leading-zero);flex:none;font:800 13px/1.5 var(--font-display);letter-spacing:.04em;color:var(--magenta)}
+.steps li b{display:block;font-family:var(--font-display);font-weight:700;font-size:var(--text-md);letter-spacing:var(--tracking-display)}
+.steps li span{display:block;font-size:var(--text-base);color:var(--text2);margin-top:3px;line-height:1.5}
+
+
+/* -- 12  Visit ------------------------------------------------------------- */
+.visit{display:grid;gap:var(--grid-gap);grid-template-columns:1fr}
 .visit .map{overflow:hidden}
-.visit iframe{display:block;width:100%;height:280px;border:0;filter:invert(.92) hue-rotate(180deg) saturate(.72) contrast(.96)}
-.visit .info{padding:20px;display:flex;flex-direction:column;gap:14px}
+.visit iframe{display:block;width:100%;height:300px;border:0;filter:invert(.92) hue-rotate(180deg) saturate(.72) contrast(.96)}
+.visit .info{padding:24px;display:flex;flex-direction:column;gap:16px}
 .visit .addr{font-family:var(--font-display);font-weight:800;font-size:20px;letter-spacing:var(--tracking-display)}
-.visit .addr small{display:block;font-family:var(--font-body);font-weight:400;font-size:var(--text-base);color:var(--text2);letter-spacing:0;margin-top:2px}
-.visit dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:var(--text-base)}
-.visit dt{color:var(--muted)}
-.visit dd{color:var(--text)}
-.visit .ph{font-family:var(--font-mono);font-weight:700;font-size:20px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.visit .addr small{display:block;font-family:var(--font-body);font-weight:400;font-size:var(--text-base);color:var(--text2);letter-spacing:0;margin-top:3px}
+.visit .ph{font-family:var(--font-mono);font-weight:700;font-size:20px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;align-self:flex-start}
+/* Ruled rows: label left, value hard against the panel's right edge. */
+.visit dl{display:grid;grid-template-columns:auto minmax(0,1fr);font-size:var(--text-base);border-top:1px solid var(--line)}
+.visit dt,.visit dd{padding:10px 0;border-bottom:1px solid var(--line)}
+.visit dt{color:var(--muted);padding-right:20px}
+.visit dd{color:var(--text);text-align:right}
 .visit .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .visit .actions .btn:first-child{grid-column:1/-1}
 .socials{display:flex;gap:8px}
@@ -172,62 +253,93 @@ section.block{padding:56px 0}
 .socials a:hover{transform:translateY(-2px);border-color:var(--magenta)}
 .socials svg{width:16px;height:16px;fill:none;stroke:var(--magenta);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
 
-/* footer */
-footer{border-top:1px solid var(--line);padding:32px 0 calc(32px + 72px + env(safe-area-inset-bottom))}
-footer .wrap{display:flex;flex-direction:column;gap:14px;font-size:var(--text-base);color:var(--muted)}
+
+/* -- 13  Footer ------------------------------------------------------------ */
+footer{border-top:1px solid var(--line);padding:36px 0 calc(36px + 72px + env(safe-area-inset-bottom))}
+footer .wrap{display:flex;flex-direction:column;gap:24px;font-size:var(--text-base);color:var(--muted)}
 footer .brand b{color:var(--text)}
-footer .legal{font-size:var(--text-sm);line-height:1.6;max-width:70ch}
+.foot-top{display:grid;gap:22px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.foot-nav{display:flex;flex-wrap:wrap;gap:8px 20px;font-weight:700;color:var(--text2)}
+.foot-nav a{transition:color var(--dur-hover)}
+.foot-nav a:hover{color:var(--text)}
+.foot-contact{display:flex;flex-direction:column;gap:5px}
+.foot-contact .ph{font-weight:700;font-size:var(--text-md);color:var(--text)}
+footer .legal{font-size:var(--text-sm);line-height:1.6;max-width:74ch;text-wrap:pretty}
 footer .meta{font-family:var(--font-mono);font-size:11px;color:var(--dim)}
 
-/* mobile action bar */
-.actionbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+
+/* -- 14  Mobile action bar ------------------------------------------------- */
+.actionbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 .actionbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:60px;background:rgba(23,23,26,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:var(--text-sm);font-weight:700;letter-spacing:.06em}
 .actionbar a:active{background:var(--panel3)}
 .actionbar svg{width:20px;height:20px;fill:none;stroke:var(--magenta);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* ---- breakpoints ---- */
+
+/* -- 15  Breakpoints ------------------------------------------------------- */
+@media (min-width:520px){
+  .head-call .num{display:inline}
+}
+
 @media (min-width:560px){
-  .room{grid-template-columns:repeat(3,1fr);grid-auto-rows:200px}
-  .shot.wide{grid-column:span 2}
-  .facts .wrap{grid-template-columns:repeat(4,1fr)}
-  .facts div{border-bottom:0;padding:22px 16px}
-  .facts div:nth-child(odd){padding-right:16px}
-  .facts div:first-child{padding-left:0}
-  .facts div:not(:last-child){border-right:1px solid var(--line)}
-  .facts div:nth-child(even){border-right:1px solid var(--line)}
-  .facts div:last-child{border-right:0}
+  :root{--grid-gap:14px}
+  .sign{flex-direction:row;align-items:center;gap:16px}
   .hero .actions{grid-template-columns:auto auto auto}
   .hero .actions .btn:first-child{grid-column:auto}
+  .facts .wrap{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .facts .wrap>div{padding:24px 22px}
+  .facts .wrap>div+div{border-left:1px solid var(--line)}
+  .facts .wrap>div:first-child{padding-left:0}
+  .facts .wrap>div:last-child{padding-right:0}
+  .room{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:200px}
+  .shot.wide{grid-column:span 2}
 }
+
+@media (min-width:700px){
+  .now .more{display:block}
+  .day{min-height:200px;padding:26px 28px}
+}
+
 @media (min-width:820px){
+  :root{--sec-pad:88px;--sec-gap:34px}
   .actionbar{display:none}
   footer{padding-bottom:40px}
-  section.block{padding:80px 0}
-  .club{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:40px}
-  .visit{grid-template-columns:minmax(0,1fr) 400px}
-  .visit iframe{height:100%;min-height:380px}
-  .hero .wrap{padding-bottom:56px}
+  .hero .wrap{padding-bottom:60px}
+  .club{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:start}
+  .club .steps{padding-top:36px}          /* drops the list past the eyebrow, level with the headline */
+  .visit{grid-template-columns:minmax(0,1fr) 380px}
+  .visit iframe{height:100%;min-height:400px}
+  .foot-top{grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:40px}
+  .foot-nav{justify-content:center}
+  .foot-contact{text-align:right}
 }
+
 @media (min-width:900px){
-  .nav{display:flex}
+  .nav{display:flex;margin-left:auto}
+  .nav ~ .head-call{margin-left:8px}
   .menu-btn{display:none}
-  .room{grid-template-columns:repeat(4,1fr);grid-auto-rows:220px}
-  .shot.tall{grid-row:span 2}
+  .mobile-nav{display:none}
+  /* Explicit 4 x 2 placement. Auto-flow left two dead cells in the second row. */
+  .room{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,215px)}
+  .shot.wide{grid-column:1/3;grid-row:1/3}
+  .shot.tall{grid-column:3;grid-row:1/3}
+  .room .shot:nth-child(3){grid-column:4;grid-row:1}
+  .room .shot:nth-child(4){grid-column:4;grid-row:2}
+  /* Banners go three-up. 236px holds the longest offer chip at 13px. */
+  .day{padding:28px 30px}
+  .day .bg{object-position:78% 50%;opacity:.45}
+  .day::after{background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.95) 46%,rgba(18,18,18,.86) 70%,rgba(18,18,18,.44) 100%)}
+  .day .body{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 236px;gap:26px}
+  .day .tags{align-items:stretch}
 }
+
+@media (min-width:1200px){
+  .day{padding:30px 34px}
+  .day .body{grid-template-columns:minmax(0,1.06fr) minmax(0,1fr) 244px;gap:30px}
+}
+
+
+/* -- 16  Reduced motion ---------------------------------------------------- */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   html{scroll-behavior:auto}
 }
-
-/* ---- promo banners: narrow screens leave less room beside the image ---- */
-@media (max-width:700px){
-  .day{min-height:168px;padding:20px 20px;gap:12px}
-  .day .body{grid-template-columns:minmax(0,1fr);gap:13px}
-  .day .tags{align-items:flex-start}
-  .day .bg{opacity:.34;object-position:72% 50%}
-  .day::after{background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.94) 52%,rgba(18,18,18,.74) 100%)}
-}
-
-/* ---- Aurora Rewards benefit chips (source: Players Club page) ---- */
-.perks{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
-.perks li{font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;letter-spacing:var(--tracking-button);text-transform:uppercase;color:var(--text2);background:var(--panel3);border:1px solid var(--line3);border-radius:var(--r-chip);padding:7px 11px}
