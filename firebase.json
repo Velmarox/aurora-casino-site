@@ -8,7 +8,7 @@
     "cleanUrls": true,
     "headers": [
       {
-        "source": "**/*.@(avif|jpg|png)",
+        "source": "**/*.@(avif|jpg|jpeg|png|mp4|webm)",
         "headers": [
           {
             "key": "Cache-Control",
