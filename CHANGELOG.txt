@@ -17,6 +17,11 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.0.1-alpha (2026-09-04)
+- Weekday tag moved inside the copy column. It had been its own row above a vertically
+  centred body, so a tall banner left a visible gap between the tag and the content.
+  All five banners are now a uniform 196px instead of 275-372px.
+- Tuesday: tier amounts moved into the description (Silver $10, Gold $20, Platinum $30,
+  Platinum Plus $40); its chips are now 'Log in and get rewards' / 'All day long'.
 - Weekly promos replaced with the current schedule from the Aurora Casino Facebook page
   (posts updated ~2026-09-01). Monday 3X Points; Tuesday Loyalty Rewards Day (Silver $10 /
   Gold $20 / Platinum $30 / Platinum Plus $40); Wednesday Win-It Wednesdays ($25 cash

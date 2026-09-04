@@ -109,7 +109,7 @@ section.block{padding:56px 0}
 .day::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.95) 46%,rgba(18,18,18,.86) 70%,rgba(18,18,18,.44) 100%)}
 .day::before{content:"";position:absolute;left:0;top:0;bottom:0;z-index:1;width:2px;background:var(--line2)}
 .day .body{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr) minmax(0,auto);align-items:center;gap:26px}
-.day .copy{display:flex;flex-direction:column;gap:8px;min-width:0}
+.day .copy{display:flex;flex-direction:column;align-items:flex-start;gap:11px;min-width:0}
 .day .title{max-width:none}
 .day .desc{font-size:var(--text-md);color:var(--text2);line-height:1.5;min-width:0}
 .day.today{border-color:rgba(53,224,161,.45)}

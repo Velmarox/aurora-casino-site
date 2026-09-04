@@ -14,8 +14,8 @@
       tags:[['3X points all day','m'],['Level up to Platinum','p']],
       draws:[] },
     { d:'Tuesday',   when:'All day', title:'Loyalty Rewards Day', img:'Assets/Promos/Promo_Cash_On_Bar.avif',
-      desc:'Free play based on your player tier. Silver through Platinum Plus, up to $40.',
-      tags:[['Silver $10','p'],['Gold $20','p'],['Platinum $30','j'],['Platinum Plus $40','m']],
+      desc:'Free play based on your player tier — Silver $10, Gold $20, Platinum $30, Platinum Plus $40.',
+      tags:[['Log in and get rewards','j'],['All day long','p']],
       draws:[] },
     { d:'Wednesday', when:'All day', title:'Win-It Wednesdays',   img:'Assets/Promos/Promo_Drawing_Drum.avif',
       desc:'Every player who logs in on Wednesday is entered into a $25 cash drawing. Two winners drawn Thursday morning.',
@@ -71,10 +71,9 @@
       var tags = p.tags.map(function (g) { return '<span class="tag ' + g[1] + '">' + g[0] + '</span>'; }).join('');
       html += '<article class="day' + (today ? ' today' : '') + '">' +
         '<img class="bg" src="' + p.img + '" alt="" loading="lazy" decoding="async">' +
-        '<div class="top"><span class="d">' + (today ? 'Today · ' + p.d : p.d) + '</span>' +
-        '</div>' +
         '<div class="body">' +
           '<div class="copy">' +
+            '<div class="top"><span class="d">' + (today ? 'Today · ' + p.d : p.d) + '</span></div>' +
             '<div class="title">' + p.title + '</div>' +
             (p.draws.length ? '<div class="draw">Drawings <span class="mono">' + p.draws.map(fmtTime).join(' · ') + '</span></div>' : '') +
           '</div>' +
