@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="version" content="v0.0.1-alpha">
+  <link rel="stylesheet" href="Aurora_Tokens.css">
+  <style>
+    body{margin:0;background:#121212;color:#f5f2ea;font-family:"Manrope",ui-sans-serif,system-ui,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+    a{color:#f5f2ea;text-decoration:none} a:hover{color:#e13ec4}
+    ::selection{background:rgba(225,62,196,.4)}
+  </style>
+</helmet>
+
+<div style="max-width:1140px;margin:0 auto;padding:40px max(18px,env(safe-area-inset-right)) 96px max(18px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:56px">
+
+  <!-- header -->
+  <header style="display:flex;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid #2e2e34">
+    <img src="../02_Assets/Brand/Aurora_Logo_Badge.png" alt="" style="width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 1px #3d3d45">
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <div style="font-family:Sora,sans-serif;font-weight:800;letter-spacing:.28em;font-size:13px;line-height:1.1">AURORA CASINO</div>
+      <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700">Design tokens · v0.0.1-alpha</div>
+    </div>
+    <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;text-align:right;line-height:1.6">Source: card index.html v0.2.0-alpha<br>File: 01_Design_System/Aurora_Tokens.css</div>
+  </header>
+
+  <!-- intro -->
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h1 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:34px;line-height:1.08;letter-spacing:-.025em;text-wrap:pretty">What the card actually does — codified.</h1>
+      <p style="margin:0;color:#d6d2ca;max-width:52ch;text-wrap:pretty">Every value below is lifted from the deployed business card. Where the card contradicted itself, the token carries a <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#35e0a1">proposed</span> tag and the conflict is listed at the bottom for you to rule on.</p>
+    </div>
+    <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;box-shadow:0 18px 40px -26px rgba(0,0,0,.9);padding:18px 20px;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13.5px;align-content:start">
+      <span style="color:#a8a5a0">Feel</span><span>Sharp, dark, neon-lit. Casino signage, not SaaS.</span>
+      <span style="color:#a8a5a0">Color rule</span><span>Text is never colored. Accents live in icons, edges, rules, the one gradient.</span>
+      <span style="color:#a8a5a0">Depth</span><span>Deep tight shadows + 1px inset top highlight. Glows are rings + bloom, never blobs.</span>
+      <span style="color:#a8a5a0">Motion</span><span>One ambient cue per screen. Everything else is ≤.25s and quiet.</span>
+    </div>
+  </section>
+
+  <!-- palette -->
+  <section style="display:flex;flex-direction:column;gap:18px">
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">1 · Palette</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#121212"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--bg</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#121212</span><span style="color:#6f6d6a">page</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#17171a"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--panel</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#17171a</span><span style="color:#6f6d6a">cards</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#1e1e22"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--panel2</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#1e1e22</span><span style="color:#6f6d6a">nested rows</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#26262b"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--panel3</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#26262b</span><span style="color:#6f6d6a">buttons</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#2c2c32"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--panel4</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#2c2c32</span><span style="color:#35e0a1">proposed · hover</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#2e2e34"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--line</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#2e2e34</span><span style="color:#6f6d6a">card borders</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#3d3d45"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--line2</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#3d3d45</span><span style="color:#6f6d6a">avatar rings</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#4a4a54"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--line3</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#4a4a54</span><span style="color:#35e0a1">proposed · control border</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#f5f2ea"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--text</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#f5f2ea</span><span style="color:#6f6d6a">warm, never #fff</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#d6d2ca"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--text2</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#d6d2ca</span><span style="color:#6f6d6a">secondary</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#a8a5a0"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--muted</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#a8a5a0</span><span style="color:#6f6d6a">captions</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#6f6d6a"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--dim</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#6f6d6a</span><span style="color:#6f6d6a">footnotes</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#e13ec4"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--magenta</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#e13ec4</span><span style="color:#6f6d6a">primary · interactive</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#f265d6"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--magenta-hi</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#f265d6</span><span style="color:#6f6d6a">hover tint</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#35e0a1"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--jade</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#35e0a1</span><span style="color:#6f6d6a">positive · confirm</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:72px;background:#8b5cc8"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--violet</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#8b5cc8</span><span style="color:#6f6d6a">gradient bridge only</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden;opacity:.55"><div style="height:72px;background:#ff5468"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--red</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#ff5468</span><span style="color:#6f6d6a">declared, unused</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden;opacity:.55"><div style="height:72px;background:#3fd8f0"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--cyan</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">#3fd8f0</span><span style="color:#6f6d6a">declared, unused</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:56px;background:linear-gradient(100deg,#e13ec4 0%,#8b5cc8 45%,#35e0a1 100%)"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--grad</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">100deg · magenta 0 → violet 45 → jade 100</span><span style="color:#6f6d6a">2px rules, flip ring, gradient-clipped phone number. The only decorative gradient.</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:56px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--grad-tile</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">160deg · 5% white → transparent 46%</span><span style="color:#6f6d6a">sheen layered over every panel</span></div></div>
+      <div style="border:1px solid #2e2e34;border-radius:3px;overflow:hidden"><div style="height:56px;background:linear-gradient(180deg,rgba(18,18,18,0),rgba(18,18,18,.96)),url(../02_Assets/Gallery/Bar_Wide.avif) center/cover"></div><div style="padding:9px 11px;font-size:12px;display:flex;flex-direction:column;gap:2px"><b style="font-weight:700">--grad-scrim</b><span style="font-family:'JetBrains Mono',monospace;color:#a8a5a0">180deg · transparent → bg .96</span><span style="color:#6f6d6a">bottom scrim on photos so captions sit on them</span></div></div>
+    </div>
+  </section>
+
+  <!-- type -->
+  <section style="display:flex;flex-direction:column;gap:18px">
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">2 · Type</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
+      <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;padding:20px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700">Display · Sora 700–800</div>
+        <div style="font-family:Sora,sans-serif;font-weight:800;font-size:44px;line-height:1.08;letter-spacing:-.025em">Adsem Merwin</div>
+        <div style="font-size:12.5px;color:#a8a5a0">Headings, brand, button labels. Tracking always −.025em. Wordmark: 800, .28em, uppercase.</div>
+      </div>
+      <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;padding:20px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700">Body · Manrope 400–700</div>
+        <div style="font-size:15px;line-height:1.55;color:#f5f2ea">Ask for me by name at the cage. Slot host, Aurora Casino, Billings. Weekly promos below.</div>
+        <div style="font-size:12.5px;color:#a8a5a0">15/1.55 default. Sentence case. No exclamation marks.</div>
+      </div>
+      <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;padding:20px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700">Mono · JetBrains Mono 500–700</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;background:linear-gradient(100deg,#e13ec4 0%,#8b5cc8 45%,#35e0a1 100%);-webkit-background-clip:text;background-clip:text;color:transparent">(406) 555-0142</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#d6d2ca">8 AM – 5 PM · Mon–Fri</div>
+        <div style="font-size:12.5px;color:#a8a5a0">All numerals: phone, hours, counts. Tabular. En dash in ranges.</div>
+      </div>
+    </div>
+    <div style="border-radius:3px;border:1px solid #2e2e34;overflow:hidden">
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700;border-bottom:1px solid #2e2e34;background:#17171a">
+        <span>Token</span><span>Size</span><span>Role</span>
+      </div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;border-bottom:1px solid #2e2e34;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-3xl</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">44px</span><span style="font-family:Sora,sans-serif;font-weight:800;font-size:44px;line-height:1;letter-spacing:-.025em">Card name</span></div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;border-bottom:1px solid #2e2e34;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-2xl</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">34px</span><span style="font-family:Sora,sans-serif;font-weight:800;font-size:34px;line-height:1.08;letter-spacing:-.025em">Section heading</span></div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;border-bottom:1px solid #2e2e34;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-xl</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">28px</span><span style="font-family:Sora,sans-serif;font-weight:800;font-size:28px;line-height:1.08;letter-spacing:-.025em">Block heading (promos h2)</span></div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;border-bottom:1px solid #2e2e34;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-lg</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">20px</span><span style="font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">Card subhead</span></div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;border-bottom:1px solid #2e2e34;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-md</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">15px</span><span style="font-size:15px">Body copy, primary button labels</span></div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;border-bottom:1px solid #2e2e34;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-base</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">13.5px</span><span style="font-size:13.5px">List links, secondary rows</span></div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;border-bottom:1px solid #2e2e34;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-sm</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">11.5px</span><span style="font-size:11.5px;font-weight:700;letter-spacing:.06em">Chips, eyebrows, small buttons</span></div>
+      <div style="display:grid;grid-template-columns:110px 70px 1fr;gap:0 16px;padding:10px 16px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6d2ca">--text-xs</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8a5a0">9px</span><span style="font-size:9px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:#35e0a1">Brand sub-line</span></div>
+    </div>
+  </section>
+
+  <!-- spacing + shape -->
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">3 · Spacing</h2>
+      <p style="margin:0;color:#d6d2ca;font-size:13.5px;text-wrap:pretty">4px grid. Panel padding 20, gaps between controls 8, between panels 22 (32 on desktop), content max 1140, gutters 18 + safe-area.</p>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-1 · 4</span><div style="height:12px;width:4px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-2 · 8</span><div style="height:12px;width:8px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-3 · 12</span><div style="height:12px;width:12px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-4 · 16</span><div style="height:12px;width:16px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-5 · 20</span><div style="height:12px;width:20px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-6 · 24</span><div style="height:12px;width:24px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-8 · 32</span><div style="height:12px;width:32px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-10 · 40</span><div style="height:12px;width:40px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-12 · 48</span><div style="height:12px;width:48px;background:#e13ec4"></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;width:120px;white-space:nowrap">--space-16 · 64</span><div style="height:12px;width:64px;background:#e13ec4"></div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">4 · Shape &amp; shadow</h2>
+      <p style="margin:0;color:#d6d2ca;font-size:13.5px;text-wrap:pretty">Deliberately sharp. Radius 3 on panels, 2 on controls, 1 on chips. Only avatars and the flip control are round.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;box-shadow:0 18px 40px -26px rgba(0,0,0,.9);padding:14px;display:flex;flex-direction:column;gap:4px"><b style="font-size:12px">--shadow-card</b><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#a8a5a0;line-height:1.5">0 18px 40px −26px<br>rgba(0,0,0,.9)</span></div>
+        <div style="border-radius:2px;background:#26262b;border:1px solid #4a4a54;box-shadow:0 6px 16px -6px rgba(0,0,0,.9),0 1px 0 0 rgba(255,255,255,.08) inset;padding:14px;display:flex;flex-direction:column;gap:4px"><b style="font-size:12px">--shadow-control</b><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#a8a5a0;line-height:1.5">0 6px 16px −6px black<br>+ 1px inset top highlight</span></div>
+        <div style="border-radius:2px;background:#26262b;border:1px solid #e13ec4;box-shadow:0 10px 20px -6px rgba(0,0,0,.9),0 0 16px -6px rgba(225,62,196,.45),0 1px 0 0 rgba(255,255,255,.08) inset;padding:14px;display:flex;flex-direction:column;gap:4px;transform:translateY(-2px)"><b style="font-size:12px">--shadow-control-hover</b><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#a8a5a0;line-height:1.5">lifted −2px, magenta edge,<br>magenta bloom</span></div>
+        <div style="border-radius:50%;width:56px;height:56px;justify-self:center;align-self:center;background:rgba(10,13,21,.86);box-shadow:0 0 0 1px rgba(225,62,196,.45),0 0 26px -6px rgba(225,62,196,.6);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:#a8a5a0;text-align:center;line-height:1.3">--glow<br>magenta</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- controls -->
+  <section style="display:flex;flex-direction:column;gap:18px">
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">5 · Buttons &amp; chips <span style="font-family:Manrope,sans-serif;font-weight:500;font-size:13px;color:#a8a5a0;letter-spacing:0;margin-left:8px">hover and press them</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
+      <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700">Neutral · md</div>
+        <a href="#" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:14px;border-radius:2px;font-family:Sora,sans-serif;font-weight:700;font-size:15px;letter-spacing:-.025em;color:#f5f2ea;background:#26262b;border:1px solid #4a4a54;box-shadow:0 8px 20px -8px rgba(0,0,0,.9),0 1px 0 0 rgba(255,255,255,.08) inset;transition:transform .16s ease-out,background .16s ease-out,box-shadow .16s ease-out,border-color .16s ease-out" style-hover="transform:translateY(-2px);border-color:#e13ec4;background:#2c2c32;box-shadow:0 10px 20px -6px rgba(0,0,0,.9),0 0 16px -6px rgba(225,62,196,.45),0 1px 0 0 rgba(255,255,255,.08) inset" style-active="transform:translateY(1px) scale(.985);box-shadow:0 2px 8px -4px rgba(0,0,0,.9)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e13ec4" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Save contact
+        </a>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <a href="#" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 6px;border-radius:2px;background:#26262b;border:1px solid #4a4a54;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#f5f2ea;box-shadow:0 6px 16px -6px rgba(0,0,0,.9),0 1px 0 0 rgba(255,255,255,.08) inset;transition:all .16s ease-out" style-hover="transform:translateY(-2px);border-color:#e13ec4;background:#2c2c32" style-active="transform:translateY(1px) scale(.985)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e13ec4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.7A2 2 0 0 1 22 16.9z"/></svg>Call</a>
+          <a href="#" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 6px;border-radius:2px;background:#26262b;border:1px solid #4a4a54;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#f5f2ea;box-shadow:0 6px 16px -6px rgba(0,0,0,.9),0 1px 0 0 rgba(255,255,255,.08) inset;transition:all .16s ease-out" style-hover="transform:translateY(-2px);border-color:#e13ec4;background:#2c2c32" style-active="transform:translateY(1px) scale(.985)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e13ec4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Text</a>
+          <a href="#" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 6px;border-radius:2px;background:#26262b;border:1px solid #4a4a54;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#f5f2ea;box-shadow:0 6px 16px -6px rgba(0,0,0,.9),0 1px 0 0 rgba(255,255,255,.08) inset;transition:all .16s ease-out" style-hover="transform:translateY(-2px);border-color:#e13ec4;background:#2c2c32" style-active="transform:translateY(1px) scale(.985)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e13ec4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 7 9 6 9-6"/></svg>Email</a>
+        </div>
+        <div style="font-size:12px;color:#a8a5a0">Label never colored; only the icon is magenta. Press: down 1px, scale .985, shadow collapses.</div>
+      </div>
+      <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700">Positive · one per screen</div>
+        <a href="#" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 18px;border-radius:2px;background:#35e0a1;color:#121212;font-family:Sora,sans-serif;font-weight:700;font-size:14px;letter-spacing:-.025em;box-shadow:0 8px 20px -8px rgba(0,0,0,.9),0 0 22px -8px rgba(53,224,161,.5);transition:transform .09s ease-out,filter .16s ease-out,box-shadow .16s ease-out" style-hover="filter:brightness(1.08);box-shadow:0 10px 24px -8px rgba(0,0,0,.9),0 0 28px -6px rgba(53,224,161,.65)" style-active="transform:translateY(1px) scale(.985)">Leave a Google review</a>
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;font-weight:700;margin-top:6px">Chips</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a8a5a0;border:1px solid #2e2e34;padding:5px 10px;border-radius:1px">Demo</span>
+          <span style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#35e0a1;border:1px solid rgba(53,224,161,.45);padding:5px 10px;border-radius:1px">Today</span>
+          <span style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#e13ec4;border:1px solid rgba(225,62,196,.45);padding:5px 10px;border-radius:1px">New</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#d6d2ca;border:1px solid #3d3d45;padding:5px 10px;border-radius:1px">FRI 6 PM</span>
+        </div>
+        <div style="font-size:12px;color:#a8a5a0">Positive hover brightens 8%, no lift. Chips are outline-only, 1px radius, .16em tracking.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- motion -->
+  <section style="display:flex;flex-direction:column;gap:18px">
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">6 · Motion</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
+      <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;padding:20px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center">
+        <div style="position:relative;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:rgba(10,13,21,.86);animation:au-glowpulse 3.2s ease-in-out infinite">
+          <div style="position:absolute;inset:0;border-radius:50%;padding:1.3px;background:linear-gradient(100deg,#e13ec4 0%,#8b5cc8 45%,#35e0a1 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude"></div>
+          <div style="position:absolute;inset:-5px;border-radius:50%;border:1.5px solid #e13ec4;opacity:0;animation:au-ring 3.2s ease-out infinite"></div>
+          <div style="position:absolute;inset:-5px;border-radius:50%;border:1.5px solid #35e0a1;opacity:0;animation:au-ring 3.2s ease-out 1.1s infinite"></div>
+          <div style="grid-area:1/1;font:800 9.5px/1.1 Sora,sans-serif;letter-spacing:.12em;text-transform:uppercase;text-align:center;color:#e13ec4;animation:au-showA 6.4s ease-in-out infinite">Tap<br>here</div>
+          <svg style="grid-area:1/1;animation:au-showB 6.4s ease-in-out infinite" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e13ec4" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.2M3 12a9 9 0 0 1 15.5-6.2"/><path d="M21 3v5h-5M3 21v-5h5"/></svg>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:12.5px">
+          <b style="font-size:13px">Flip-control pulse</b>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;line-height:1.6">glow 3.2s ease-in-out ∞<br>ring 3.2s ease-out (magenta), 2nd ring +1.1s (jade)<br>TAP HERE ↔ arrows 6.4s = every other pulse</span>
+        </div>
+      </div>
+      <div style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:13px;border-radius:2px;background:#26262b;border:1px solid #4a4a54;box-shadow:0 6px 16px -6px rgba(0,0,0,.9),0 1px 0 0 rgba(255,255,255,.08) inset;font-family:Sora,sans-serif;font-weight:700;font-size:14px;letter-spacing:-.025em">
+          Get Directions
+          <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.22) 50%,transparent 60%);background-size:250% 100%;animation:au-shimmer 7s ease-in-out infinite"></div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8a5a0;line-height:1.6">shimmer 7s, sweep occupies last 20% · staggered .4s–5s per button<br>--ease cubic-bezier(.65,.02,.2,1) · flip .9s<br>hover .16s ease-out · press .09s · scale .25s pop</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- breakpoints -->
+  <section style="display:flex;flex-direction:column;gap:18px">
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">7 · Breakpoints</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+      <div style="border-radius:3px;border:1px solid #2e2e34;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700">&lt; 560</span><span style="font-size:12.5px;color:#d6d2ca">Phone. Single column everywhere. Portrait card 1:1.7. Flip control pinned to viewport corner.</span></div>
+      <div style="border-radius:3px;border:1px solid #2e2e34;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700">≥ 560</span><span style="font-size:12.5px;color:#d6d2ca">Large phone. Two-up grids (promo days, club steps).</span></div>
+      <div style="border-radius:3px;border:1px solid #2e2e34;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700">≥ 820</span><span style="font-size:12.5px;color:#d6d2ca">Tablet. Landscape card, visible scrollbar, wider gutters.</span></div>
+      <div style="border-radius:3px;border:1px solid #2e2e34;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700">≥ 900</span><span style="font-size:12.5px;color:#d6d2ca">Desktop. 400px + fluid two-column, 32px gap.</span></div>
+    </div>
+  </section>
+
+  <!-- inconsistencies -->
+  <section style="border-radius:3px;background:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%),#17171a;border:1px solid #2e2e34;position:relative;overflow:hidden;padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+    <div style="position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(100deg,#e13ec4 0%,#8b5cc8 45%,#35e0a1 100%)"></div>
+    <h2 style="margin:0;font-family:Sora,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.025em">8 · Where the card contradicts itself — your call</h2>
+    <ol style="margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:13.5px;color:#d6d2ca;counter-reset:n">
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">01</span><span><b style="color:#f5f2ea">--gold is jade.</b> The token named gold is #35e0a1. Kept as an alias so nothing breaks; new code uses --jade. Also the :root comment still says "NeonDragon Casino" — leftover name.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">02</span><span><b style="color:#f5f2ea">Control border isn't a token.</b> Every button hard-codes #4a4a54, except Get Directions which uses --line2 (#3d3d45). Proposed: --line3 = #4a4a54 on all controls.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">03</span><span><b style="color:#f5f2ea">Hover lift varies.</b> Buttons lift −2px; the review button lifts −1px; the flip control scales 1.09 instead. Proposed: −2px on all rectangular controls, scale reserved for the round control.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">04</span><span><b style="color:#f5f2ea">Seven hand-written shadows.</b> Card face, save, row, links, directions, review (in em units) and go each have their own recipe. Collapsed to four: card / control / control-hover / control-active, plus float.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">05</span><span><b style="color:#f5f2ea">16 font sizes.</b> 9, 9.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 15, 16, 17, 20, 28, 34, 44. Kept the 8 that carry a role (section 2). 12/12.5/13/14/16/17 fold into neighbours.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">06</span><span><b style="color:#f5f2ea">Spacing is off-grid.</b> Gaps of 9, 11, 14, 18, 22 appear alongside 8/12/16/20. Proposed 4px grid; 22 → 24, 18 → 16 or 20, 9/11 → 8/12.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">07</span><span><b style="color:#f5f2ea">Five breakpoints.</b> 520, 560, 720, 820, 900. 520 and 720 are one-off fixes. Proposed three: 560 / 820 / 900.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">08</span><span><b style="color:#f5f2ea">Reduced motion is half-respected.</b> The pulse and shimmer deliberately ignore prefers-reduced-motion. Defensible on a one-button card; on a public site I recommend honouring it everywhere.</span></li>
+      <li style="display:grid;grid-template-columns:28px 1fr;gap:10px;padding:11px 13px;border-radius:2px;background:#1e1e22;border:1px solid #2e2e34"><span style="font-family:'JetBrains Mono',monospace;color:#e13ec4;font-weight:700">09</span><span><b style="color:#f5f2ea">Logo SVG is empty.</b> aurora_casino.svg wraps a raster &lt;image&gt; with no data — it renders nothing. Using the 1330px transparent PNGs (gradient + mono) and the 1024px badge instead.</span></li>
+    </ol>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>

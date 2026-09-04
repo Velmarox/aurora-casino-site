@@ -1,0 +1,45 @@
+AURORACASINO SITE - CHANGELOG
+Versioning scheme: v#.#.#-[stage] (semver)
+Patch = fixes | Minor = new content (patch resets) | Major 0 until launch (v1.0.0)
+Stages: -alpha → -beta at feature-complete → -rc1 when launch-ready → v1.0.0 gold
+A bump renames the build root folder and adds an entry here; working files keep their names.
+Archived (outgoing-version) copies live in _version_archive/, never in the build folder.
+
+Folder organization (Firebase-native repo):
+  public/            Hosting deploy root — index.html, Css/, Js/, Assets/  (lowercase "public" is Firebase's convention)
+  Docs/01_Design_System/  tokens (Aurora_Tokens.css) + token reference doc
+  Docs/02_Assets/         master brand marks + gallery photography (public/Assets holds deploy copies)
+  Docs/02_Assets/Video/   hero video poster master (the .mp4 deploy copy lives in public/Assets/Video/)
+  Docs/02_Assets/Promos/  promo graphics — not deployed until a promos page exists
+  Docs/02_Assets/Team/    staff photography — not deployed until a team page exists
+  Docs/04_Notes/          audits and decision records
+  _version_archive/       frozen copies of outgoing versions — never edit
+  firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
+
+v0.0.1-alpha (2026-09-04)
+- Hero video wired into the homepage. The poster still is the <img>; Site.js only attaches the mp4 src
+  above 820px and skips it entirely under prefers-reduced-motion, Data Saver, or a 2G link.
+  Phones keep the still — first load on mobile is 117 KB. Verified both paths in a browser.
+- Favicon fix: Aurora_Logo_Badge.png (501 KB) was serving as the favicon, the apple-touch-icon AND the
+  38x38 header/footer mark. Replaced by Aurora_Badge_32.png (2.5 KB) and Aurora_Badge_180.png (31 KB).
+- Removed two now-unreferenced deploy copies from public/: Aurora_Logo_Badge.png and Bar_Wide.avif
+  (the old hero still). Both masters remain in Docs/02_Assets/.
+- All text files normalized to LF line endings.
+- Hero video added: 720p encode (9.3 MB) at public/Assets/Video/Hero_Loop.mp4, self-hosted rather than
+  hotlinked to the old Wix CDN. 1080p (18.8 MB) rejected — it burns Firebase's free 10 GB/month in ~540 loads.
+  Poster frame master in Docs/02_Assets/Video/, 48 KB AVIF deploy copy alongside the mp4.
+- Design tokens: semantic layer (--surface-*, --accent-*, --focus-ring, --selection) and weight tokens
+  ported from Aurora Design Scheme.zip. Additive only — no existing token changed value.
+  ::selection and :focus-visible now bound; keyboard focus is visible for the first time.
+- Promo graphics and staff headshot filed under Docs/02_Assets/ (Snake_Case), not deployed — no page yet.
+- Verified the four loose gallery photos and three loose logo files in 'Orig Website Assets' are byte-different
+  but pixel-identical re-encodes of assets already in the project. Nothing copied; no duplicates introduced.
+- CHANGELOG folder references corrected: the deploy root was renamed 03_Public -> public.
+- Version set to v0.0.1-alpha at the owner's request (deviates from the usual v0.1.0 start).
+- Players club copy corrected (kiosk, attendant). Meet-the-team nav removed pending content.
+- Homepage: neon OPEN/CLOSED sign clocked to Mountain time.
+- Added firebase.json (public: public) so the repo deploys as-is.
+- Initial scaffold. Design tokens extracted from the digital card (card index.html v0.2.0-alpha) into 01_Design_System/.
+- Brand marks and gallery photos filed under 02_Assets/ (renamed to Snake_Case).
+- Homepage first draft: public/index.html + Css/Site.css + Js/Site.js. Homepage audit in 04_Notes/Homepage_Audit.md.
+- Replaced card-era logos with hi-res transparent PNGs: Aurora_Logo_Full (gradient, 1330px), Aurora_Logo_Full_Mono (black), Aurora_Logo_Badge (1024px).

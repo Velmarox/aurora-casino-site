@@ -1,0 +1,104 @@
+/* Aurora Casino — design tokens
+   Source: digital business card index.html (v0.2.0-alpha). Values marked [card] are verbatim.
+   Values marked [proposed] are cleanups where the card was inconsistent — see Design_Tokens doc. */
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap");
+
+:root{
+  /* ---- surfaces [card] ---- */
+  --bg:#121212; --panel:#17171a; --panel2:#1e1e22; --panel3:#26262b;
+  --panel4:#2c2c32;                 /* [proposed] control hover fill; card used --panel3 on hover of --panel2 items */
+  --line:#2e2e34; --line2:#3d3d45;
+  --line3:#4a4a54;                  /* [proposed] the card hard-codes #4a4a54 on every control border — now a token */
+
+  /* ---- text [card] ---- */
+  --text:#f5f2ea; --text2:#d6d2ca; --muted:#a8a5a0; --dim:#6f6d6a;
+
+  /* ---- accents [card] ---- */
+  --magenta:#e13ec4; --magenta-hi:#f265d6;
+  --jade:#35e0a1;
+  --gold:var(--jade);               /* [card] legacy alias — the "gold" role was always jade. Prefer --jade. */
+  --violet:#8b5cc8;
+  --red:#ff5468; --cyan:#3fd8f0;    /* [card] declared, never used */
+
+  /* ---- gradients [card] ---- */
+  --grad:linear-gradient(100deg,#e13ec4 0%,#8b5cc8 45%,#35e0a1 100%);
+  --grad-tile:linear-gradient(160deg,rgba(255,255,255,.05) 0%,transparent 46%);
+  --grad-scrim:linear-gradient(180deg,rgba(18,18,18,0) 0%,rgba(18,18,18,.96) 100%);
+
+  /* ---- glows [card] ---- */
+  --glow-magenta:0 0 0 1px rgba(225,62,196,.45),0 0 26px -6px rgba(225,62,196,.6);
+  --glow-jade:0 0 0 1px rgba(53,224,161,.4),0 0 26px -8px rgba(53,224,161,.5);
+
+  /* ---- shadows [proposed: 4 recipes collapsed from 7 hand-written ones in the card] ---- */
+  --shadow-card:0 24px 64px -24px rgba(0,0,0,.9),0 2px 10px -2px rgba(0,0,0,.6),0 1px 0 0 rgba(255,255,255,.05) inset;
+  --shadow-control:0 6px 16px -6px rgba(0,0,0,.9),0 1px 0 0 rgba(255,255,255,.08) inset;
+  --shadow-control-hover:0 10px 20px -6px rgba(0,0,0,.9),0 0 16px -6px rgba(225,62,196,.45),0 1px 0 0 rgba(255,255,255,.08) inset;
+  --shadow-control-active:0 2px 8px -4px rgba(0,0,0,.9);
+  --shadow-float:0 8px 20px -8px rgba(0,0,0,.9);
+
+  /* ---- type ---- */
+  --font-display:"Sora",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"Manrope",ui-sans-serif,system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* [proposed] scale — the card uses 16 distinct px sizes; these are the 8 that carry a role */
+  --text-xs:9px; --text-sm:11.5px; --text-base:13.5px; --text-md:15px;
+  --text-lg:20px; --text-xl:28px; --text-2xl:34px; --text-3xl:44px;
+  --leading-tight:1.08; --leading-snug:1.3; --leading-body:1.55;
+  --tracking-display:-.025em; --tracking-button:.06em; --tracking-eyebrow:.16em; --tracking-brand:.28em;
+
+  /* ---- shape [card] ---- */
+  --radius:3px; --r-ctl:2px; --r-chip:1px; --r-round:50%;
+
+  /* ---- spacing [proposed 4px grid; card values were 8/9/11/12/14/16/18/20/22/32] ---- */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px;
+  --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px; --space-16:64px;
+  --content-max:1140px;             /* [card] sheet content width */
+  --gutter:max(18px,env(safe-area-inset-left)); /* [card] */
+
+  /* ---- motion [card] ---- */
+  --ease:cubic-bezier(.65,.02,.2,1);      /* flip / sheet reveal */
+  --ease-pop:cubic-bezier(.2,.8,.2,1);    /* control scale */
+  --dur-press:.09s; --dur-hover:.16s; --dur-scale:.25s; --dur-flip:.9s;
+  --pulse:3.2s;                           /* glow pulse; rings share it, second ring offset 1.1s */
+  --pulse-alt:6.4s;                       /* TAP HERE ↔ arrows swap = two pulses */
+  --shimmer:7s;                           /* sheen sweep, staggered .4s–5s across buttons */
+}
+
+/* ---- breakpoints (can't be tokens in CSS; documented here, used verbatim) ----
+   [proposed] 3 breakpoints:  ≥560px  two-up grids  |  ≥820px  tablet / scrollbars  |  ≥900px  two-column layout
+   [card]     also had 520 and 720 one-offs — dropped. */
+
+@keyframes au-glowpulse{0%,100%{box-shadow:var(--shadow-float),0 0 0 0 rgba(225,62,196,0)}50%{box-shadow:var(--shadow-float),0 0 16px 3px rgba(225,62,196,.4)}}
+@keyframes au-ring{0%{transform:scale(.9);opacity:.55}100%{transform:scale(1.55);opacity:0}}
+@keyframes au-shimmer{0%,80%{background-position:130% 0}100%{background-position:-30% 0}}
+@keyframes au-showA{0%,50%,100%{opacity:0}25%{opacity:1}}
+@keyframes au-showB{0%,50%,100%{opacity:0}75%{opacity:1}}
+
+/* ---- semantic layer [Aurora Design Scheme.zip → design-system/tokens/colors.css] ----
+   Role-based aliases over the raw tokens above. Prefer these in new component CSS;
+   the raw --magenta / --panel3 names stay valid for the rules that already use them. */
+:root{
+  --surface-page:var(--bg);
+  --surface-card:var(--panel);
+  --surface-control:var(--panel3);
+  --surface-control-hover:var(--panel4);
+  --border-card:var(--line);
+  --border-control:var(--line3);
+  --text-body:var(--text);
+  --text-secondary:var(--text2);
+  --text-muted:var(--muted);
+  --accent-primary:var(--magenta);
+  --accent-positive:var(--jade);
+  --accent-danger:var(--red);
+  --glow-gold:var(--glow-jade);          /* [zip] pairs with the --gold legacy alias */
+  --focus-ring:2px solid var(--magenta);
+  --selection:rgba(225,62,196,.4);
+
+  /* ---- font weights [zip] ---- */
+  --weight-body:400; --weight-medium:500; --weight-semibold:600;
+  --weight-bold:700; --weight-black:800;
+}
+
+/* Applies the two tokens that are useless unless bound to something. */
+::selection{background:var(--selection)}
+:focus-visible{outline:var(--focus-ring);outline-offset:2px}

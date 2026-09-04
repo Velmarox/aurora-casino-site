@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="version" content="v0.0.1-alpha">
+  <meta name="theme-color" content="#121212">
+  <title>Aurora Casino — Billings, MT · Open daily 8 AM – 2 AM</title>
+  <meta name="description" content="Your local casino on Grand Avenue. 20 machines, 15 taps, daily promos and the most underrated players club in Billings. Open 8 AM – 2 AM every day.">
+  <link rel="icon" href="Assets/Brand/Aurora_Badge_32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="Assets/Brand/Aurora_Badge_180.png">
+  <link rel="preload" as="image" href="Assets/Video/Hero_Poster.avif" fetchpriority="high">
+  <link rel="stylesheet" href="Css/Aurora_Tokens.css">
+  <link rel="stylesheet" href="Css/Site.css">
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Aurora Casino home">
+      <img src="Assets/Brand/Aurora_Badge_180.png" alt="" width="38" height="38">
+      <span><b>AURORA CASINO</b><small>Billings, Montana</small></span>
+    </a>
+    <nav class="nav" aria-label="Site">
+      <a href="#week">This week</a>
+      <a href="#room">The room</a>
+      <a href="#club">Players club</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <a class="btn head-call" href="tel:+14066011282">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.7A2 2 0 0 1 22 16.9z"/></svg>
+      <span class="mono">(406) 601-1282</span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="mobileNav">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Site, mobile">
+    <a href="#week">This week's promos</a>
+    <a href="#room">The room</a>
+    <a href="#club">Players club</a>
+    <a href="#visit">Hours &amp; directions</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-label="Welcome">
+    <img class="bg" src="Assets/Video/Hero_Poster.avif" alt="Aurora Casino on Grand Avenue after dark" fetchpriority="high">
+    <video class="bg" id="heroVideo" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+    <div class="scrim"></div>
+    <img class="wm" src="Assets/Brand/Aurora_Logo_Full.png" alt="" aria-hidden="true">
+    <div class="wrap">
+      <div class="sign" id="sign" role="status">
+        <span class="tube">Open</span>
+        <span class="until">Daily 8 AM – 2 AM · Mountain time</span>
+      </div>
+      <h1 class="display">Your local casino, lit up right.</h1>
+      <p>Twenty machines, fifteen taps, the best snacks on Grand Avenue, and a players club nobody talks about enough. Come see us — ask for anyone on the floor by name.</p>
+      <div class="actions">
+        <a class="btn shimmer" href="https://www.google.com/maps/dir/?api=1&amp;destination=1918+Grand+Ave,+Billings,+MT+59102" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Get directions
+        </a>
+        <a class="btn" href="tel:+14066011282">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.7A2 2 0 0 1 22 16.9z"/></svg>Call
+        </a>
+        <a class="btn" href="#week">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>This week
+        </a>
+      </div>
+      <div class="tonight" id="tonight">
+        <span class="chip jade">Today</span>
+        <span><b>—</b> · <span class="when mono">—</span></span>
+        <span class="chip magenta next">—</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="facts" aria-label="At a glance">
+    <div class="wrap">
+      <div><b>20 machines</b><span>Newest titles on the floor, comfy chairs</span></div>
+      <div><b>15 taps</b><span>Montana craft heavy, always rotating</span></div>
+      <div><b>8 AM – 2 AM</b><span>Every single day</span></div>
+      <div><b>Free snacks</b><span>The good kind. Ask.</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="week">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Weekly promos</span>
+        <div class="row">
+          <h2 class="display">This week at Aurora</h2>
+          <p>Something going on every single day. Today is first.</p>
+        </div>
+      </div>
+      <div class="week" id="week-grid"></div>
+      <p class="fine">Promotions subject to change — ask an attendant for current details. Must be 18+ to play. Please play responsibly.</p>
+    </div>
+  </section>
+
+  <section class="block" id="room" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">The room</span>
+        <h2 class="display">Newly renovated. Still your neighborhood spot.</h2>
+      </div>
+      <div class="room">
+        <a class="shot wide" href="Assets/Gallery/Gaming_Floor.avif" target="_blank" rel="noopener">
+          <img src="Assets/Gallery/Gaming_Floor.avif" alt="Gaming floor with twenty machines and leather chairs" loading="lazy">
+          <div class="cap"><b>The floor</b><span>Twenty machines, big chairs, no crowding</span></div>
+        </a>
+        <a class="shot tall" href="Assets/Gallery/Bar_Portrait.jpg" target="_blank" rel="noopener">
+          <img src="Assets/Gallery/Bar_Portrait.jpg" alt="Bar seating under teal light with TVs above" loading="lazy">
+          <div class="cap"><b>The bar</b><span>Every game on, every night</span></div>
+        </a>
+        <a class="shot" href="Assets/Gallery/Tap_Handles.avif" target="_blank" rel="noopener">
+          <img src="Assets/Gallery/Tap_Handles.avif" alt="Row of fifteen craft beer tap handles" loading="lazy">
+          <div class="cap"><b>Fifteen taps</b><span>Bitter Root, Dirt Church and friends</span></div>
+        </a>
+        <a class="shot" href="Assets/Gallery/Exterior_Front.avif" target="_blank" rel="noopener">
+          <img src="Assets/Gallery/Exterior_Front.avif" alt="Aurora Casino exterior on Grand Avenue with neon trim" loading="lazy">
+          <div class="cap"><b>1918 Grand Ave</b><span>Look for the neon</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="club" style="background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="wrap club">
+      <div class="pitch">
+        <span class="eyebrow">Players club</span>
+        <h2 class="display">The most underrated players club in town.</h2>
+        <p>Free to join, takes two minutes at the kiosk, and it pays out every week — double and triple point days, match plays, free-play drawings. If you play here more than once a month and you're not in it, you're leaving money on the floor.</p>
+        <a class="btn positive" href="#visit">Come sign up — it's free</a>
+      </div>
+      <ol>
+        <li><div><b>Sign up at the kiosk with an attendant</b><span>Tell the attendant that you'd like to sign up for the player's club. They will guide you through the rest.</span></div></li>
+        <li><div><b>Play like you already do</b><span>Every dollar earns points. Monday and Wednesday earn double and triple.</span></div></li>
+        <li><div><b>Get drawn, get paid</b><span>Thursday, Friday and Saturday free-play drawings pull from club members on the floor.</span></div></li>
+        <li><div><b>Trade points for the good stuff</b><span>Free play, match plays, and the drinks on us.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="visit">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Visit</span>
+        <h2 class="display">Grand Avenue, right where you'd guess.</h2>
+      </div>
+      <div class="visit">
+        <div class="panel map">
+          <iframe title="Map to Aurora Casino, 1918 Grand Avenue, Billings" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=1918+Grand+Ave,+Billings,+MT+59102&amp;z=15&amp;output=embed"></iframe>
+        </div>
+        <div class="panel accent info">
+          <div class="addr">1918 Grand Avenue<small>Billings, Montana 59102</small></div>
+          <a class="ph" href="tel:+14066011282">(406) 601-1282</a>
+          <dl>
+            <dt>Hours</dt><dd class="mono">Daily · 8 AM – 2 AM</dd>
+            <dt>Age</dt><dd>18+ to play</dd>
+            <dt>Parking</dt><dd>Free lot, right out front</dd>
+          </dl>
+          <div class="actions">
+            <a class="btn shimmer" href="https://www.google.com/maps/dir/?api=1&amp;destination=1918+Grand+Ave,+Billings,+MT+59102" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Get directions
+            </a>
+            <a class="btn" href="tel:+14066011282"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.7A2 2 0 0 1 22 16.9z"/></svg>Call</a>
+            <a class="btn" href="sms:+14066011282"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Text</a>
+          </div>
+          <div class="socials">
+            <a href="https://www.facebook.com/AuroraCasinoMT/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v7h4v-7h3l1-4h-4V8z"/></svg>Facebook</a>
+            <a href="https://www.instagram.com/aurora_casino/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>Instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">
+      <img src="Assets/Brand/Aurora_Badge_180.png" alt="" width="38" height="38">
+      <span><b>AURORA CASINO</b><small>1918 Grand Ave · Billings, MT</small></span>
+    </div>
+    <p class="legal">Must be 18 or older to play. Please play responsibly. Promotions subject to change without notice — ask an attendant for current details. If gambling is a problem for you or someone you know, call 1-888-900-9979 (Montana Council on Problem Gambling).</p>
+    <p class="meta">© <span id="year">2026</span> Aurora Casino · auroracasinomt.com · v0.0.1-alpha</p>
+  </div>
+</footer>
+
+<nav class="actionbar" aria-label="Quick actions">
+  <a href="tel:+14066011282"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.7A2 2 0 0 1 22 16.9z"/></svg>Call</a>
+  <a href="https://www.google.com/maps/dir/?api=1&amp;destination=1918+Grand+Ave,+Billings,+MT+59102" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Directions</a>
+  <a href="#week"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Tonight</a>
+</nav>
+
+<script src="Js/Site.js" defer></script>
+</body>
+</html>
