@@ -112,7 +112,16 @@ section.block{padding:56px 0}
 .day.today{border-color:rgba(53,224,161,.45)}
 .day.today::before{background:var(--grad)}
 .day .top{display:flex;align-items:center;gap:10px}
-.day .d{font-family:var(--font-display);font-weight:800;font-size:var(--text-lg);letter-spacing:var(--tracking-display)}
+/* Day tag: light box, black bold caps — same device as the printed promo sheet. */
+.day .d{font-family:var(--font-display);font-weight:800;font-size:var(--text-sm);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:#121212;background:var(--text);padding:6px 12px;border-radius:var(--r-chip);white-space:nowrap}
+.day.today .d{background:var(--jade)}
+/* Offer chips carry the promo instead of a sentence. Solid fills mean they stay
+   legible wherever they land over the photo, so they can run wider than the copy. */
+.day .tags{display:flex;flex-wrap:wrap;gap:7px;max-width:min(80ch,88%)}
+.day .tag{font-family:var(--font-display);font-weight:800;font-size:var(--text-sm);letter-spacing:var(--tracking-button);text-transform:uppercase;color:#121212;padding:8px 12px;border-radius:var(--r-chip);white-space:nowrap}
+.day .tag.j{background:var(--jade)}
+.day .tag.m{background:var(--magenta-hi)}
+.day .tag.p{background:rgba(245,242,234,.10);color:var(--text);border:1px solid var(--line3);font-weight:700}
 .day .t{margin-left:auto;font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text2);white-space:nowrap}
 .day .title{font-family:var(--font-display);font-weight:700;font-size:clamp(19px,1.9vw,24px);letter-spacing:var(--tracking-display)}
 .day .desc{font-size:var(--text-md);color:var(--text2);line-height:1.55}

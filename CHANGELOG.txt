@@ -17,6 +17,13 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.0.1-alpha (2026-09-04)
+- Promo banners restyled after the printed weekly-promos sheet: the day is a light box
+  with black bold caps, and each promo's claims are now theme-coloured chips with black
+  caps (jade for money/free play, magenta for point multipliers, outline for detail)
+  instead of one sentence. A short supporting line sits beneath. Contrast measured:
+  black on jade 11.0:1, on magenta 6.8:1, on the day tag 16.7:1 (AAA/AA/AAA).
+  Chips have solid fills so they stay legible anywhere over the photo, which lets them
+  run wider than the body copy and fill the banner.
 - Weekly promos rebuilt as full-width banner rows: the day's promo photo sits behind the
   copy at 45% opacity (34% on mobile) under a horizontal scrim, so contrast never depends
   on which image is in play. Images lazy-load; 252 KB added to public/Assets/Promos/.
