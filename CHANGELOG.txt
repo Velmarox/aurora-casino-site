@@ -17,6 +17,24 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.0.1-alpha (2026-09-04)
+- Weekly promos replaced with the current schedule from the Aurora Casino Facebook page
+  (posts updated ~2026-09-01). Monday 3X Points; Tuesday Loyalty Rewards Day (Silver $10 /
+  Gold $20 / Platinum $30 / Platinum Plus $40); Wednesday Win-It Wednesdays ($25 cash
+  drawing, monthly $300, $1,000 year-end); Thursday VIP Rewards Day (Platinum tiers only);
+  Friday Nifty-Fifty 7-9 PM, drawings every 30 min, prize by player rank.
+  THERE ARE NO SATURDAY OR SUNDAY PROMOS — those two days render no banner at all.
+  Wine Down Wednesday, Match Play Tuesday, Seahorse Races and the 2X point days are gone.
+- Descriptions restored as a third banner column: copy | description | chips.
+- draws[] now holds MINUTES past midnight, not hours, so Friday's half-hour drawings work.
+  Added fmtTime(); fmtHour() still drives the open/closed sign.
+- FIXED a live bug: the hero 'tonight' line read tp.t, a field removed in the previous
+  commit, so it was printing 'undefined' on the deployed site. It now uses tp.when, and on
+  weekends falls forward to the next weekday promo instead of breaking on a null day.
+- Promo images renamed by CONTENT rather than day (Promo_Gaming_Floor, Promo_Cash_On_Bar,
+  Promo_Drawing_Drum, Promo_Lounge_Wine, Promo_Slots_Night) so a promo change no longer
+  leaves a filename lying. Draft_Taps and Neon_Lanes are unused and left out of public/.
+- Homepage copy corrected where the old promos had made it false: meta description,
+  the 'every single day' subhead, and three players-club lines citing dead promos.
 - Promo banners: the standalone time stamp is gone; times now live inside the chips, so
   each chip is a complete statement rather than half a thought pointing at a number in
   the corner. Sunday reads '2X POINTS 8 AM - 12 PM', Tuesday '$5-$25 MATCH PLAY ALL DAY'.

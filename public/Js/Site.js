@@ -5,29 +5,31 @@
   /* ===================== EDIT ME ===================== */
   var HOURS = { open: 8, close: 26 };   // 8 AM – 2 AM next day, daily (24h; 26 = 2 AM tomorrow)
   var TZ = 'America/Denver';
-  /* Weekly promo schedule (0=Sun … 6=Sat). draws = drawing hours in 24h time. */
+  /* Weekly promos, 0=Sun … 6=Sat. null = no promo that day.
+     draws = drawing times in MINUTES past midnight, so half-hours work. */
   var WEEK = [
-    { d:'Sunday',    title:'2X Points Morning',    img:'Assets/Promos/Promo_Sun_2X_Points.avif',
-      tags:[['2X points 8 AM – 12 PM','m'],['Every machine','p']],
+    null,
+    { d:'Monday',    when:'All day', title:'3X Points All Day',   img:'Assets/Promos/Promo_Gaming_Floor.avif',
+      desc:'Triple points on every machine, open to close — the fastest way to climb to a Platinum tier.',
+      tags:[['3X points all day','m'],['Level up to Platinum','p']],
       draws:[] },
-    { d:'Monday',    title:'2X Points Monday',       img:'Assets/Promos/Promo_Mon_Happy_Hour.avif',
-      tags:[['2X points all day','m'],['Happy hour 4–7 PM','j']],
+    { d:'Tuesday',   when:'All day', title:'Loyalty Rewards Day', img:'Assets/Promos/Promo_Cash_On_Bar.avif',
+      desc:'Free play based on your player tier. Silver through Platinum Plus, up to $40.',
+      tags:[['Silver $10','p'],['Gold $20','p'],['Platinum $30','j'],['Platinum Plus $40','m']],
       draws:[] },
-    { d:'Tuesday',   title:'Match Play Tuesday',     img:'Assets/Promos/Promo_Tue_Match_Play.avif',
-      tags:[['$5 – $25 match play all day','j'],['Redeem within 7 days','p']],
+    { d:'Wednesday', when:'All day', title:'Win-It Wednesdays',   img:'Assets/Promos/Promo_Drawing_Drum.avif',
+      desc:'Every player who logs in on Wednesday is entered into a $25 cash drawing. Two winners drawn Thursday morning.',
+      tags:[['$25 cash drawing','j'],['Monthly $300 drawing','m'],['$1,000 year-end drawing','m']],
       draws:[] },
-    { d:'Wednesday', title:'Wine Down Wednesday',    img:'Assets/Promos/Promo_Wed_Wine_Down.avif',
-      tags:[['3X points all day','m'],['$1 off every glass','j']],
+    { d:'Thursday',  when:'All day', title:'VIP Rewards Day',     img:'Assets/Promos/Promo_Lounge_Wine.avif',
+      desc:'Platinum and Platinum Plus members collect their VIP free play.',
+      tags:[['Platinum $30','j'],['Platinum Plus $40','m']],
       draws:[] },
-    { d:'Thursday',  title:'$20 Free Play Drawings', img:'Assets/Promos/Promo_Thu_Free_Play.avif',
-      tags:[['$20 free machine play drawings','j'],['Must be present to win','p']],
-      draws:[16,18,20] },
-    { d:'Friday',    title:'Nifty Fifty Fri-Yay',    img:'Assets/Promos/Promo_Fri_Nifty_Fifty.avif',
-      tags:[['$50 free machine play drawings','j'],['Must be present to win','p']],
-      draws:[18,19,20] },
-    { d:'Saturday',  title:'Seahorse Races',         img:'Assets/Promos/Promo_Sat_Seahorse_Races.avif',
-      tags:[['Seahorse races 9 AM – 10 PM','m'],['$25 free machine play drawings','j']],
-      draws:[17,18,19,20] }
+    { d:'Friday',    when:'7 – 9 PM', title:'Nifty-Fifty Fridays', img:'Assets/Promos/Promo_Slots_Night.avif',
+      desc:'Drawings every thirty minutes from seven to nine. Prize amount is based on your player rank.',
+      tags:[['Win up to $50','j'],['Every 30 minutes','p']],
+      draws:[1140,1170,1200,1230,1260] },
+    null
   ];
   /* =================================================== */
 
@@ -39,6 +41,7 @@
     return { day: days[o.weekday], h: (+o.hour) % 24, m: +o.minute };
   }
   function fmtHour(h) { h = h % 24; var ap = h >= 12 ? 'PM' : 'AM'; var hh = h % 12; if (hh === 0) hh = 12; return hh + ' ' + ap; }
+  function fmtTime(t) { var h = Math.floor(t / 60) % 24, m = t % 60, ap = h >= 12 ? 'PM' : 'AM', hh = h % 12; if (hh === 0) hh = 12; return hh + (m ? ':' + (m < 10 ? '0' + m : m) : '') + ' ' + ap; }
 
   /* ---- open / closed status ---- */
   var now = localNow();
@@ -62,7 +65,9 @@
   if (week) {
     var html = '';
     for (var i = 0; i < 7; i++) {
-      var idx = (promoDay + i) % 7, p = WEEK[idx], today = i === 0;
+      var idx = (promoDay + i) % 7, p = WEEK[idx];
+      if (!p) { continue; }                              // no promo that day
+      var today = i === 0;
       var tags = p.tags.map(function (g) { return '<span class="tag ' + g[1] + '">' + g[0] + '</span>'; }).join('');
       html += '<article class="day' + (today ? ' today' : '') + '">' +
         '<img class="bg" src="' + p.img + '" alt="" loading="lazy" decoding="async">' +
@@ -71,8 +76,9 @@
         '<div class="body">' +
           '<div class="copy">' +
             '<div class="title">' + p.title + '</div>' +
-            (p.draws.length ? '<div class="draw">Drawings <span class="mono">' + p.draws.map(fmtHour).join(' · ') + '</span></div>' : '') +
+            (p.draws.length ? '<div class="draw">Drawings <span class="mono">' + p.draws.map(fmtTime).join(' · ') + '</span></div>' : '') +
           '</div>' +
+          '<p class="desc">' + p.desc + '</p>' +
           '<div class="tags">' + tags + '</div>' +
         '</div>' +
         '</article>';
@@ -83,17 +89,29 @@
   /* ---- hero: tonight line ---- */
   var tonight = document.getElementById('tonight');
   if (tonight) {
-    var tp = WEEK[promoDay];
-    tonight.querySelector('b').textContent = tp.title;
-    tonight.querySelector('.when').textContent = tp.t;
-    // next drawing countdown if there is one still to come today
-    var next = null;
-    for (var j = 0; j < tp.draws.length; j++) { if (tp.draws[j] * 60 > mins) { next = tp.draws[j]; break; } }
-    var nd = tonight.querySelector('.next');
-    if (next !== null && isOpen) {
-      var diff = next * 60 - mins;
-      nd.textContent = 'Next drawing in ' + (diff >= 60 ? Math.floor(diff / 60) + 'h ' : '') + (diff % 60) + 'm';
-    } else { nd.remove(); }
+    var tp = WEEK[promoDay], label = 'Today', off = 0;
+    if (!tp) {                                           // weekend: point at the next weekday promo
+      for (off = 1; off <= 7 && !tp; off++) { tp = WEEK[(promoDay + off) % 7]; }
+      off--;
+      label = tp ? tp.d : '';
+    }
+    if (!tp) {
+      tonight.remove();
+    } else {
+      tonight.querySelector('.chip').textContent = label;
+      tonight.querySelector('b').textContent = tp.title;
+      tonight.querySelector('.when').textContent = tp.when;
+      // countdown only makes sense for a drawing still to come today
+      var next = null;
+      if (off === 0) {
+        for (var j = 0; j < tp.draws.length; j++) { if (tp.draws[j] > mins) { next = tp.draws[j]; break; } }
+      }
+      var nd = tonight.querySelector('.next');
+      if (next !== null && isOpen) {
+        var diff = next - mins;
+        nd.textContent = 'Next drawing in ' + (diff >= 60 ? Math.floor(diff / 60) + 'h ' : '') + (diff % 60) + 'm';
+      } else { nd.remove(); }
+    }
   }
 
   /* ---- mobile menu ---- */
