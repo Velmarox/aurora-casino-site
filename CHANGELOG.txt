@@ -16,6 +16,11 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.0.4-alpha (2026-09-04)
+- Site credit added to the footer meta line: 'Site by Jamie Merwin', set between the
+  domain and the version stamp so the build stamp stays last. It inherits the existing
+  11px mono .meta styling, so no new rule was needed.
+
 v0.0.3-alpha (2026-09-04)
 - Removed 'On Grand Avenue with a free lot out front.' from the Visit heading and the
   'Come in and sign up' button from the players club, both at the owner's request. With
