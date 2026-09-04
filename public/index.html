@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="version" content="v0.0.4-alpha">
+  <meta name="version" content="v0.0.5-alpha">
   <meta name="theme-color" content="#121212">
 
-  <title>Aurora Casino | Billings, MT · Open daily 8 AM – 2 AM</title>
+  <title>[DEMO] Aurora Casino | Billings, MT · Open daily 8 AM – 2 AM</title>
   <meta name="description" content="Twenty machines, fifteen taps and a promo every weekday at 1918 Grand Avenue in Billings. Open 8 AM to 2 AM, seven days a week.">
   <!-- Hosting URL, not auroracasinomt.com: the custom domain still serves the old Wix
        site. Flip all four of these the day the domain cuts over to Firebase. -->
@@ -20,7 +20,7 @@
 
   <meta property="og:type" content="business.business">
   <meta property="og:site_name" content="Aurora Casino">
-  <meta property="og:title" content="Aurora Casino · Billings, MT">
+  <meta property="og:title" content="[DEMO — unofficial concept] Aurora Casino · Billings, MT">
   <meta property="og:description" content="Twenty machines, fifteen taps and a promo every weekday at 1918 Grand Avenue. Open 8 AM to 2 AM, seven days a week.">
   <meta property="og:url" content="https://aurora-casino-site.web.app/">
   <meta property="og:image" content="https://aurora-casino-site.web.app/Assets/Brand/Aurora_Share_Card.jpg">
@@ -41,7 +41,40 @@
   <link rel="stylesheet" href="Css/Aurora_Tokens.css">
   <link rel="stylesheet" href="Css/Site.css">
 </head>
-<body>
+<body class="demo-open">
+
+<!-- ===== DEMO NOTICES ======================================================
+     This build is an unaffiliated portfolio concept. The overlay below, the
+     fixed watermark under it and the footer band all say so. Styles are in
+     Site.css section 17, dismissal is Site.js step 1. Remove all four together
+     if this ever becomes the real site, and drop body.demo-open with them. -->
+
+<div class="demo-modal" id="demoModal" role="dialog" aria-modal="true"
+     aria-labelledby="demoModalTitle" aria-describedby="demoModalBody">
+  <div class="card">
+    <span class="tag">Demo site</span>
+    <h2 class="display" id="demoModalTitle">Disclaimer: this is not the official website.</h2>
+    <div id="demoModalBody">
+      <p>This site is an independent design concept created solely for demonstration and
+        portfolio purposes. It is strictly a <b>DEMO</b>.</p>
+      <p>To visit the actual business, please go to the official website:
+        <a class="official" href="https://www.auroracasinomt.com/" target="_blank" rel="noopener">https://www.auroracasinomt.com/</a></p>
+      <p>All trademarks, logos, and copyrights belong to Aurora Casino and their respective
+        owners. This project is not affiliated with, endorsed by, or connected to Aurora
+        Casino in any way.</p>
+    </div>
+    <div class="actions">
+      <button class="btn shimmer" id="demoModalClose" type="button">I understand — view the demo</button>
+      <a class="btn" href="https://www.auroracasinomt.com/" target="_blank" rel="noopener">Official site</a>
+    </div>
+  </div>
+</div>
+
+<!-- Script off means nothing can dismiss the overlay, so hide it and hand the
+     visitor the footer band and watermark instead. -->
+<noscript><style>#demoModal{display:none}body.demo-open{overflow:visible}</style></noscript>
+
+<div class="demo-wm" role="note" aria-label="Notice: this is a demo site, not the official Aurora Casino website">Demo — not official</div>
 
 <a class="skip" href="#main">Skip to content</a>
 
@@ -259,8 +292,16 @@
       </div>
     </div>
 
+    <p class="demo-note"><b>Demo site — not the official Aurora Casino website.</b>
+      This page is an independent design concept built solely for demonstration and portfolio
+      purposes. It is not affiliated with, endorsed by, or connected to Aurora Casino in any way,
+      and every trademark, logo and copyright shown belongs to Aurora Casino and their respective
+      owners. Hours, promotions and contact details here are illustrative and may not be current —
+      for the real business visit
+      <a href="https://www.auroracasinomt.com/" target="_blank" rel="noopener">https://www.auroracasinomt.com/</a>.</p>
+
     <p class="legal">Must be 18 or older to play. Please play responsibly. Promotions may change without notice, so ask an attendant for current details. If gambling is a problem for you or someone you know, call <span class="nb">1-888-900-9979</span> (Montana Council on Problem Gambling).</p>
-    <p class="meta">© <span id="year">2026</span> Aurora Casino · auroracasinomt.com · <span class="nb">Site by Jamie Merwin</span> · v0.0.4-alpha</p>
+    <p class="meta">Unofficial demo concept · © <span id="year">2026</span> Aurora Casino for all marks shown · <span class="nb">Site by Jamie Merwin</span> · v0.0.5-alpha</p>
   </div>
 </footer>
 

@@ -21,6 +21,7 @@
      14  Mobile action bar
      15  Breakpoints
      16  Reduced motion
+     17  Demo notices: disclaimer, watermark, footer band
    ========================================================================= */
 
 
@@ -339,4 +340,90 @@ footer .meta{font-family:var(--font-mono);font-size:11px;color:var(--dim)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   html{scroll-behavior:auto}
+}
+
+
+/* -- 17  Demo notices: disclaimer, watermark, footer band ------------------
+   This build is an unaffiliated portfolio concept, not the business's site, so
+   three notices carry that message and none of them are subtle: a load-time
+   disclaimer over the whole page, a flashing watermark pinned to the same
+   corner of the viewport everywhere, and a labelled band in the footer.
+   Deliberately last in the file, after reduced motion, so the overrides at the
+   bottom of this section win. Delete the section and its markup together on the
+   day this stops being a demo. */
+
+/* Disclaimer overlay. Markup ships in index.html rather than being injected, so
+   it paints with the first frame; Site.js only handles dismissal. The lock class
+   is set in the markup too, so the page cannot scroll behind the overlay before
+   the deferred script runs. */
+body.demo-open{overflow:hidden}
+.demo-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:20px max(18px,env(safe-area-inset-left)) calc(20px + env(safe-area-inset-bottom));overflow-y:auto;
+  background:rgba(9,9,11,.9);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  animation:au-demo-fade .55s ease-out both}
+.demo-modal[hidden]{display:none}
+@keyframes au-demo-fade{from{opacity:0}to{opacity:1}}
+@keyframes au-demo-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.demo-modal .card{position:relative;isolation:isolate;overflow:hidden;width:min(640px,100%);margin:auto;
+  padding:28px 22px 24px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line2);
+  box-shadow:0 30px 90px rgba(0,0,0,.7);animation:au-demo-rise .5s cubic-bezier(.2,.7,.3,1) both .1s}
+.demo-modal .card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--grad);z-index:2}
+
+.demo-modal .tag{display:inline-flex;align-items:center;gap:8px;margin-bottom:14px;padding:6px 11px;border-radius:var(--r-chip);
+  background:rgba(225,62,196,.12);border:1px solid var(--magenta);
+  font-family:var(--font-mono);font-weight:700;font-size:var(--text-sm);letter-spacing:.18em;text-transform:uppercase;color:var(--magenta-hi)}
+.demo-modal h2{font-size:var(--text-lg);margin-bottom:14px}
+.demo-modal p{font-size:var(--text-base);line-height:1.65;color:var(--text2);text-wrap:pretty}
+.demo-modal p + p{margin-top:11px}
+.demo-modal b{color:var(--text)}
+.demo-modal .official{color:var(--magenta-hi);border-bottom:1px solid rgba(242,101,214,.45);word-break:break-word}
+.demo-modal .official:hover{border-bottom-color:var(--magenta-hi)}
+.demo-modal .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.demo-modal .actions .btn{flex:1 1 auto}
+
+/* Watermark. Fixed to the viewport, so it holds the same corner on every page
+   and through every scroll. Above the mobile action bar, never over it. */
+.demo-wm{position:fixed;z-index:150;pointer-events:none;user-select:none;
+  left:max(14px,env(safe-area-inset-left));bottom:calc(72px + 14px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:var(--r-ctl);
+  background:rgba(18,18,18,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid var(--magenta);box-shadow:0 0 22px rgba(225,62,196,.5),0 8px 24px rgba(0,0,0,.5);
+  font-family:var(--font-mono);font-weight:700;font-size:var(--text-base);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text);white-space:nowrap;
+  animation:au-demo-flash 1.5s steps(1,end) infinite}
+.demo-wm::before{content:"";flex:none;width:9px;height:9px;border-radius:var(--r-round);background:var(--magenta);box-shadow:0 0 10px var(--magenta)}
+/* Hard blink rather than a pulse — a fade reads as decoration, this reads as a
+   warning light. Ends on the visible frame so a stopped animation stays legible. */
+@keyframes au-demo-flash{0%,54%{opacity:1}55%,99%{opacity:.3}100%{opacity:1}}
+
+/* Footer band. The fixed watermark parks over the bottom-left corner, so the
+   footer buys back that height and never has its last line covered. */
+footer{padding-bottom:calc(36px + 72px + 58px + env(safe-area-inset-bottom))}
+footer .demo-note{padding:15px 17px;border-radius:var(--radius);background:var(--panel2);
+  border:1px solid var(--line2);border-left:2px solid var(--magenta);
+  font-size:var(--text-base);line-height:1.65;color:var(--text2);max-width:74ch;text-wrap:pretty}
+footer .demo-note b{display:block;margin-bottom:6px;font-family:var(--font-display);font-size:var(--text-md);
+  letter-spacing:var(--tracking-display);color:var(--text)}
+footer .demo-note a{color:var(--magenta-hi);border-bottom:1px solid rgba(242,101,214,.45)}
+footer .demo-note a:hover{border-bottom-color:var(--magenta-hi)}
+
+@media (min-width:520px){
+  .demo-modal .card{padding:34px 32px 28px}
+  .demo-modal h2{font-size:var(--text-xl)}
+  .demo-modal .actions .btn{flex:0 1 auto}
+}
+
+@media (min-width:820px){
+  /* No action bar at this width, so the watermark drops to the corner itself. */
+  .demo-wm{bottom:calc(18px + env(safe-area-inset-bottom))}
+  footer{padding-bottom:98px}
+}
+
+/* Reduced motion keeps every notice, and drops only the movement. The global
+   rule in section 16 already freezes them on their final frame; these restate
+   the resting state so nothing lands mid-fade. */
+@media (prefers-reduced-motion:reduce){
+  .demo-modal,.demo-modal .card{opacity:1;transform:none}
+  .demo-wm{opacity:1}
 }

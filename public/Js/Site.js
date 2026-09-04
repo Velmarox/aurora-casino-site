@@ -2,13 +2,14 @@
    Aurora Casino - homepage behaviour. Plain JS, no dependencies, no build step.
 
    What it does, in order:
-     1. Open / closed neon sign, clocked to Billings time
-     2. Weekly promo banners, today first
-     3. The "running today" band under the hero
-     4. Mobile menu
-     5. Staggered button sheen
-     6. Hero video, loaded only where it is worth the bandwidth
-     7. Footer year
+     1. Demo disclaimer overlay, dismissed before anything else matters
+     2. Open / closed neon sign, clocked to Billings time
+     3. Weekly promo banners, today first
+     4. The "running today" band under the hero
+     5. Mobile menu
+     6. Staggered button sheen
+     7. Hero video, loaded only where it is worth the bandwidth
+     8. Footer year
    ========================================================================= */
 (function () {
   'use strict';
@@ -67,6 +68,50 @@
   /* ===================== END EDIT ME ======================================= */
 
 
+  /* -- 1  demo disclaimer overlay ------------------------------------------ */
+  /* The overlay and the scroll lock ship in index.html so they are on screen with
+     the first frame. All this does is take them away again, and put the page back
+     within reach of a screen reader and the keyboard while they are up. */
+
+  var modal = document.getElementById('demoModal');
+  if (modal) {
+    // Everything the overlay covers. Marked inert so tab and swipe navigation
+    // stay inside the dialog instead of wandering the page behind it.
+    var behind = [];
+    var kids = document.body.children;
+    for (var b = 0; b < kids.length; b++) {
+      if (kids[b] !== modal && kids[b].tagName !== 'SCRIPT' && kids[b].tagName !== 'NOSCRIPT') {
+        behind.push(kids[b]);
+      }
+    }
+    behind.forEach(function (el) { el.inert = true; el.setAttribute('aria-hidden', 'true'); });
+
+    var closeBtn = document.getElementById('demoModalClose');
+    if (closeBtn) { closeBtn.focus({ preventScroll: true }); }
+
+    var dismiss = function () {
+      modal.hidden = true;
+      document.body.classList.remove('demo-open');
+      behind.forEach(function (el) { el.inert = false; el.removeAttribute('aria-hidden'); });
+      document.removeEventListener('keydown', onKey, true);
+    };
+
+    var onKey = function (e) {
+      if (e.key === 'Escape') { e.preventDefault(); dismiss(); return; }
+      if (e.key !== 'Tab') { return; }
+      // inert already blocks the page behind; this wraps the two controls inside.
+      var stops = modal.querySelectorAll('button, [href]');
+      if (!stops.length) { return; }
+      var first = stops[0], last = stops[stops.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+
+    if (closeBtn) { closeBtn.addEventListener('click', dismiss); }
+    document.addEventListener('keydown', onKey, true);
+  }
+
+
   /* -- helpers ------------------------------------------------------------- */
 
   // Billings local time, whatever zone the visitor is actually in.
@@ -100,7 +145,7 @@
   }
 
 
-  /* -- 1  open / closed sign ----------------------------------------------- */
+  /* -- 2  open / closed sign ----------------------------------------------- */
 
   var now = localNow();
   var mins = now.h * 60 + now.m;
@@ -125,7 +170,7 @@
   var promoDay = afterMidnight ? (now.day + 6) % 7 : now.day;
 
 
-  /* -- 2  weekly promo banners, today first -------------------------------- */
+  /* -- 3  weekly promo banners, today first -------------------------------- */
 
   var grid = document.getElementById('week-grid');
   if (grid) {
@@ -158,7 +203,7 @@
   }
 
 
-  /* -- 3  the "running today" band ----------------------------------------- */
+  /* -- 4  the "running today" band ----------------------------------------- */
   /* Hidden in the markup. It is only unhidden once there is something real to
      put in it, so a weekend or a JS failure shows no empty strip. */
 
@@ -192,7 +237,7 @@
   }
 
 
-  /* -- 4  mobile menu ------------------------------------------------------ */
+  /* -- 5  mobile menu ------------------------------------------------------ */
 
   var menuBtn = document.getElementById('menuBtn'), mnav = document.getElementById('mobileNav');
   if (menuBtn && mnav) {
@@ -210,7 +255,7 @@
   }
 
 
-  /* -- 5  staggered button sheen ------------------------------------------- */
+  /* -- 6  staggered button sheen ------------------------------------------- */
   /* The animation itself is in Site.css; this only offsets each button so they
      do not all sweep at the same moment. */
 
@@ -220,7 +265,7 @@
   }
 
 
-  /* -- 6  hero video ------------------------------------------------------- */
+  /* -- 7  hero video ------------------------------------------------------- */
   /* The mp4 is 9.3 MB, most of the page weight, so it never downloads on phones,
      under reduced motion, or when the browser reports Data Saver or a 2G link.
      Those visitors keep the poster still, which is already on screen. */
@@ -245,7 +290,7 @@
   }
 
 
-  /* -- 7  footer year ------------------------------------------------------ */
+  /* -- 8  footer year ------------------------------------------------------ */
 
   var y = document.getElementById('year');
   if (y) { y.textContent = new Date().getFullYear(); }

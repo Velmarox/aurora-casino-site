@@ -1,4 +1,4 @@
-# Aurora Casino website revamp (v0.0.1-alpha)
+# Aurora Casino website revamp
 
 Static site: plain HTML, CSS and JS. No React, no build step, no npm packages.
 Deployed to Firebase Hosting as static files.
@@ -34,8 +34,9 @@ Do **not** run `firebase init hosting` in this folder. It offers to overwrite
 - Folders `PascalCase`, files `Snake_Case`. (`public/` is lowercase because Firebase expects it.)
 - Nothing lives in the folder that doesn't need to be there. An asset with no page
   that uses it stays in `Docs/`, not `public/`.
-- Semver, pre-launch alpha. The version appears in exactly three places and they must agree:
-  this folder's name, `<meta name="version">` in `public/index.html`, and `CHANGELOG.txt`.
+- Semver, pre-launch alpha. The version appears in exactly four places and they must agree:
+  this folder's name, `<meta name="version">` in `public/index.html`, the footer `.meta`
+  line in the same file, and `CHANGELOG.txt`.
 - On a bump, tag the outgoing version (`git tag v0.0.1-alpha <sha>`) before committing
   the new one. `git archive` or `git worktree add` against that tag reproduces it byte
   for byte, which is what `_version_archive/` would otherwise hold.

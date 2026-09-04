@@ -16,6 +16,32 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.0.5-alpha (2026-09-04)
+- Demo notices, because this build is an unaffiliated portfolio concept and nothing on
+  it said so. Three of them, and none are dismissible except the first:
+    * A disclaimer overlay that fades in over the whole page on load. Its markup ships
+      in index.html rather than being injected, so it paints with the first frame
+      instead of waiting on the deferred script; Site.js step 1 only handles dismissal.
+      While it is up the rest of the body is `inert` and aria-hidden, so tab order and
+      screen readers stay inside the dialog, and Escape or the button closes it. A
+      <noscript> block hides it outright, since with no script nothing could dismiss it.
+    * A flashing 'DEMO - NOT OFFICIAL' watermark fixed to the bottom-left of the
+      viewport, so it holds the same spot on every screen and through every scroll. It
+      clears the mobile action bar at 72px and drops to the corner past 820px. The blink
+      is steps(1) rather than a fade - a fade reads as decoration, a hard blink reads as
+      a warning light - and it ends on the visible frame so reduced motion leaves it
+      legible rather than frozen at 30%.
+    * A footer band above the existing legal copy naming the official site, plus the
+      meta line reworded: it read '(c) 2026 Aurora Casino - auroracasinomt.com', which
+      is the business's own copyright notice, and now credits the marks to Aurora
+      Casino while calling the build an unofficial demo concept.
+- <title> and og:title carry a [DEMO] prefix so a bookmarked or shared link is labelled
+  before it is even opened.
+- Site.css section 17 holds all of it, deliberately last in the file so its reduced-motion
+  overrides win over section 16. Site.js steps 1-7 shifted to 2-8 to make room for step 1.
+- Nothing else moved. footer's padding-bottom grew by 58px (98px past 820px) only so the
+  fixed watermark never sits over the footer's last line.
+
 v0.0.4-alpha (2026-09-04)
 - Site credit added to the footer meta line: 'Site by Jamie Merwin', set between the
   domain and the version stamp so the build stamp stays last. It inherits the existing
