@@ -20,6 +20,9 @@ Do **not** run `firebase init hosting` in this folder. It offers to overwrite
     byte-identical to it; edit both together.
   - `02_Assets/` — masters. `Brand/`, `Gallery/`, `Video/`, `Promos/`, `Team/`.
     `public/Assets/` holds the optimized deploy copies.
+  - `02_Assets/Promos/Web/` — deploy-ready AVIFs waiting on a promos page.
+    Move them to `public/Assets/Promos/` when a page actually references them,
+    not before.
   - `04_Notes/` — audits and decision records.
 - `_version_archive/` — frozen copies of outgoing versions. Never edit.
 

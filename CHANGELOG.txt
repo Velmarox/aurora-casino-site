@@ -17,6 +17,17 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.0.1-alpha (2026-09-04)
+- Weekly promo banner set added (7 AI-generated backgrounds, one per day) under
+  Docs/02_Assets/Promos/. Masters are full-resolution; Web/ holds 1800px AVIF deploy
+  copies (237 KB for all seven). Not in public/ — there is no promos page yet.
+  Standardized to 21:9 by trimming top and bottom; subjects sit right-of-centre so
+  nothing was lost. Uncropped files were copied byte-for-byte to avoid re-encoding.
+  Every image has a dark left third (luminance 11-31 vs 58-87 right) for text overlay.
+  Promo_Fri_Nifty_Fifty is 1024x339 where the rest are 2752-3168px wide — it needs
+  regenerating at full size, and was left uncropped rather than shrunk further.
+- Earlier Facebook graphics renamed Legacy_FB_* to separate them from the banner set.
+- Staging folder renamed 'Orig Website Assets' -> 'Source_Assets' (PascalCase; it also
+  read confusingly next to public/Assets and Docs/02_Assets). Outside the repo.
 - Hero video wired into the homepage. The poster still is the <img>; Site.js only attaches the mp4 src
   above 820px and skips it entirely under prefers-reduced-motion, Data Saver, or a 2G link.
   Phones keep the still — first load on mobile is 117 KB. Verified both paths in a browser.
