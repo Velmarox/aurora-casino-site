@@ -110,7 +110,7 @@ section.block{padding:56px 0}
 .day::before{content:"";position:absolute;left:0;top:0;bottom:0;z-index:1;width:2px;background:var(--line2)}
 .day .body{display:block}
 .day .copy{display:flex;flex-direction:column;gap:8px;min-width:0}
-.day .title,.day .desc{max-width:44ch}
+.day .title{max-width:44ch}
 .day.today{border-color:rgba(53,224,161,.45)}
 .day.today::before{background:var(--grad)}
 .day .top{display:flex;align-items:center;gap:10px}
@@ -127,8 +127,7 @@ section.block{padding:56px 0}
 .day .tag.m{background:var(--magenta-hi)}
 .day .tag.p{background:rgba(245,242,234,.10);color:var(--text);border:1px solid var(--line3);font-weight:700}
 .day .t{margin-left:auto;font-family:var(--font-mono);font-weight:700;font-size:clamp(15px,1.35vw,19px);color:var(--text);white-space:nowrap;text-shadow:0 1px 4px rgba(18,18,18,.9)}
-.day .title{font-family:var(--font-display);font-weight:700;font-size:clamp(19px,1.9vw,24px);letter-spacing:var(--tracking-display)}
-.day .desc{font-size:var(--text-md);color:var(--text2);line-height:1.55}
+.day .title{font-family:var(--font-display);font-weight:700;font-size:clamp(24px,2.7vw,36px);letter-spacing:var(--tracking-display);line-height:1.12}
 .day .draw{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:var(--text-sm);font-weight:700;letter-spacing:.06em;color:var(--jade)}
 .day .draw .mono{font-weight:700}
 .fine{font-size:var(--text-sm);color:var(--muted);line-height:1.6;margin-top:18px;max-width:70ch}
@@ -223,12 +222,10 @@ footer .meta{font-family:var(--font-mono);font-size:11px;color:var(--dim)}
 /* ---- promo banners: narrow screens leave less room beside the image ---- */
 @media (max-width:700px){
   .day{min-height:168px;padding:20px 20px;gap:12px}
-  .day .body{grid-template-columns:minmax(0,1fr);gap:12px}
   .day .tags{position:static;transform:none;justify-content:flex-start}
-  .day .title,.day .desc{max-width:none}
+  .day .title{max-width:none}
   .day .bg{opacity:.34;object-position:72% 50%}
   .day::after{background:linear-gradient(90deg,rgba(18,18,18,.97) 0%,rgba(18,18,18,.94) 52%,rgba(18,18,18,.74) 100%)}
-  .day .title,.day .desc{max-width:none}
 }
 
 /* ---- Aurora Rewards benefit chips (source: Players Club page) ---- */

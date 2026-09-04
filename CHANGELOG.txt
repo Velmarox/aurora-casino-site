@@ -17,6 +17,13 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.0.1-alpha (2026-09-04)
+- Promo banners: supporting sentence removed, title enlarged to clamp(24px,2.7vw,36px)
+  to carry the banner on its own. Drawing-time row unchanged.
+- The three free-play chips now read 'free machine play DRAWINGS' — they are drawings,
+  not open free play. Thursday's 'Three drawings' and Friday's 'Nifty Fifty' chips became
+  'Must be present to win' (from the original copy); both had become redundant.
+- Removed dead .day .desc rules, a stale .day .body grid override and a duplicated
+  max-width line in the mobile block.
 - Promo chips moved out of the text column into the open middle of the banner (centred
   around 62% of the width, between the copy and the time). Absolutely positioned on
   desktop, back to static and stacked under the copy below 700px.

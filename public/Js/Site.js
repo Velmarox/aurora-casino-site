@@ -9,25 +9,25 @@
   var WEEK = [
     { d:'Sunday',    t:'8 AM – 12 PM', title:'2X Points Morning',    img:'Assets/Promos/Promo_Sun_2X_Points.avif',
       tags:[['2X points','m'],['Every machine','p']],
-      note:'Double points on everything you play, from open until noon.', draws:[] },
+      draws:[] },
     { d:'Monday',    t:'All day',      title:'2X Points Monday',       img:'Assets/Promos/Promo_Mon_Happy_Hour.avif',
       tags:[['2X points all day','m'],['Happy hour 4–7 PM','j']],
-      note:'Double points open to close, and the bar joins in at four.', draws:[] },
+      draws:[] },
     { d:'Tuesday',   t:'All day',      title:'Match Play Tuesday',     img:'Assets/Promos/Promo_Tue_Match_Play.avif',
       tags:[['$5 – $25 match play','j'],['Redeem within 7 days','p']],
-      note:'Grab a match play coupon from an attendant.', draws:[] },
+      draws:[] },
     { d:'Wednesday', t:'All day',      title:'Wine Down Wednesday',    img:'Assets/Promos/Promo_Wed_Wine_Down.avif',
       tags:[['3X points all day','m'],['$1 off every glass','j']],
-      note:'The biggest points day of the week.', draws:[] },
+      draws:[] },
     { d:'Thursday',  t:'4, 6 & 8 PM',  title:'$20 Free Play Drawings', img:'Assets/Promos/Promo_Thu_Free_Play.avif',
-      tags:[['$20 free machine play','j'],['Three drawings','p']],
-      note:'Be on the floor when your name is called.', draws:[16,18,20] },
+      tags:[['$20 free machine play drawings','j'],['Must be present to win','p']],
+      draws:[16,18,20] },
     { d:'Friday',    t:'6 – 8 PM',     title:'Nifty Fifty Fri-Yay',    img:'Assets/Promos/Promo_Fri_Nifty_Fifty.avif',
-      tags:[['$50 free machine play','j'],['Nifty Fifty','m']],
-      note:'Drawings every hour between six and eight.', draws:[18,19,20] },
+      tags:[['$50 free machine play drawings','j'],['Must be present to win','p']],
+      draws:[18,19,20] },
     { d:'Saturday',  t:'9 AM – 10 PM', title:'Seahorse Races',         img:'Assets/Promos/Promo_Sat_Seahorse_Races.avif',
-      tags:[['Seahorse races 9 AM – 10 PM','m'],['$25 free machine play','j']],
-      note:'Races all day, drawings from five to eight.', draws:[17,18,19,20] }
+      tags:[['Seahorse races 9 AM – 10 PM','m'],['$25 free machine play drawings','j']],
+      draws:[17,18,19,20] }
   ];
   /* =================================================== */
 
@@ -71,7 +71,6 @@
         '<div class="body">' +
           '<div class="copy">' +
             '<div class="title">' + p.title + '</div>' +
-            '<p class="desc">' + p.note + '</p>' +
             (p.draws.length ? '<div class="draw">Drawings <span class="mono">' + p.draws.map(fmtHour).join(' · ') + '</span></div>' : '') +
           '</div>' +
           '<div class="tags">' + tags + '</div>' +
