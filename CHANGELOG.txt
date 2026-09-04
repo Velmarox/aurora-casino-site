@@ -17,6 +17,17 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.0.1-alpha (2026-09-04)
+- Weekly promos rebuilt as full-width banner rows: the day's promo photo sits behind the
+  copy at 45% opacity (34% on mobile) under a horizontal scrim, so contrast never depends
+  on which image is in play. Images lazy-load; 252 KB added to public/Assets/Promos/.
+  Removed the 2-up/4-up card grid rules — banners are one per row at every width.
+- Players Club content from the old site: Real Time Rewards and the no-earning-cap line
+  added to the club pitch, plus a seven-item benefits chip list.
+- Promo fine print now carries the actual house-rule wording: 18+ to wager, government
+  issued photo ID may be required, promotions may be modified or removed at any time.
+- NOT DONE: no game details added. All three saved Wix pages captured almost no content
+  (Promotions & Perks is empty; the homepage yielded one paragraph), so there was no
+  source for machine or game specifics and none were invented.
 - Weekly promo banner set added (7 AI-generated backgrounds, one per day) under
   Docs/02_Assets/Promos/. Masters are full-resolution; Web/ holds 1800px AVIF deploy
   copies (237 KB for all seven). Not in public/ — there is no promos page yet.
