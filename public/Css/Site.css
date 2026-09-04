@@ -56,9 +56,6 @@ a{color:inherit;text-decoration:none}
 .btn svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--magenta);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
 .btn:hover{transform:translateY(-2px);border-color:var(--magenta);background:var(--panel4);box-shadow:var(--shadow-control-hover)}
 .btn:active{transform:translateY(1px) scale(.985);box-shadow:var(--shadow-control-active)}
-.btn.positive{background:var(--jade);color:#121212;border-color:transparent;box-shadow:0 8px 20px -8px rgba(0,0,0,.9),0 0 22px -8px rgba(53,224,161,.5)}
-.btn.positive svg{stroke:#121212}
-.btn.positive:hover{transform:none;filter:brightness(1.08);border-color:transparent;box-shadow:0 10px 24px -8px rgba(0,0,0,.9),0 0 28px -6px rgba(53,224,161,.65)}
 /* Sheen sweep. Site.js staggers --sweep so buttons never flash in unison. */
 .btn.shimmer::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.22) 50%,transparent 60%);background-size:250% 100%;background-position:130% 0;animation:au-shimmer var(--shimmer) ease-in-out infinite;animation-delay:var(--sweep,0s)}
 

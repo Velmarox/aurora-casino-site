@@ -8,6 +8,15 @@
     "cleanUrls": true,
     "headers": [
       {
+        "source": "**/*.@(html|css|js)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
         "source": "**/*.@(avif|jpg|jpeg|png|mp4|webm)",
         "headers": [
           {

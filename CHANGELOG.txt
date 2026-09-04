@@ -16,6 +16,27 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.0.3-alpha (2026-09-04)
+- Removed 'On Grand Avenue with a free lot out front.' from the Visit heading and the
+  'Come in and sign up' button from the players club, both at the owner's request. With
+  nothing sitting beside the Visit headline the .sec-head .row wrapper had no job left,
+  so that head is back to eyebrow + h2. Parking still appears in the hours table.
+- .btn.positive removed with it. The club CTA was its only user, so the jade button
+  variant was three dead rules. It is in git if a jade CTA comes back.
+- FIXED: og:image was an AVIF, so every Facebook, iMessage, Slack and X share rendered
+  with no image at all. None of those crawlers decode AVIF. Replaced with a 1200x630
+  progressive JPEG (78 KB) at Assets/Brand/Aurora_Share_Card.jpg, cropped from the
+  Hero_Poster.jpg master, plus og:image:type / width / height / alt so the crawlers do
+  not have to fetch it to lay the card out. The JSON-LD image points at it too. This
+  matters here: Facebook is where the promos actually get posted.
+- FIXED: index.html was inheriting Firebase's one-hour default Cache-Control, so a promo
+  or hours change could take an hour to reach a returning visitor. firebase.json now
+  sends no-cache for html/css/js. Images and video keep the one-year max-age, which is
+  safe only because promo art is renamed by content rather than overwritten in place.
+- Added meta robots noindex, pre-launch only and commented as such in <head>.
+  auroracasinomt.com still serves the old Wix site, so an indexed copy at the hosting URL
+  would compete with the business's own listing. Delete that line at cutover.
+
 v0.0.2-alpha (2026-09-04)
 - Copy pass across the whole homepage to strip the tells that make writing read as
   machine-generated. Zero em dashes left in any visible string (they were in the title,
