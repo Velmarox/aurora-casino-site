@@ -17,6 +17,13 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.0.1-alpha (2026-09-04)
+- Promo banners: the standalone time stamp is gone; times now live inside the chips, so
+  each chip is a complete statement rather than half a thought pointing at a number in
+  the corner. Sunday reads '2X POINTS 8 AM - 12 PM', Tuesday '$5-$25 MATCH PLAY ALL DAY'.
+  Days with a drawings row already carry their times there.
+- Chips always stack vertically (no wrapping) and moved right into the freed space.
+  Weekday tag enlarged to clamp(13px,1.15vw,16px), chips to clamp(12px,1.05vw,14.5px).
+- Removed the now-unused per-day 't' field and its .day .t rule.
 - Promo banners: supporting sentence removed, title enlarged to clamp(24px,2.7vw,36px)
   to carry the banner on its own. Drawing-time row unchanged.
 - The three free-play chips now read 'free machine play DRAWINGS' — they are drawings,

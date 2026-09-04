@@ -7,25 +7,25 @@
   var TZ = 'America/Denver';
   /* Weekly promo schedule (0=Sun … 6=Sat). draws = drawing hours in 24h time. */
   var WEEK = [
-    { d:'Sunday',    t:'8 AM – 12 PM', title:'2X Points Morning',    img:'Assets/Promos/Promo_Sun_2X_Points.avif',
-      tags:[['2X points','m'],['Every machine','p']],
+    { d:'Sunday',    title:'2X Points Morning',    img:'Assets/Promos/Promo_Sun_2X_Points.avif',
+      tags:[['2X points 8 AM – 12 PM','m'],['Every machine','p']],
       draws:[] },
-    { d:'Monday',    t:'All day',      title:'2X Points Monday',       img:'Assets/Promos/Promo_Mon_Happy_Hour.avif',
+    { d:'Monday',    title:'2X Points Monday',       img:'Assets/Promos/Promo_Mon_Happy_Hour.avif',
       tags:[['2X points all day','m'],['Happy hour 4–7 PM','j']],
       draws:[] },
-    { d:'Tuesday',   t:'All day',      title:'Match Play Tuesday',     img:'Assets/Promos/Promo_Tue_Match_Play.avif',
-      tags:[['$5 – $25 match play','j'],['Redeem within 7 days','p']],
+    { d:'Tuesday',   title:'Match Play Tuesday',     img:'Assets/Promos/Promo_Tue_Match_Play.avif',
+      tags:[['$5 – $25 match play all day','j'],['Redeem within 7 days','p']],
       draws:[] },
-    { d:'Wednesday', t:'All day',      title:'Wine Down Wednesday',    img:'Assets/Promos/Promo_Wed_Wine_Down.avif',
+    { d:'Wednesday', title:'Wine Down Wednesday',    img:'Assets/Promos/Promo_Wed_Wine_Down.avif',
       tags:[['3X points all day','m'],['$1 off every glass','j']],
       draws:[] },
-    { d:'Thursday',  t:'4, 6 & 8 PM',  title:'$20 Free Play Drawings', img:'Assets/Promos/Promo_Thu_Free_Play.avif',
+    { d:'Thursday',  title:'$20 Free Play Drawings', img:'Assets/Promos/Promo_Thu_Free_Play.avif',
       tags:[['$20 free machine play drawings','j'],['Must be present to win','p']],
       draws:[16,18,20] },
-    { d:'Friday',    t:'6 – 8 PM',     title:'Nifty Fifty Fri-Yay',    img:'Assets/Promos/Promo_Fri_Nifty_Fifty.avif',
+    { d:'Friday',    title:'Nifty Fifty Fri-Yay',    img:'Assets/Promos/Promo_Fri_Nifty_Fifty.avif',
       tags:[['$50 free machine play drawings','j'],['Must be present to win','p']],
       draws:[18,19,20] },
-    { d:'Saturday',  t:'9 AM – 10 PM', title:'Seahorse Races',         img:'Assets/Promos/Promo_Sat_Seahorse_Races.avif',
+    { d:'Saturday',  title:'Seahorse Races',         img:'Assets/Promos/Promo_Sat_Seahorse_Races.avif',
       tags:[['Seahorse races 9 AM – 10 PM','m'],['$25 free machine play drawings','j']],
       draws:[17,18,19,20] }
   ];
@@ -67,7 +67,7 @@
       html += '<article class="day' + (today ? ' today' : '') + '">' +
         '<img class="bg" src="' + p.img + '" alt="" loading="lazy" decoding="async">' +
         '<div class="top"><span class="d">' + (today ? 'Today · ' + p.d : p.d) + '</span>' +
-        '<span class="t">' + p.t + '</span></div>' +
+        '</div>' +
         '<div class="body">' +
           '<div class="copy">' +
             '<div class="title">' + p.title + '</div>' +
