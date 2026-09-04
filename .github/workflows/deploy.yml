@@ -1,0 +1,28 @@
+# Deploys public/ to Firebase Hosting on every push to main.
+# No build step — the site is plain HTML/CSS/JS, so this just checks out
+# the repo and hands firebase.json to the deploy action.
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:        # lets you trigger a deploy by hand from the Actions tab
+
+jobs:
+  deploy:
+    name: Deploy to live channel
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AURORA_CASINO_SITE }}
+          channelId: live
+          projectId: aurora-casino-site
