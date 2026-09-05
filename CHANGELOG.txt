@@ -16,6 +16,15 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.1.0-alpha (2026-09-04)
+- Promoted to v0.1.0-alpha. The site has been deployed and shown as a demo, which is
+  past the point where a 0.0.x patch number describes it honestly; every live site in
+  Live Projects now sits at v0.1.0-alpha or above.
+- Version string bumped in the <meta name="version"> tag and in the footer meta line,
+  which carries it visibly.
+- No design or content changes in this bump. The demo notices logged under v0.0.5-alpha
+  below are what is deployed.
+
 v0.0.5-alpha (2026-09-04)
 - Demo notices, because this build is an unaffiliated portfolio concept and nothing on
   it said so. Three of them, and none are dismissible except the first:
