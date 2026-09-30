@@ -1,0 +1,138 @@
+/* ============================================================================
+   Aurora Casino - admin dashboard styling.
+
+   Built for one person who is not a web developer and uses this a few times a
+   month. That drives every choice here: big targets, one obvious button per
+   panel, plain language, and no clever interactions to relearn each visit.
+   Borrows the site's own tokens so it feels like the same product.
+   ========================================================================= */
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--font-body);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+h1,h2{font-family:var(--font-display);letter-spacing:var(--tracking-display);margin:0}
+:focus-visible{outline:var(--focus-ring);outline-offset:2px}
+
+/* ---- shared controls ---- */
+.btn{
+  font-family:var(--font-display);font-weight:800;font-size:14px;
+  letter-spacing:var(--tracking-button);text-transform:uppercase;
+  border:1px solid var(--line3);border-radius:var(--r-ctl);
+  background:var(--panel3);color:var(--text);
+  padding:0 20px;min-height:48px;cursor:pointer;
+  transition:background var(--dur-hover),border-color var(--dur-hover)}
+.btn:hover{background:var(--panel4)}
+.btn.primary{background:var(--jade);border-color:var(--jade);color:#121212}
+.btn.primary:hover{background:#4ff0b4}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.5;cursor:progress}
+
+.field{margin:0 0 20px;display:flex;flex-direction:column;gap:7px}
+.field label{font-family:var(--font-display);font-weight:700;font-size:13px;
+  letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--text2)}
+.field .opt{font-weight:600;letter-spacing:0;text-transform:none;color:var(--dim)}
+.field input,.field textarea{
+  font-family:var(--font-body);font-size:16px;color:var(--text);
+  background:var(--panel2);border:1px solid var(--line3);border-radius:var(--r-ctl);
+  padding:12px 13px;min-height:48px;width:100%}
+.field textarea{resize:vertical;min-height:88px}
+.field input:focus-visible,.field textarea:focus-visible{border-color:var(--magenta)}
+.hint{margin:0;font-size:14px;color:var(--muted);line-height:1.5}
+.field .hint{margin-top:2px}
+
+/* Toggles are the main control here, so they get a whole row and a big target. */
+.toggle{display:flex;align-items:center;gap:13px;padding:15px 16px;margin-bottom:10px;
+  background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-ctl);
+  cursor:pointer;min-height:56px}
+.toggle:hover{background:var(--panel3)}
+.toggle input{width:22px;height:22px;flex:none;accent-color:var(--jade);cursor:pointer}
+.toggle span{font-weight:600}
+
+/* ---- sign in ---- */
+.signin{min-height:100dvh;display:grid;place-items:center;padding:24px}
+.signin-card{width:100%;max-width:400px;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);padding:32px;
+  box-shadow:var(--shadow-card);text-align:center}
+.signin-card .mark{margin-bottom:14px}
+.signin-card h1{font-size:26px;margin-bottom:6px}
+.signin-card .sub{margin:0 0 24px;color:var(--text2);font-size:15px}
+.signin-card .field{text-align:left}
+.signin-card .btn{width:100%}
+
+.msg{margin:16px 0 0;padding:12px 14px;border-radius:var(--r-ctl);
+  font-size:14px;font-weight:700;border:1px solid;text-align:left}
+.msg.bad{background:rgba(255,84,104,.12);border-color:var(--red);color:var(--red)}
+.msg.ok{background:rgba(53,224,161,.12);border-color:var(--jade);color:var(--jade)}
+
+/* ---- dashboard shell ---- */
+.bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--font-display);
+  font-weight:800;letter-spacing:var(--tracking-brand);font-size:13px;text-transform:uppercase}
+.bar .btn.ghost{margin-left:auto;min-height:42px;font-size:12px;padding:0 14px}
+
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{font-family:var(--font-display);font-weight:700;font-size:14px;
+  background:transparent;color:var(--text2);border:1px solid transparent;
+  border-radius:var(--r-ctl);padding:0 15px;min-height:42px;cursor:pointer}
+.tab:hover{color:var(--text);background:var(--panel2)}
+.tab.on{background:var(--panel3);border-color:var(--line3);color:var(--text)}
+.tab .count{display:inline-block;margin-left:7px;padding:2px 7px;border-radius:9px;
+  background:var(--magenta);color:#121212;font-size:12px;font-weight:800}
+
+.loading{padding:48px 20px;text-align:center;color:var(--muted)}
+.panels{max-width:720px;margin:0 auto;padding:28px 20px 80px}
+.panel h2{font-size:24px;margin-bottom:8px}
+.panel > .hint{margin-bottom:22px}
+
+.foot{display:flex;align-items:center;gap:16px;margin-top:26px;
+  padding-top:22px;border-top:1px solid var(--line)}
+.saved{font-family:var(--font-display);font-weight:800;font-size:13px;
+  letter-spacing:var(--tracking-button);text-transform:uppercase;color:var(--jade)}
+
+/* Live preview of the notice bar, so he can see it before it is public. */
+.preview{margin:8px 0 0}
+.plabel{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.pbar{display:flex;align-items:center;gap:11px;flex-wrap:wrap;
+  background:var(--magenta-hi);color:#121212;padding:11px 14px;border-radius:var(--r-ctl)}
+.ptag{flex:none;font-family:var(--font-display);font-weight:800;font-size:11.5px;
+  letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;
+  background:#121212;color:var(--text);padding:4px 9px;border-radius:var(--r-chip)}
+.ptext{font-family:var(--font-display);font-weight:700;font-size:15px}
+
+/* ---- inbox ---- */
+.filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.chip{font-family:var(--font-display);font-weight:800;font-size:13px;
+  letter-spacing:var(--tracking-button);text-transform:uppercase;
+  background:var(--panel2);color:var(--text2);
+  border:1px solid var(--line3);border-radius:var(--r-chip);
+  padding:0 15px;min-height:42px;cursor:pointer}
+.chip:hover{background:var(--panel3);color:var(--text)}
+.chip.on{background:var(--jade);border-color:var(--jade);color:#121212}
+
+.empty{color:var(--muted);padding:32px 0;text-align:center}
+.inbox{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.note{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-ctl);padding:18px}
+.note.unread{border-left:3px solid var(--jade)}
+.note .who{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.note .nm{font-family:var(--font-display);font-weight:800;font-size:17px}
+.note .when{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);margin-left:auto}
+.note .ct{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:14px}
+.note .ct a{color:var(--jade);font-family:var(--font-mono);text-decoration:none}
+.note .ct a:hover{text-decoration:underline}
+.note .body{margin:0 0 15px;color:var(--text2);white-space:pre-wrap;word-break:break-word}
+.note .acts{display:flex;gap:8px;flex-wrap:wrap}
+.note .acts .btn{min-height:40px;font-size:12px;padding:0 13px}
+.note .acts .danger{color:var(--red);border-color:var(--red)}
+.note .acts .danger:hover{background:rgba(255,84,104,.14)}
+
+@media (max-width:640px){
+  .bar{padding:10px 14px}
+  .bar .btn.ghost{margin-left:0;order:3}
+  .panels{padding:22px 14px 80px}
+  .note .when{margin-left:0;width:100%}
+}

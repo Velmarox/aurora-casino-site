@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="version" content="v0.1.0-alpha">
+  <title>Aurora Casino — Manage your site</title>
+  <link rel="icon" href="../Assets/Brand/Aurora_Badge_32.png" type="image/png" sizes="32x32">
+  <link rel="stylesheet" href="../Css/Aurora_Tokens.css">
+  <link rel="stylesheet" href="Admin.css">
+  <script src="../Js/Firebase_Config.js"></script>
+</head>
+<body>
+
+<!-- ===== SIGN IN ========================================================== -->
+<main class="signin" id="signinView">
+  <form class="card signin-card" id="signinForm" novalidate>
+    <img class="mark" src="../Assets/Brand/Aurora_Badge_180.png" alt="" width="54" height="54">
+    <h1>Manage your site</h1>
+    <p class="sub">Sign in to change your promos, contact details and notices.</p>
+
+    <p class="field">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+    </p>
+    <p class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+    </p>
+
+    <button class="btn primary" type="submit" id="signinBtn">Sign in</button>
+    <p class="msg" id="signinMsg" role="status" aria-live="polite" hidden></p>
+  </form>
+</main>
+
+<!-- ===== DASHBOARD ======================================================= -->
+<div class="app" id="appView" hidden>
+
+  <header class="bar">
+    <span class="brand"><img src="../Assets/Brand/Aurora_Badge_180.png" alt="" width="30" height="30"> Aurora Casino</span>
+    <nav class="tabs" role="tablist">
+      <button role="tab" class="tab on" data-panel="pNotice"  aria-selected="true">Notice bar</button>
+      <button role="tab" class="tab"    data-panel="pContact" aria-selected="false">Contact info</button>
+      <button role="tab" class="tab"    data-panel="pShow"    aria-selected="false">Show / hide</button>
+      <button role="tab" class="tab"    data-panel="pInbox"   aria-selected="false">
+        Messages <span class="count" id="unreadCount" hidden>0</span>
+      </button>
+    </nav>
+    <button class="btn ghost" type="button" id="signoutBtn">Sign out</button>
+  </header>
+
+  <p class="loading" id="loading">Loading your settings…</p>
+
+  <div class="panels" id="panels" hidden>
+
+    <!-- ---- notice bar ---- -->
+    <section class="panel" id="pNotice">
+      <h2>Notice bar</h2>
+      <p class="hint">A coloured bar across the very top of your website. Use it for
+        temporary things: closures, holiday hours, a burst pipe. Leave it switched
+        off the rest of the time.</p>
+
+      <label class="toggle">
+        <input type="checkbox" id="nOn">
+        <span>Show the notice bar on my website</span>
+      </label>
+
+      <p class="field">
+        <label for="nText">What should it say?</label>
+        <textarea id="nText" rows="3" maxlength="200"
+          placeholder="Closed Monday through Wednesday, June 14 to 16, for new carpeting."></textarea>
+        <span class="hint" id="nCount">0 of 200 characters</span>
+      </p>
+
+      <p class="field">
+        <label for="nExpires">Hide it automatically after this date <span class="opt">optional</span></label>
+        <input id="nExpires" type="date">
+        <span class="hint">The bar disappears on its own the day after this date, so you
+          don't have to remember to switch it off. Leave blank to keep it up until you
+          turn it off yourself.</span>
+      </p>
+
+      <div class="preview" id="nPreview" hidden>
+        <span class="plabel">This is how it will look:</span>
+        <div class="pbar"><span class="ptag">Notice</span><span class="ptext" id="nPreviewText"></span></div>
+      </div>
+
+      <div class="foot">
+        <button class="btn primary" type="button" data-save="notice">Save notice bar</button>
+        <span class="saved" data-saved="notice" role="status" aria-live="polite" hidden>Saved</span>
+      </div>
+    </section>
+
+    <!-- ---- contact info ---- -->
+    <section class="panel" id="pContact" hidden>
+      <h2>Contact info</h2>
+      <p class="hint">Changing the phone number here updates it everywhere on the
+        website at once, including the buttons people tap to call you.</p>
+
+      <p class="field">
+        <label for="cPhone">Phone number</label>
+        <input id="cPhone" type="tel" maxlength="30" placeholder="(406) 601-1282">
+      </p>
+      <p class="field">
+        <label for="cFacebook">Facebook page <span class="opt">optional</span></label>
+        <input id="cFacebook" type="url" maxlength="200" placeholder="https://www.facebook.com/AuroraCasinoMT/">
+      </p>
+      <p class="field">
+        <label for="cInstagram">Instagram <span class="opt">optional</span></label>
+        <input id="cInstagram" type="url" maxlength="200" placeholder="https://www.instagram.com/aurora_casino/">
+      </p>
+      <p class="hint">Leave a social box empty and that link disappears from the website
+        rather than pointing somewhere broken.</p>
+
+      <div class="foot">
+        <button class="btn primary" type="button" data-save="contact">Save contact info</button>
+        <span class="saved" data-saved="contact" role="status" aria-live="polite" hidden>Saved</span>
+      </div>
+    </section>
+
+    <!-- ---- show / hide ---- -->
+    <section class="panel" id="pShow" hidden>
+      <h2>Show or hide parts of the website</h2>
+      <p class="hint">Switch a section off and it disappears from the site completely.
+        Nothing is deleted — switch it back on and it returns exactly as it was.</p>
+
+      <label class="toggle"><input type="checkbox" id="sHeroVideo"><span>Moving video at the top of the page</span></label>
+      <label class="toggle"><input type="checkbox" id="sPromos"><span>This week's promos</span></label>
+      <label class="toggle"><input type="checkbox" id="sRoom"><span>Photos of the room</span></label>
+      <label class="toggle"><input type="checkbox" id="sClub"><span>Players club</span></label>
+      <label class="toggle"><input type="checkbox" id="sContact"><span>Contact form, where people send you messages</span></label>
+
+      <div class="foot">
+        <button class="btn primary" type="button" data-save="sections">Save changes</button>
+        <span class="saved" data-saved="sections" role="status" aria-live="polite" hidden>Saved</span>
+      </div>
+    </section>
+
+    <!-- ---- inbox ---- -->
+    <section class="panel" id="pInbox" hidden>
+      <h2>Messages</h2>
+      <p class="hint">Messages people send from the contact form on your website.
+        There is no email notification, so check here now and then.</p>
+
+      <div class="filters" role="group" aria-label="Which messages to show">
+        <button class="chip on" type="button" data-filter="new">New</button>
+        <button class="chip"    type="button" data-filter="read">Read</button>
+        <button class="chip"    type="button" data-filter="archived">Archived</button>
+      </div>
+
+      <p class="empty" id="inboxEmpty" hidden>Nothing here.</p>
+      <ul class="inbox" id="inbox"></ul>
+    </section>
+
+  </div>
+</div>
+
+<script type="module" src="Admin.js"></script>
+</body>
+</html>

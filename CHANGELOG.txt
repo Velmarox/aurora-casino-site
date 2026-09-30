@@ -17,6 +17,29 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Phase 2, part one: admin dashboard and Firestore security rules.
+  firestore.rules - two collections and nothing else. site/config is world readable
+  (the homepage fetches it) and owner-writable. messages/* is CREATE-ONLY for the
+  public: nobody can read, edit or delete somebody else's message. Message writes are
+  shape-checked with hasOnly() so no extra fields can be smuggled in, status is forced
+  to 'new', and createdAt must equal server time so a bot cannot backdate or pin itself
+  to the top. Owner updates are narrowed to the status field alone.
+  TWO FAIL-CLOSED PLACEHOLDERS: the owner UID must be pasted into isOwner(), and App
+  Check must be registered, or the rules deny everything. Deliberate.
+  public/admin/ - sign in, notice bar editor with live preview, contact info, section
+  show/hide, and the inbox with read/unread, archive and delete. Firebase SDK loads
+  only here; the public homepage still ships no framework.
+  firebase.json - /admin gets no-store, noindex and no-referrer. robots.txt disallows it.
+- Auth error messages are written for a person, not a stack trace. Found in testing that
+  Authentication is not yet enabled on the project: the raw code is
+  auth/configuration-not-found, which was showing as 'wrong password' and would have
+  sent someone hunting for a typo instead of a console switch. Now named explicitly.
+- VERIFIED: sign-in failure path end to end against the live project, friendly errors,
+  password cleared on failure, tab switching, notice preview, filter chips.
+  NOT VERIFIED, needs a configured project: config load/save round trip, inbox rendering
+  with real messages, and whether the rules actually permit and deny what they claim.
+- STILL TO DO for Phase 2: wire the public site to read site/config and to write contact
+  form submissions. The form remains inert until then.
 - Contact form section added after Visit: name and phone required, email optional,
   message required. Phone is the required one because the client has no email address
   to reply from. Double-hidden until a backend exists - the section carries the hidden

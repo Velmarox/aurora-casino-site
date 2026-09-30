@@ -1,0 +1,9 @@
+# The admin dashboard is not for crawlers. This is politeness, not security -
+# the actual protection is Firebase Auth plus the Firestore rules. Anything that
+# ignores robots.txt still gets nothing but a login screen.
+User-agent: *
+Disallow: /admin
+Disallow: /admin/
+
+# No Sitemap line yet: there is no sitemap.xml to point at. Add one here when
+# the site moves to its real domain and grows past a single page.

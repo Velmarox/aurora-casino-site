@@ -1,0 +1,92 @@
+rules_version = '2';
+
+/* ============================================================================
+   Aurora Casino - Firestore security rules
+
+   Two collections and nothing else:
+
+     site/config    what the owner can change about the public site. World
+                    readable, because the homepage fetches it on every visit.
+                    Writable only by the owner account.
+
+     messages/*     the contact form inbox. The public may CREATE a message and
+                    do nothing else - not read one, not edit one, not delete
+                    one. Only the owner can read them. These are real people's
+                    names and phone numbers; a mistake here exposes every
+                    message anyone has ever sent.
+
+   TWO THINGS MUST BE FILLED IN BEFORE ANY OF THIS WORKS. Both fail closed, so
+   until they are done the rules deny everything rather than allowing too much:
+
+     1. OWNER_UID below. Firebase Console > Authentication > Users > copy the
+        User UID of the owner account and paste it in.
+     2. App Check must be registered (Console > App Check > reCAPTCHA v3) or
+        every contact form submission is rejected. See the note on create.
+   ========================================================================= */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* The one account allowed to change anything. A UID allowlist rather than
+       "any signed-in user", because if signup is ever left open by accident,
+       "any signed-in user" means anyone on the internet. */
+    function isOwner() {
+      return request.auth != null
+          && request.auth.uid in ['REPLACE_WITH_OWNER_UID'];
+    }
+
+    /* A contact message must look exactly like one. hasOnly() is the important
+       half: it rejects any extra field, so nobody can smuggle junk into the
+       document and use the inbox as free storage. Sizes match the maxlength
+       attributes on the form. */
+    function isValidMessage() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'phone', 'email', 'message', 'createdAt', 'status'])
+          && d.keys().hasAll(['name', 'phone', 'message', 'createdAt', 'status'])
+          && d.name is string    && d.name.size() > 0    && d.name.size() <= 80
+          && d.phone is string   && d.phone.size() > 0   && d.phone.size() <= 30
+          && d.message is string && d.message.size() > 0 && d.message.size() <= 1500
+          && (!('email' in d) || (d.email is string && d.email.size() <= 120))
+          /* Status is forced to 'new' on the way in. The sender does not get to
+             mark their own message read or archived. */
+          && d.status == 'new'
+          /* Server clock, not the sender's. Stops backdating and stops a bot
+             flooding the list with future timestamps to pin itself to the top. */
+          && d.createdAt == request.time;
+    }
+
+    /* ---- public site config ---- */
+    match /site/config {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+
+    /* ---- contact form inbox ---- */
+    match /messages/{messageId} {
+
+      /* request.app != null requires a valid App Check token, which is what
+         actually keeps bots out - the honeypot on the form is only a speed bump.
+         Until App Check is registered in the console this denies every
+         submission. To test before then, and ONLY before the site is public,
+         temporarily drop the "request.app != null &&" below. Put it back. */
+      allow create: if request.app != null && isValidMessage();
+
+      /* Deliberately no public read. Someone else's message is none of your
+         business, and a contact inbox is a favourite target for scrapers. */
+      allow read: if isOwner();
+
+      /* The owner marks read/archived and deletes. Update is narrowed to the
+         status field so a stray write cannot rewrite what somebody sent. */
+      allow update: if isOwner()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && request.resource.data.status in ['new', 'read', 'archived'];
+      allow delete: if isOwner();
+    }
+
+    /* Anything not named above is denied. Without this a future collection
+       created by accident would inherit nothing and be wide open to confusion. */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
