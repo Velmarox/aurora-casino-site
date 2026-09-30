@@ -16,5 +16,15 @@ window.AURORA_FIREBASE = {
   apiKey:     'AIzaSyAyRn635XFwZPNCpNC56lzgoshdVw97kzU',
   authDomain: 'aurora-casino-site.firebaseapp.com',
   projectId:  'aurora-casino-site',
-  appId:      '1:19861960466:web:d81810e80464834da3a5cb'
+  appId:      '1:19861960466:web:d81810e80464834da3a5cb',
+
+  /* reCAPTCHA v3 SITE key for App Check - the public half of the pair. The
+     SECRET key is the one that matters and it never comes near this file; it
+     goes into the Firebase console only.
+
+     Empty until Part 5 of Docs/04_Notes/Firebase_Setup_Checklist.md is done.
+     While it is empty the contact form cannot obtain an App Check token, so
+     firestore.rules rejects every submission. That is the intended failure
+     direction: no form is better than a form that silently drops messages. */
+  recaptchaSiteKey: ''
 };

@@ -17,6 +17,13 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Docs/04_Notes/Firebase_Setup_Checklist.md added: the console work that has to happen
+  before any of Phase 2 functions, in order, with the reasons the order matters.
+  Notably: the Firestore location is permanent, App Check must wait until the domain
+  is pointed at Firebase or the reCAPTCHA key gets registered twice, and App Check
+  enforcement must stay off until real traffic is confirmed passing - turning it on
+  early locks you out of your own site. Includes a symptom-to-cause table.
+- Firebase_Config.js gains an empty recaptchaSiteKey slot for that key.
 - Phase 2, part one: admin dashboard and Firestore security rules.
   firestore.rules - two collections and nothing else. site/config is world readable
   (the homepage fetches it) and owner-writable. messages/* is CREATE-ONLY for the
