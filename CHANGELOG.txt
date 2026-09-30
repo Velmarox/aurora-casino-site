@@ -17,6 +17,23 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Contact form section added after Visit: name and phone required, email optional,
+  message required. Phone is the required one because the client has no email address
+  to reply from. Double-hidden until a backend exists - the section carries the hidden
+  attribute AND Site.js only unhides it when CONTACT.on is true and an endpoint is set,
+  so a form that cannot send can never reach a visitor.
+  Anti-spam: off-canvas honeypot field (display:none is skipped by some bots). A filled
+  honeypot gets the ordinary thank-you and is dropped, so whoever wrote the bot learns
+  nothing. Real spam defence is Firebase App Check, which comes with the backend.
+  A failed send keeps what the visitor typed and hands them the phone number instead of
+  wiping the form. Inputs are 16px so iOS does not zoom on focus; all tap targets 48px+.
+- Verified: validation (required vs optional), honeypot path, failure path, mobile
+  single-column, no horizontal scroll. NOT verified: focus-moves-to-first-error, because
+  the test browser never holds OS focus so no programmatic focus can take. Needs a
+  manual keyboard pass before launch.
+- OPEN: the Instagram URL on the client's current Wix site points at instagram.com/wix,
+  which is Wix's own corporate account, not theirs. Our build links aurora_casino in two
+  places (visible link + JSON-LD sameAs). Unconfirmed which is right.
 - Owner notice bar added across the very top of the page, above the sticky header, for
   temporary operational notices ("closed Mon-Wed for new carpeting"). Controlled by the
   NOTICE block at the top of Js/Site.js: on/off, text, an optional link, and an optional

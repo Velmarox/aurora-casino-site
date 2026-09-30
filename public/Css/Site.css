@@ -444,3 +444,41 @@ footer .demo-note a:hover{border-bottom-color:var(--magenta-hi)}
   .demo-modal,.demo-modal .card{opacity:1;transform:none}
   .demo-wm{opacity:1}
 }
+
+/* ---- contact form --------------------------------------------------------
+   Section stays hidden until CONTACT.on is true in Site.js. Fields are sized
+   for thumbs first: 16px inputs so iOS does not zoom on focus, and 44px+ tap
+   targets throughout. */
+.cform{margin-top:var(--space-6)}
+.cf-grid{display:grid;grid-template-columns:1fr;gap:var(--space-4)}
+.cf-field{margin:0;display:flex;flex-direction:column;gap:7px}
+.cf-field label{font-family:var(--font-display);font-weight:700;font-size:var(--text-sm);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--text2)}
+.cf-field .req{color:var(--magenta)}
+.cf-field .opt{font-weight:600;letter-spacing:0;text-transform:none;color:var(--dim)}
+.cf-field input,.cf-field textarea{
+  font-family:var(--font-body);font-size:16px;line-height:1.45;color:var(--text);
+  background:var(--panel2);border:1px solid var(--line3);border-radius:var(--r-ctl);
+  padding:12px 13px;min-height:46px;width:100%;
+  transition:border-color var(--dur-hover),background var(--dur-hover)}
+.cf-field textarea{min-height:120px;resize:vertical}
+.cf-field input:hover,.cf-field textarea:hover{background:var(--panel3)}
+.cf-field input:focus-visible,.cf-field textarea:focus-visible{outline:var(--focus-ring);outline-offset:2px;border-color:var(--magenta)}
+.cf-field input[aria-invalid="true"],.cf-field textarea[aria-invalid="true"]{border-color:var(--red)}
+.cf-err{font-size:var(--text-sm);color:var(--red);font-weight:600}
+
+/* Honeypot: off-canvas rather than display:none, which some bots skip. */
+.cf-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+.cf-foot{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-4);margin-top:var(--space-5)}
+.cf-foot .btn{min-height:48px}
+.cf-note{margin:0;font-size:var(--text-sm);color:var(--muted);max-width:46ch}
+.cform button[disabled]{opacity:.55;cursor:progress}
+
+.cf-status{margin:var(--space-4) 0 0;padding:13px 15px;border-radius:var(--r-ctl);font-weight:700;font-size:var(--text-base);border:1px solid}
+.cf-status.ok{background:rgba(53,224,161,.12);border-color:var(--jade);color:var(--jade)}
+.cf-status.bad{background:rgba(255,84,104,.12);border-color:var(--red);color:var(--red)}
+
+@media (min-width:700px){
+  .cf-grid{grid-template-columns:1fr 1fr;gap:var(--space-4) var(--space-5)}
+  .cf-wide{grid-column:1/-1}
+}

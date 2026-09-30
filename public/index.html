@@ -279,6 +279,59 @@
     </div>
   </section>
 
+  <!-- Contact form. Hidden until CONTACT.on is true in Js/Site.js, which only
+       happens once the backend is actually wired - a form that cannot send is
+       worse than no form, because people think they have reached someone. -->
+  <section class="block banded" id="contact" hidden>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Contact us</span>
+        <div class="row">
+          <h2 class="display">Send us a message.</h2>
+          <p>We read these during opening hours. For the fastest answer, call &mdash; someone is on the floor from 8 AM.</p>
+        </div>
+      </div>
+
+      <form class="cform" id="contactForm" novalidate>
+        <div class="cf-grid">
+          <p class="cf-field">
+            <label for="cfName">Your name <span class="req" aria-hidden="true">*</span></label>
+            <input id="cfName" name="name" type="text" autocomplete="name" maxlength="80" required>
+            <span class="cf-err" id="cfNameErr" hidden>Please tell us your name.</span>
+          </p>
+          <p class="cf-field">
+            <label for="cfPhone">Phone <span class="req" aria-hidden="true">*</span></label>
+            <input id="cfPhone" name="phone" type="tel" autocomplete="tel" maxlength="30" required>
+            <span class="cf-err" id="cfPhoneErr" hidden>We reply by phone, so we need a number.</span>
+          </p>
+          <p class="cf-field cf-wide">
+            <label for="cfEmail">Email <span class="opt">optional</span></label>
+            <input id="cfEmail" name="email" type="email" autocomplete="email" maxlength="120">
+            <span class="cf-err" id="cfEmailErr" hidden>That does not look like an email address.</span>
+          </p>
+          <p class="cf-field cf-wide">
+            <label for="cfMsg">Message <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="cfMsg" name="message" rows="5" maxlength="1500" required></textarea>
+            <span class="cf-err" id="cfMsgErr" hidden>Let us know what you need.</span>
+          </p>
+        </div>
+
+        <!-- Honeypot. Real people never see it; bots fill everything in. -->
+        <div class="cf-hp" aria-hidden="true">
+          <label for="cfCompany">Company</label>
+          <input id="cfCompany" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="cf-foot">
+          <button class="btn shimmer" type="submit" id="cfSend">Send message</button>
+          <p class="cf-note">Must be 18+ to play. We use what you send here only to reply to you.</p>
+        </div>
+
+        <p class="cf-status" id="cfStatus" role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+  </section>
+
 </main>
 
 <footer>

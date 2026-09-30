@@ -10,7 +10,8 @@
      6. Mobile menu
      7. Staggered button sheen
      8. Hero video, loaded only where it is worth the bandwidth
-     9. Footer year
+     9. Contact form, hidden until a backend is wired
+    10. Footer year
    ========================================================================= */
 (function () {
   'use strict';
@@ -35,6 +36,12 @@
     linkText: '',
     linkUrl:  ''
   };
+
+  /* Contact form. The section stays hidden unless on is true AND endpoint is
+     filled in, so a form that cannot actually send can never reach a visitor -
+     a dead form is worse than none, because people think they got through.
+     endpoint gets the dashboard backend URL in Phase 2. */
+  var CONTACT = { on: false, endpoint: '' };
 
   /* Weekly promos, 0 = Sunday through 6 = Saturday. null means no promo that day
      and no banner at all. Saturday and Sunday are deliberately null.
@@ -338,7 +345,89 @@
   }
 
 
-  /* -- 9  footer year ------------------------------------------------------ */
+  /* -- 9  contact form ------------------------------------------------------ */
+  (function () {
+    var form = document.getElementById('contactForm');
+    var section = document.getElementById('contact');
+    if (!form || !section || !CONTACT.on || !CONTACT.endpoint) { return; }
+    section.hidden = false;
+
+    var status = document.getElementById('cfStatus');
+    var btn = document.getElementById('cfSend');
+    var PHONE = '(406) 601-1282';
+
+    var fields = [
+      { el: document.getElementById('cfName'),  err: document.getElementById('cfNameErr'),
+        ok: function (v) { return v.length > 0; } },
+      { el: document.getElementById('cfPhone'), err: document.getElementById('cfPhoneErr'),
+        ok: function (v) { return v.replace(/\D/g, '').length >= 7; } },
+      { el: document.getElementById('cfEmail'), err: document.getElementById('cfEmailErr'),
+        ok: function (v) { return v === '' || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); } },
+      { el: document.getElementById('cfMsg'),   err: document.getElementById('cfMsgErr'),
+        ok: function (v) { return v.length > 1; } }
+    ];
+
+    function say(msg, good) {
+      status.textContent = msg;
+      status.className = 'cf-status ' + (good ? 'ok' : 'bad');
+      status.hidden = false;
+    }
+
+    function validate() {
+      var firstBad = null;
+      fields.forEach(function (f) {
+        var good = f.ok(f.el.value.trim());
+        f.err.hidden = good;
+        f.el.setAttribute('aria-invalid', good ? 'false' : 'true');
+        if (!good && !firstBad) { firstBad = f.el; }
+      });
+      if (firstBad) { firstBad.focus(); }
+      return !firstBad;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Honeypot filled means a bot. Show the ordinary thank-you and drop it on
+      // the floor - telling a bot it was caught just teaches whoever wrote it.
+      if (document.getElementById('cfCompany').value) {
+        form.reset();
+        say('Thanks, we got your message.', true);
+        return;
+      }
+
+      if (!validate()) { say('Please fix the highlighted fields.', false); return; }
+
+      btn.disabled = true;
+      say('Sending your message...', true);
+
+      send({
+        name:    document.getElementById('cfName').value.trim(),
+        phone:   document.getElementById('cfPhone').value.trim(),
+        email:   document.getElementById('cfEmail').value.trim(),
+        message: document.getElementById('cfMsg').value.trim()
+      }).then(function () {
+        form.reset();
+        fields.forEach(function (f) { f.el.setAttribute('aria-invalid', 'false'); });
+        say('Thanks, we got your message. For anything urgent, call ' + PHONE + '.', true);
+      })['catch'](function () {
+        say('Sorry, that did not send. Please call ' + PHONE + ' instead.', false);
+      }).then(function () { btn.disabled = false; });
+    });
+
+    /* Phase 2 replaces the body of this with the Firestore write. It rejects on
+       anything less than a clean 2xx, so the form never claims to have sent
+       something that did not land. */
+    function send(data) {
+      return fetch(CONTACT.endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(function (r) { if (!r.ok) { throw new Error('send failed: ' + r.status); } });
+    }
+  })();
+
+  /* -- 10  footer year ------------------------------------------------------ */
 
   var y = document.getElementById('year');
   if (y) { y.textContent = new Date().getFullYear(); }
