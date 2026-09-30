@@ -3,13 +3,14 @@
 
    What it does, in order:
      1. Demo disclaimer overlay, dismissed before anything else matters
-     2. Open / closed neon sign, clocked to Billings time
-     3. Weekly promo banners, today first
-     4. The "running today" band under the hero
-     5. Mobile menu
-     6. Staggered button sheen
-     7. Hero video, loaded only where it is worth the bandwidth
-     8. Footer year
+     2. Owner notice bar across the very top of the page
+     3. Open / closed neon sign, clocked to Billings time
+     4. Weekly promo banners, today first
+     5. The "running today" band under the hero
+     6. Mobile menu
+     7. Staggered button sheen
+     8. Hero video, loaded only where it is worth the bandwidth
+     9. Footer year
    ========================================================================= */
 (function () {
   'use strict';
@@ -20,6 +21,20 @@
 
   var HOURS = { open: 8, close: 26 };   // 24h clock; 26 means 2 AM the next day
   var TZ = 'America/Denver';            // Billings, so the sign is right for everyone
+
+  /* Temporary notice bar across the very top of the page. Set on:true and give it
+     text. An empty text shows nothing even when on is true, so a half-finished
+     notice can never go live. expires is a plain YYYY-MM-DD read in Billings time:
+     after that day the bar hides itself, so a closure notice cleans up after
+     itself instead of sitting there until somebody remembers. Leave expires blank
+     to run until switched off. The link is optional and needs both of its fields. */
+  var NOTICE = {
+    on:       false,
+    text:     'Closed Monday through Wednesday, June 14 to 16, for new carpeting.',
+    expires:  '',
+    linkText: '',
+    linkUrl:  ''
+  };
 
   /* Weekly promos, 0 = Sunday through 6 = Saturday. null means no promo that day
      and no banner at all. Saturday and Sunday are deliberately null.
@@ -145,7 +160,40 @@
   }
 
 
-  /* -- 2  open / closed sign ----------------------------------------------- */
+  /* -- 2  owner notice bar -------------------------------------------------- */
+  /* Fails closed on purpose: any missing or malformed piece just leaves the bar
+     hidden. That is the safe direction for something edited without a preview.
+     textContent, never innerHTML - once this string arrives from the dashboard it
+     is untrusted input and must not be able to inject markup. */
+  (function () {
+    var bar = document.getElementById('notice');
+    if (!bar || !NOTICE.on) { return; }
+
+    var text = String(NOTICE.text || '').trim();
+    if (!text) { return; }
+
+    if (NOTICE.expires) {
+      // en-CA formats as YYYY-MM-DD, so a string compare is a date compare, and
+      // reading it in Billings time means it clears at local midnight, not UTC.
+      var today = new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
+      if (today > NOTICE.expires) { return; }
+    }
+
+    document.getElementById('noticeText').textContent = text;
+
+    var url = String(NOTICE.linkUrl || '').trim();
+    var label = String(NOTICE.linkText || '').trim();
+    if (url && label) {
+      var link = document.getElementById('noticeLink');
+      link.href = url;
+      link.textContent = label;
+      link.hidden = false;
+    }
+
+    bar.hidden = false;
+  })();
+
+  /* -- 3  open / closed sign ----------------------------------------------- */
 
   var now = localNow();
   var mins = now.h * 60 + now.m;
@@ -170,7 +218,7 @@
   var promoDay = afterMidnight ? (now.day + 6) % 7 : now.day;
 
 
-  /* -- 3  weekly promo banners, today first -------------------------------- */
+  /* -- 4  weekly promo banners, today first -------------------------------- */
 
   var grid = document.getElementById('week-grid');
   if (grid) {
@@ -203,7 +251,7 @@
   }
 
 
-  /* -- 4  the "running today" band ----------------------------------------- */
+  /* -- 5  the "running today" band ----------------------------------------- */
   /* Hidden in the markup. It is only unhidden once there is something real to
      put in it, so a weekend or a JS failure shows no empty strip. */
 
@@ -237,7 +285,7 @@
   }
 
 
-  /* -- 5  mobile menu ------------------------------------------------------ */
+  /* -- 6  mobile menu ------------------------------------------------------ */
 
   var menuBtn = document.getElementById('menuBtn'), mnav = document.getElementById('mobileNav');
   if (menuBtn && mnav) {
@@ -255,7 +303,7 @@
   }
 
 
-  /* -- 6  staggered button sheen ------------------------------------------- */
+  /* -- 7  staggered button sheen ------------------------------------------- */
   /* The animation itself is in Site.css; this only offsets each button so they
      do not all sweep at the same moment. */
 
@@ -265,7 +313,7 @@
   }
 
 
-  /* -- 7  hero video ------------------------------------------------------- */
+  /* -- 8  hero video ------------------------------------------------------- */
   /* The mp4 is 9.3 MB, most of the page weight, so it never downloads on phones,
      under reduced motion, or when the browser reports Data Saver or a 2G link.
      Those visitors keep the poster still, which is already on screen. */
@@ -290,7 +338,7 @@
   }
 
 
-  /* -- 8  footer year ------------------------------------------------------ */
+  /* -- 9  footer year ------------------------------------------------------ */
 
   var y = document.getElementById('year');
   if (y) { y.textContent = new Date().getFullYear(); }

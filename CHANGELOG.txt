@@ -17,6 +17,18 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Owner notice bar added across the very top of the page, above the sticky header, for
+  temporary operational notices ("closed Mon-Wed for new carpeting"). Controlled by the
+  NOTICE block at the top of Js/Site.js: on/off, text, an optional link, and an optional
+  YYYY-MM-DD expiry read in Billings time so a closure notice clears itself at local
+  midnight. Fails closed - empty text shows nothing even when on is true, so a
+  half-finished notice cannot go live. Rendered with textContent, never innerHTML,
+  because this string will come from the client dashboard and is untrusted input.
+  Hidden state takes zero height: no layout shift when it is off.
+- Text (SMS) button removed from the Visit section at the owner's request. The phone
+  number stays; no email button was added because the client has no address yet.
+- Site.js section map renumbered 1-9 to take in the new notice renderer.
+- Working copy of this file was CRLF against a repo pinned to LF; normalized.
 - Promoted to v0.1.0-alpha. The site has been deployed and shown as a demo, which is
   past the point where a 0.0.x patch number describes it honestly; every live site in
   Live Projects now sits at v0.1.0-alpha or above.

@@ -78,6 +78,18 @@
 
 <a class="skip" href="#main">Skip to content</a>
 
+<!-- Owner-controlled notice bar. Stays hidden unless NOTICE.on is true and there
+     is text to show - see the EDIT ME block in Js/Site.js. Sits above the sticky
+     header on purpose: seen on arrival, then scrolls away instead of eating room
+     on every screen. -->
+<aside class="notice" id="notice" aria-label="Notice" hidden>
+  <div class="wrap">
+    <span class="notice-tag">Notice</span>
+    <p class="notice-text" id="noticeText"></p>
+    <a class="notice-link" id="noticeLink" hidden></a>
+  </div>
+</aside>
+
 <header class="site-head">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="Aurora Casino home">
@@ -257,7 +269,6 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Get directions
             </a>
             <a class="btn" href="tel:+14066011282"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.1 9.7a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.7A2 2 0 0 1 22 16.9z"/></svg>Call</a>
-            <a class="btn" href="sms:+14066011282"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Text</a>
           </div>
           <div class="socials">
             <a href="https://www.facebook.com/AuroraCasinoMT/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v7h4v-7h3l1-4h-4V8z"/></svg>Facebook</a>
