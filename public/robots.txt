@@ -1,9 +1,15 @@
 # The admin dashboard is not for crawlers. This is politeness, not security -
-# the actual protection is Firebase Auth plus the Firestore rules. Anything that
+# the real protection is Firebase Auth plus the Firestore rules. Anything that
 # ignores robots.txt still gets nothing but a login screen.
 User-agent: *
-Disallow: /admin
-Disallow: /admin/
+Disallow: /demo/admin
+Disallow: /demo/admin/
 
-# No Sitemap line yet: there is no sitemap.xml to point at. Add one here when
-# the site moves to its real domain and grows past a single page.
+# /demo itself is deliberately NOT disallowed. It carries <meta name="robots"
+# content="noindex">, and a crawler has to be allowed to fetch the page before
+# it can read that tag. Blocking it here would leave the URL eligible to appear
+# in results with no description - the opposite of what we want.
+
+# No Sitemap line: there is no sitemap.xml. If this ever moves into the
+# merwinwebdesignz.com Hosting site, these Disallow lines belong in THAT site's
+# robots.txt, since robots.txt is only honoured at a domain root.

@@ -17,6 +17,22 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Demo moved to its own /demo path on the designer's domain. Everything the site serves
+  now builds into public/demo/ (index.html, Css, Js, Assets, admin), so the deployed
+  URL is merwinwebdesignz.com/demo rather than a root domain. Relative paths inside the
+  page were already relative, so nothing internal had to change.
+  canonical, og:url, og:image and the three JSON-LD URLs all repointed.
+  firebase.json header sources moved to /demo and /demo/admin/**; robots.txt Disallow
+  moved to /demo/admin.
+- The noindex meta is now PERMANENT rather than pre-launch. It used to be there because
+  the client's domain still served Wix; it stays because this is an unaffiliated demo of
+  a real business that has its own live site, and an indexed copy would compete with the
+  casino's own listing. robots.txt deliberately does NOT disallow /demo: a crawler has to
+  be allowed to fetch the page to read the noindex tag.
+- NOT WIRED YET: merwinwebdesignz.com is Firebase project 'merwinwd' and a Hosting deploy
+  replaces every file on a site, so retargeting this repo at merwinwd would wipe the
+  live Merwin Web Designz site. Either copy public/demo/ into the merwinwd repo, or
+  point demo.merwinwebdesignz.com at aurora-casino-site. Unresolved.
 - Docs/04_Notes/Firebase_Setup_Checklist.md added: the console work that has to happen
   before any of Phase 2 functions, in order, with the reasons the order matters.
   Notably: the Firestore location is permanent, App Check must wait until the domain

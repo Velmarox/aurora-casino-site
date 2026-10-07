@@ -90,21 +90,24 @@ command will happily tell you it succeeded.
 App Check is what actually keeps bots out of the contact form. The rules require
 it, so **until this is done every form submission is rejected.**
 
-⚠️ **Do this after `auroracasinomt.com` points at Firebase.** A reCAPTCHA key is
-registered against specific domains. Doing it now means redoing it at launch, and
-a half-registered key is the classic cause of "the contact form silently stopped
-working."
+⚠️ **Register it against whichever domain actually serves the demo.** A reCAPTCHA
+key is tied to specific domains, and a half-registered key is the classic cause of
+"the contact form silently stopped working." The demo now lives at
+`merwinwebdesignz.com/demo`, so that is the domain that matters - not the
+client's.
 
 ### Get a reCAPTCHA v3 key
 
 - [ ] <https://www.google.com/recaptcha/admin/create>
 - [ ] Type: **reCAPTCHA v3**
 - [ ] Domains — add **all** of these:
-      - `auroracasinomt.com`
-      - `www.auroracasinomt.com`
-      - `aurora-casino-site.web.app`
+      - `merwinwebdesignz.com`
+      - `www.merwinwebdesignz.com`
+      - `aurora-casino-site.web.app` (where this repo deploys today)
       - `aurora-casino-site.firebaseapp.com`
       - `localhost` (so the form can be tested locally)
+
+      Add `demo.merwinwebdesignz.com` too if you go the subdomain route.
 - [ ] Submit, then copy **both** the **site key** and the **secret key**
 
 ### Register it with Firebase
@@ -178,5 +181,15 @@ If all six pass, the plumbing is sound.
    band all have to come off before this is a real client site.
 3. **Ownership transfer** — last, not first. Add his Google account as Owner,
    move billing to his card, transfer the GitHub repo, then remove yourself.
-4. **The domain** — `auroracasinomt.com` is registered through Wix and expires
-   May 2027. Transfer it out **before** cancelling the Wix plan, not after.
+4. **How the demo reaches merwinwebdesignz.com/demo.** The site now builds into
+   `public/demo/`, so the paths are right, but the deploy is not wired yet.
+   `merwinwebdesignz.com` is Firebase project **merwinwd** and a Hosting deploy
+   **replaces every file on the site** - retargeting this repo at `merwinwd`
+   would wipe Merwin Web Designz. Either copy `public/demo/` into the merwinwd
+   repo and let that project's pipeline publish it, or point
+   `demo.merwinwebdesignz.com` at `aurora-casino-site` and leave the portfolio
+   untouched. The second is five minutes and carries no risk.
+
+5. **The client's own domain** — `auroracasinomt.com` is registered through Wix
+   and expires May 2027. Only relevant if the casino signs; transfer it out
+   **before** cancelling the Wix plan, not after.
