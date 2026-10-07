@@ -17,6 +17,14 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- FIX, caught live: every asset path is now root-absolute (/work/demos/aurora/...) rather
+  than relative. The portfolio site sets trailingSlash:false, so /work/demos/aurora/
+  redirects to /work/demos/aurora, and from there a relative 'Css/Site.css' resolved to
+  /work/demos/Css/Site.css and 404'd. The page shipped with no stylesheet and no promos.
+  Fixed in index.html (18), admin/index.html (5) and Js/Site.js (6). Absolute paths work
+  in both repos because the folder sits at the same path in each.
+  prairie-dog-pierogi never hit this - it is a single self-contained file with no
+  external assets, so there was no working precedent to copy.
 - Demo moved to /work/demos/aurora to match the convention the portfolio site already
   uses (prairie-dog-pierogi lives there). The access-code portal stays at /demo and
   redirects into /work/demos/<client>/, so there is one gate and one place demos live

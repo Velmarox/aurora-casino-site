@@ -51,35 +51,35 @@
     null,
     {
       d: 'Monday', when: 'All day', title: '3X Points All Day',
-      img: 'Assets/Promos/Promo_Gaming_Floor.avif',
+      img: '/work/demos/aurora/Assets/Promos/Promo_Gaming_Floor.avif',
       desc: 'Triple points on every machine, open to close. It\'s the quickest way up the tiers.',
       tags: [['3X points all day', 'm'], ['Level up to Platinum', 'p']],
       draws: []
     },
     {
       d: 'Tuesday', when: 'All day', title: 'Loyalty Rewards Day',
-      img: 'Assets/Promos/Promo_Cash_On_Bar.avif',
+      img: '/work/demos/aurora/Assets/Promos/Promo_Cash_On_Bar.avif',
       desc: 'Free play based on your player tier: Silver $10, Gold $20, Platinum $30, Platinum Plus $40.',
       tags: [['Log in and get rewards', 'j'], ['All day long', 'p']],
       draws: []
     },
     {
       d: 'Wednesday', when: 'All day', title: 'Win-It Wednesdays',
-      img: 'Assets/Promos/Promo_Drawing_Drum.avif',
+      img: '/work/demos/aurora/Assets/Promos/Promo_Drawing_Drum.avif',
       desc: 'Every player who logs in on Wednesday is entered into a $25 cash drawing. Two winners are drawn Thursday morning.',
       tags: [['$25 cash drawing', 'j'], ['Monthly $300 drawing', 'm'], ['$1,000 year-end drawing', 'm']],
       draws: []
     },
     {
       d: 'Thursday', when: 'All day', title: 'VIP Rewards Day',
-      img: 'Assets/Promos/Promo_Lounge_Wine.avif',
+      img: '/work/demos/aurora/Assets/Promos/Promo_Lounge_Wine.avif',
       desc: 'Platinum and Platinum Plus members collect their VIP free play.',
       tags: [['Platinum $30', 'j'], ['Platinum Plus $40', 'm']],
       draws: []
     },
     {
       d: 'Friday', when: '7 – 9 PM', title: 'Nifty-Fifty Fridays',
-      img: 'Assets/Promos/Promo_Slots_Night.avif',
+      img: '/work/demos/aurora/Assets/Promos/Promo_Slots_Night.avif',
       desc: 'Drawings every thirty minutes from seven to nine. The prize amount is based on your player rank.',
       tags: [['Win up to $50', 'j'], ['Every 30 minutes', 'p']],
       draws: [1140, 1170, 1200, 1230, 1260]
@@ -334,7 +334,7 @@
 
     if (wideEnough && motionOK && dataOK) {
       hv.addEventListener('canplay', function () { hv.classList.add('is-ready'); }, { once: true });
-      hv.src = 'Assets/Video/Hero_Loop.mp4';
+      hv.src = '/work/demos/aurora/Assets/Video/Hero_Loop.mp4';
       var attempt = hv.play();
       // Autoplay refused, which some power-saving modes do. Drop the download
       // rather than stall on it.
