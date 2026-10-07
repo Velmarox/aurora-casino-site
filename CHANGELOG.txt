@@ -17,6 +17,22 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Client demo portal added at public/demo/index.html, with the Aurora build moved under
+  public/demo/aurora/. Codes are SHA-256 hashed, so the plain code never ships in the
+  page source; a correct code redirects to that client's folder. Self-contained: no
+  external fonts, stylesheets or scripts, so it drops into any site as one file.
+  Adding a client is three lines - hash the code, add hash plus folder name, drop their
+  build in /demo/<folder>/. Instructions are in a comment at the top of the file.
+  Aurora's code: AuroraNeon2026
+- DOCUMENTED IN THE FILE, because it must not be forgotten: this is a curtain, not a
+  lock. The demos are static files on a public host, so anyone who types /demo/aurora
+  reaches it whether or not they came through the portal. The code hides the LINK, not
+  the destination. Never tell a client their demo is private. Anything genuinely
+  confidential has to be served through authenticated code, not a public folder.
+- URLs repointed to merwinwebdesignz.com/demo/aurora. firebase.json gained a no-store,
+  noindex rule for /demo itself. robots.txt updated.
+- Montana Meal Prep's business card demos are untouched - they live elsewhere and stay
+  there. This portal is for Aurora and anything after it.
 - Demo moved to its own /demo path on the designer's domain. Everything the site serves
   now builds into public/demo/ (index.html, Css, Js, Assets, admin), so the deployed
   URL is merwinwebdesignz.com/demo rather than a root domain. Relative paths inside the

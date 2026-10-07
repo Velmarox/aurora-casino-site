@@ -2,10 +2,10 @@
 # the real protection is Firebase Auth plus the Firestore rules. Anything that
 # ignores robots.txt still gets nothing but a login screen.
 User-agent: *
-Disallow: /demo/admin
-Disallow: /demo/admin/
+Disallow: /demo/aurora/admin
+Disallow: /demo/aurora/admin/
 
-# /demo itself is deliberately NOT disallowed. It carries <meta name="robots"
+# /demo/aurora itself is deliberately NOT disallowed. It carries <meta name="robots"
 # content="noindex">, and a crawler has to be allowed to fetch the page before
 # it can read that tag. Blocking it here would leave the URL eligible to appear
 # in results with no description - the opposite of what we want.

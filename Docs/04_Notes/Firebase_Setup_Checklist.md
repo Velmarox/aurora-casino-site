@@ -93,7 +93,7 @@ it, so **until this is done every form submission is rejected.**
 ⚠️ **Register it against whichever domain actually serves the demo.** A reCAPTCHA
 key is tied to specific domains, and a half-registered key is the classic cause of
 "the contact form silently stopped working." The demo now lives at
-`merwinwebdesignz.com/demo`, so that is the domain that matters - not the
+`merwinwebdesignz.com/demo/aurora`, so that is the domain that matters - not the
 client's.
 
 ### Get a reCAPTCHA v3 key
@@ -181,7 +181,7 @@ If all six pass, the plumbing is sound.
    band all have to come off before this is a real client site.
 3. **Ownership transfer** — last, not first. Add his Google account as Owner,
    move billing to his card, transfer the GitHub repo, then remove yourself.
-4. **How the demo reaches merwinwebdesignz.com/demo.** The site now builds into
+4. **How the demo reaches merwinwebdesignz.com/demo/aurora.** The site now builds into
    `public/demo/`, so the paths are right, but the deploy is not wired yet.
    `merwinwebdesignz.com` is Firebase project **merwinwd** and a Hosting deploy
    **replaces every file on the site** - retargeting this repo at `merwinwd`
