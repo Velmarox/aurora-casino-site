@@ -17,6 +17,15 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Portal moved OUT of this repo into the Merwin Web Designz portfolio repo. It lists every
+  client, so it belongs to the portfolio, not to any one client's project - a copy in
+  each client repo would mean hand-merging a client list across repos forever.
+  This repo now owns only public/demo/aurora/, which mirrors exactly where it lands.
+- Docs/05_Tools/Sync_To_Portfolio.ps1 copies public/demo/aurora into the portfolio repo
+  with robocopy /MIR, so deletions propagate and the two cannot silently drift. It
+  refuses to run if the destination is not a git repo, supports -WhatIf, and
+  deliberately does NOT commit, push or deploy: pushing the portfolio repo publishes a
+  live business site, and that stays a human decision.
 - Client demo portal added at public/demo/index.html, with the Aurora build moved under
   public/demo/aurora/. Codes are SHA-256 hashed, so the plain code never ships in the
   page source; a correct code redirects to that client's folder. Self-contained: no
