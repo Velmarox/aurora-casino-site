@@ -8,20 +8,7 @@
     "cleanUrls": true,
     "headers": [
       {
-        "source": "/demo",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-store"
-          },
-          {
-            "key": "X-Robots-Tag",
-            "value": "noindex, nofollow"
-          }
-        ]
-      },
-      {
-        "source": "/demo/aurora/admin/**",
+        "source": "/work/demos/aurora/admin/**",
         "headers": [
           {
             "key": "Cache-Control",
@@ -38,7 +25,7 @@
         ]
       },
       {
-        "source": "/demo/aurora",
+        "source": "/work/demos/aurora",
         "headers": [
           {
             "key": "Cache-Control",

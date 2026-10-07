@@ -2,7 +2,7 @@
     Sync_To_Portfolio.ps1
     ---------------------------------------------------------------------------
     Copies this repo's demo build into the Merwin Web Designz portfolio repo,
-    where it is published at merwinwebdesignz.com/demo/aurora.
+    where it is published at merwinwebdesignz.com/work/demos/aurora.
 
     Why this exists: the demo has to live in the portfolio repo, because a
     Firebase Hosting deploy replaces every file on a site and merwinwebdesignz.com
@@ -21,21 +21,21 @@
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
     # Override if the portfolio repo ever moves.
-    [string]$PortfolioRepo = "C:\Users\Administrator\Documents\MWD Studio\2 Active\Jamie Web Portfolio\Merwin_Web_Designz_v2.2.1",
+    [string]$PortfolioRepo = "C:\Users\Administrator\Documents\MWD Studio\2 Active\Jamie Web Portfolio\Merwin_Web_Designz_v3.2.2",
 
-    # Folder name under /demo/ on the portfolio site.
+    # Folder name under /work/demos/ on the portfolio site.
     [string]$ClientFolder = "aurora"
 )
 
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
-$source   = Join-Path $repoRoot "public\demo\$ClientFolder"
-$dest     = Join-Path $PortfolioRepo "public\demo\$ClientFolder"
+$source   = Join-Path $repoRoot "public\work\demos\$ClientFolder"
+$dest     = Join-Path $PortfolioRepo "public\work\demos\$ClientFolder"
 
 # --- checks before touching anything ---------------------------------------
 if (-not (Test-Path $source)) {
-    throw "Source not found: $source`nRun this from the repo that contains public\demo\$ClientFolder."
+    throw "Source not found: $source`nRun this from the repo that contains public\work\demos\$ClientFolder."
 }
 if (-not (Test-Path $PortfolioRepo)) {
     throw "Portfolio repo not found: $PortfolioRepo`nPass -PortfolioRepo with the right path."
@@ -71,8 +71,8 @@ if ($WhatIfPreference) {
 
 Write-Host ""
 Write-Host "  Next, in the portfolio repo:" -ForegroundColor Cyan
-Write-Host "    git status                      # check only /demo/$ClientFolder changed"
-Write-Host "    git add public/demo/$ClientFolder"
+Write-Host "    git status                      # check only /work/demos/$ClientFolder changed"
+Write-Host "    git add public/work/demos/$ClientFolder"
 Write-Host "    git commit -m `"Update $ClientFolder demo`""
 Write-Host "    git push                        # this publishes your live site"
 Write-Host ""

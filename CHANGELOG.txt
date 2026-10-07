@@ -17,6 +17,11 @@ Folder organization (Firebase-native repo):
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
 v0.1.0-alpha (2026-09-04)
+- Demo moved to /work/demos/aurora to match the convention the portfolio site already
+  uses (prairie-dog-pierogi lives there). The access-code portal stays at /demo and
+  redirects into /work/demos/<client>/, so there is one gate and one place demos live
+  rather than two competing conventions. URLs, firebase.json, robots.txt and the sync
+  script all repointed.
 - Portal moved OUT of this repo into the Merwin Web Designz portfolio repo. It lists every
   client, so it belongs to the portfolio, not to any one client's project - a copy in
   each client repo would mean hand-merging a client list across repos forever.
