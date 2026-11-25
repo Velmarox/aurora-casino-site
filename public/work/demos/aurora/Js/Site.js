@@ -273,6 +273,46 @@
     });
   }
 
+  /* The line under "This week at Aurora", written from the days that actually
+     have a promo, so it can't go stale when the owner changes them:
+       Mon-Fri on        "Five promos, Monday through Friday. Today's is at the top."
+       every day         "A promo every day of the week. ..."
+       Mon, Wed, Fri     "Three promos: Monday, Wednesday and Friday. ..."
+       Friday only       "One promo, on Fridays. ..."
+     A run that wraps the weekend (Friday to Monday) still reads "through".
+     The second sentence says "today's" only when today has one. */
+  var NUM_WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'];
+
+  function weekSummary(WEEK) {
+    var on = [];
+    for (var d = 0; d < 7; d++) { if (WEEK[d]) { on.push(d); } }
+    var n = on.length;
+    if (!n) { return 'No promos running right now. Check back soon.'; }
+
+    var first;
+    if (n === 7) {
+      first = 'A promo every day of the week';
+    } else if (n === 1) {
+      first = 'One promo, on ' + DAY_NAMES[on[0]] + 's';
+    } else {
+      // A run of three or more days in a row, allowing the week to wrap.
+      var start = -1;
+      for (var s = 0; s < n && start === -1; s++) {
+        var ok = true;
+        for (var k = 0; k < n; k++) { if (!WEEK[(on[s] + k) % 7]) { ok = false; break; } }
+        if (ok) { start = on[s]; }
+      }
+      if (n >= 3 && start !== -1) {
+        first = NUM_WORDS[n] + ' promos, ' + DAY_NAMES[start] + ' through ' + DAY_NAMES[(start + n - 1) % 7];
+      } else {
+        // Two days in a row across the weekend read Saturday and Sunday, not the reverse.
+        var names = on.map(function (i, k) { return DAY_NAMES[start === -1 ? i : (start + k) % 7]; });
+        first = NUM_WORDS[n] + ' promos: ' + names.slice(0, -1).join(', ') + ' and ' + names[n - 1];
+      }
+    }
+    return first + '. ' + (WEEK[promoDay] ? 'Today\'s is at the top.' : 'The next one is at the top.');
+  }
+
   function renderPromos(WEEK) {
     var grid = document.getElementById('week-grid');
     if (grid) {
@@ -303,6 +343,9 @@
       }
       grid.innerHTML = html;
     }
+
+    var sub = document.getElementById('weekSub');
+    if (sub) { sub.textContent = weekSummary(WEEK); }
 
     /* -- 5  the "running today" band --------------------------------------- */
     /* Hidden in the markup. It is only unhidden once there is something real to

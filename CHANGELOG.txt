@@ -16,6 +16,17 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.2.1-alpha (2026-11-25)
+- The line under "This week at Aurora" is written from the promos that are switched
+  on, so it stays true when the owner changes them in the dashboard: "Five promos,
+  Monday through Friday", "Three promos: Monday, Wednesday and Friday", "One promo,
+  on Fridays", "A promo every day of the week", or "No promos running right now".
+  A run across the weekend reads "Friday through Monday". The second sentence says
+  "Today's is at the top" only when today has a promo, otherwise "The next one is at
+  the top" (it used to claim today's on weekends too). The markup keeps the old text
+  for anyone without JavaScript.
+- Sync_To_Portfolio.ps1 finds the newest Merwin_Web_Designz_v* folder itself.
+
 v0.2.0-alpha (2026-11-25)
 - Owner dashboard moved from /work/demos/aurora/admin to an unlisted address,
   /work/demos/aurora/dashboard-hp4dnbgcrx52/. It is linked from nowhere, and
