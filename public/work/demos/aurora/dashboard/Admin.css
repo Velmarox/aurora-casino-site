@@ -250,3 +250,23 @@ h1,h2{font-family:var(--font-display);letter-spacing:var(--tracking-display);mar
   .foot{flex-wrap:wrap}
   .foot .reset{margin-left:0}
 }
+
+/* ---- social links ---- */
+.slinks{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.slinks:empty::before{content:attr(data-empty);display:block;padding:18px;text-align:center;
+  color:var(--muted);background:var(--panel2);border:1px dashed var(--line3);border-radius:var(--r-ctl)}
+.slink{display:grid;grid-template-columns:auto 150px 1fr auto;grid-template-areas:"icon plat label btns" "url url url url";
+  gap:8px;align-items:center;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-ctl)}
+.sicon{grid-area:icon;display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-ctl);
+  background:var(--panel3);border:1px solid var(--line3)}
+.sicon svg{width:18px;height:18px;fill:none;stroke:var(--magenta);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.splat{grid-area:plat}.slabel{grid-area:label}.surl{grid-area:url}
+.slink select,.slink input{font-family:var(--font-body);font-size:16px;color:var(--text);background:var(--panel);
+  border:1px solid var(--line3);border-radius:var(--r-ctl);padding:10px 12px;min-height:44px;width:100%;min-width:0}
+.slink input:focus-visible,.slink select:focus-visible{border-color:var(--magenta)}
+.slink input[aria-invalid="true"]{border-color:var(--red)}
+.sbtns{grid-area:btns;display:flex;gap:8px;justify-content:flex-end}
+.sbtns .btn[disabled]{opacity:.35;cursor:default}
+@media (max-width:600px){
+  .slink{grid-template-columns:auto 1fr;grid-template-areas:"icon plat" "label label" "url url" "btns btns"}
+}

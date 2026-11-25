@@ -159,6 +159,43 @@
     bar.hidden = false;
   }
 
+  /* -- 2b  social buttons ------------------------------------------------- */
+  /* The row of buttons under the address. index.html ships Facebook and Instagram;
+     once the owner saves socials in the dashboard, this replaces them with the
+     saved list, in order. An empty saved list hides the row. Nothing saved, or a
+     failed read, leaves the shipped buttons alone.
+     Only https links, only known platforms (icons come from Js/Socials.js, never
+     from saved data), labels length-capped and set with textContent. */
+  function showSocials(saved) {
+    var box = document.getElementById('socials');
+    var SOC = window.AURORA_SOCIALS;
+    if (!box || !SOC || !saved || !Array.isArray(saved.links)) { return; }
+
+    var links = saved.links.slice(0, SOC.max).filter(function (l) {
+      return l && typeof l.url === 'string' && /^https:\/\/[^\s"<>]+\.[^\s"<>]+$/i.test(l.url.trim());
+    });
+
+    box.textContent = '';
+    links.forEach(function (l) {
+      var key = SOC.platforms[l.platform] ? l.platform : 'other';
+      var p = SOC.platforms[key];
+      var label = typeof l.label === 'string' && l.label.trim() ? l.label.trim().slice(0, 30) : p.name;
+      var a = document.createElement('a');
+      a.href = l.url.trim();
+      a.target = '_blank';
+      a.rel = 'noopener';
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.innerHTML = p.icon;                  // trusted: from Socials.js only
+      a.appendChild(svg);
+      a.appendChild(document.createTextNode(label));
+      box.appendChild(a);
+    });
+    // .socials sets display:flex, which would beat the hidden attribute.
+    box.style.display = links.length ? "" : "none";
+  }
+
   /* -- 3  open / closed sign ----------------------------------------------- */
 
   var now = localNow();
@@ -255,14 +292,15 @@
     return o;
   }
 
-  // One read for everything the homepage takes from the dashboard: promos and the
-  // notice bar. Resolves with the parsed document; rejects on any failure.
+  // One read for everything the homepage takes from the dashboard: promos, the
+  // notice bar and the social buttons. Resolves with the parsed document; rejects on any failure.
   function fetchSaved() {
     var fb = window.AURORA_FIREBASE;
     if (!fb || !fb.projectId || !fb.apiKey || !window.fetch) { return Promise.reject(new Error('no config')); }
     var url = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(fb.projectId) +
               '/databases/(default)/documents/site/config' +
-              '?mask.fieldPaths=promos&mask.fieldPaths=notice&key=' + encodeURIComponent(fb.apiKey);
+              '?mask.fieldPaths=promos&mask.fieldPaths=notice&mask.fieldPaths=socials&key=' +
+              encodeURIComponent(fb.apiKey);
     return fetch(url, { cache: 'no-store' }).then(function (r) {
       if (!r.ok) { throw new Error('settings read failed: ' + r.status); }
       return r.json();
@@ -398,6 +436,7 @@
       clearTimeout(timer);
       show(savedDays(saved) || DEFAULTS.days);
       showNotice(saved.notice);
+      showSocials(saved.socials);
     }, function () { clearTimeout(timer); show(DEFAULTS.days); });
   })();
 

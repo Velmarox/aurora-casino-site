@@ -16,6 +16,22 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.4.0-alpha (2026-11-25)
+- Dashboard: the Contact info and Messages tabs are gone, along with the inbox code
+  and the "Contact form" switch on Show / hide. firestore.rules no longer has the
+  messages collection: site/config is the only thing anyone can read or write.
+- Dashboard: new Socials tab. "+ Add a social link" adds a button; each one picks a
+  site (Facebook, Instagram, TikTok, X, YouTube, Snapchat, Google reviews, Yelp, or
+  Other link), its button text and its address. Up to eight, reorder with the
+  arrows, Remove to drop one. A link typed without https:// gets it added; anything
+  that is not an https address, or an Other link with no text, blocks the save.
+- Homepage: the social buttons under the address come from the dashboard
+  (site/config.socials, same single Firestore read as promos and the notice bar).
+  Until the first save the shipped Facebook and Instagram buttons stay; an empty
+  saved list hides the row. Icons come only from Js/Socials.js (new, shared by both
+  pages); labels go in as text; only https links are shown. The row now wraps.
+  The JSON-LD sameAs list still names the shipped Facebook and Instagram pages.
+
 v0.3.0-alpha (2026-11-25)
 - Notice bar wired up: the homepage shows what the dashboard's Notice bar tab
   saves (site/config.notice), read in the same single Firestore request as the

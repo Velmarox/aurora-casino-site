@@ -1,12 +1,12 @@
 /* ============================================================================
    Aurora Casino - admin dashboard.
 
-   ES module, loaded only on /admin. The Firebase SDK lives here and nowhere
+   ES module, loaded only on /dashboard. The Firebase SDK lives here and nowhere
    near the public homepage, which still ships no framework at all.
 
-   Everything an owner types is written with textContent, never innerHTML. He is
-   trusted, but his messages are not: the inbox renders text typed by strangers
-   on the internet, and that is exactly where markup injection would land.
+   Everything an owner types is written with textContent, never innerHTML. The owner is
+   trusted, but text saved here ends up on the public homepage, so it is treated
+   as data everywhere.
    ========================================================================= */
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -14,8 +14,7 @@ import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
-  getFirestore, doc, getDoc, setDoc,
-  collection, query, orderBy, onSnapshot, updateDoc, deleteDoc
+  getFirestore, doc, getDoc, setDoc
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const app  = initializeApp(window.AURORA_FIREBASE);
@@ -30,16 +29,10 @@ const $  = (id) => document.getElementById(id);
    look identical. */
 const DEFAULTS = {
   notice:   { on: false, text: '', expires: '', linkText: '', linkUrl: '' },
-  contact:  { phone: '(406) 601-1282',
-              facebook: 'https://www.facebook.com/AuroraCasinoMT/',
-              instagram: 'https://www.instagram.com/aurora_casino/' },
-  sections: { heroVideo: true, promos: true, room: true, club: true, contact: true }
+  sections: { heroVideo: true, promos: true, room: true, club: true }
 };
 
 let config = structuredClone(DEFAULTS);
-let messages = [];
-let filter = 'new';
-let stopInbox = null;
 
 /* ---- sign in ------------------------------------------------------------ */
 
@@ -171,8 +164,9 @@ $('forgotBtn').addEventListener('click', async () => {
 });
 
 $('signoutBtn').addEventListener('click', () => {
-  if (promosDirty && !confirm('Your promo changes are not saved. Sign out anyway?')) { return; }
+  if ((promosDirty || socialsDirty) && !confirm('Some changes are not saved. Sign out anyway?')) { return; }
   promosDirty = false;
+  socialsDirty = false;
   signOut(auth);
 });
 
@@ -181,7 +175,6 @@ onAuthStateChanged(auth, (user) => {
   $('appView').hidden    = !user;
   if (user) { load(); }
   else {
-    if (stopInbox) { stopInbox(); stopInbox = null; }
     $('password').value = '';
     $('email').focus();
   }
@@ -197,12 +190,11 @@ async function load() {
     const saved = snap.exists() ? snap.data() : {};
     config = {
       notice:   { ...DEFAULTS.notice,   ...(saved.notice   || {}) },
-      contact:  { ...DEFAULTS.contact,  ...(saved.contact  || {}) },
       sections: { ...DEFAULTS.sections, ...(saved.sections || {}) }
     };
     fillForms();
     renderPromoDays(promosFromStored(saved.promos && saved.promos.days));
-    watchInbox();
+    renderSocials(socialsFromStored(saved.socials));
     $('loading').hidden = true;
     $('panels').hidden = false;
   } catch (err) {
@@ -216,19 +208,15 @@ function fillForms() {
   $('nOn').checked    = !!config.notice.on;
   $('nText').value    = config.notice.text || '';
   $('nExpires').value = config.notice.expires || '';
-  $('cPhone').value     = config.contact.phone || '';
-  $('cFacebook').value  = config.contact.facebook || '';
-  $('cInstagram').value = config.contact.instagram || '';
   $('sHeroVideo').checked = !!config.sections.heroVideo;
   $('sPromos').checked    = !!config.sections.promos;
   $('sRoom').checked      = !!config.sections.room;
   $('sClub').checked      = !!config.sections.club;
-  $('sContact').checked   = !!config.sections.contact;
   refreshPreview();
 }
 
 /* merge:true so saving one panel cannot wipe another. Without it, saving the
-   notice bar would silently blank the contact details. */
+   notice bar would silently blank the promos. */
 async function save(part, data, btn) {
   const flag = document.querySelector(`[data-saved="${part}"]`);
   btn.disabled = true;
@@ -259,19 +247,12 @@ document.querySelectorAll('[data-save]').forEach((btn) => {
         linkText: config.notice.linkText || '',
         linkUrl: config.notice.linkUrl || ''
       }, btn);
-    } else if (part === 'contact') {
-      save('contact', {
-        phone: $('cPhone').value.trim(),
-        facebook: $('cFacebook').value.trim(),
-        instagram: $('cInstagram').value.trim()
-      }, btn);
     } else {
       save('sections', {
         heroVideo: $('sHeroVideo').checked,
         promos: $('sPromos').checked,
         room: $('sRoom').checked,
-        club: $('sClub').checked,
-        contact: $('sContact').checked
+        club: $('sClub').checked
       }, btn);
     }
   });
@@ -298,129 +279,6 @@ document.querySelectorAll('.tab').forEach((tab) => {
     document.querySelectorAll('.panel').forEach((p) => {
       p.hidden = p.id !== tab.dataset.panel;
     });
-  });
-});
-
-/* ---- inbox -------------------------------------------------------------- */
-
-/* Ordered by date only, then filtered in the browser. Filtering in the query
-   would need a composite index built by hand in the console, and this inbox
-   will hold tens of messages, not thousands. Fewer setup steps to get wrong. */
-function watchInbox() {
-  if (stopInbox) { stopInbox(); }
-  const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
-  stopInbox = onSnapshot(q,
-    (snap) => {
-      messages = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-      renderInbox();
-    },
-    (err) => {
-      $('inboxEmpty').textContent = 'Could not load messages. Refresh the page.';
-      $('inboxEmpty').hidden = false;
-      console.error(err);
-    });
-}
-
-function when(ts) {
-  if (!ts || !ts.toDate) { return ''; }
-  return ts.toDate().toLocaleString('en-US', {
-    timeZone: TZ, month: 'short', day: 'numeric',
-    hour: 'numeric', minute: '2-digit'
-  });
-}
-
-function renderInbox() {
-  const unread = messages.filter((m) => m.status === 'new').length;
-  const badge = $('unreadCount');
-  badge.textContent = String(unread);
-  badge.hidden = unread === 0;
-
-  const list = $('inbox');
-  list.textContent = '';
-  const shown = messages.filter((m) => (m.status || 'new') === filter);
-  $('inboxEmpty').hidden = shown.length > 0;
-  $('inboxEmpty').textContent =
-    filter === 'new' ? 'No new messages.' :
-    filter === 'read' ? 'Nothing read yet.' : 'Nothing archived.';
-
-  shown.forEach((m) => list.appendChild(noteEl(m)));
-}
-
-function noteEl(m) {
-  const li = document.createElement('li');
-  li.className = 'note' + (m.status === 'new' ? ' unread' : '');
-
-  const who = document.createElement('div');
-  who.className = 'who';
-  const nm = document.createElement('span');
-  nm.className = 'nm';
-  nm.textContent = m.name || 'No name given';
-  const wh = document.createElement('span');
-  wh.className = 'when';
-  wh.textContent = when(m.createdAt);
-  who.append(nm, wh);
-
-  const ct = document.createElement('div');
-  ct.className = 'ct';
-  if (m.phone) {
-    const a = document.createElement('a');
-    a.href = 'tel:' + String(m.phone).replace(/[^\d+]/g, '');
-    a.textContent = m.phone;
-    ct.appendChild(a);
-  }
-  if (m.email) {
-    const a = document.createElement('a');
-    a.href = 'mailto:' + m.email;
-    a.textContent = m.email;
-    ct.appendChild(a);
-  }
-
-  const body = document.createElement('p');
-  body.className = 'body';
-  body.textContent = m.message || '';
-
-  const acts = document.createElement('div');
-  acts.className = 'acts';
-  acts.append(
-    actBtn(m.status === 'new' ? 'Mark as read' : 'Mark as unread',
-           () => setStatus(m.id, m.status === 'new' ? 'read' : 'new')),
-    actBtn(m.status === 'archived' ? 'Put back' : 'Archive',
-           () => setStatus(m.id, m.status === 'archived' ? 'read' : 'archived')),
-    actBtn('Delete', () => remove(m), true)
-  );
-
-  li.append(who, ct, body, acts);
-  return li;
-}
-
-function actBtn(label, onClick, danger) {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'btn' + (danger ? ' danger' : '');
-  b.textContent = label;
-  b.addEventListener('click', onClick);
-  return b;
-}
-
-async function setStatus(id, status) {
-  try { await updateDoc(doc(db, 'messages', id), { status }); }
-  catch (err) { console.error(err); alert('That did not save. Check your internet and try again.'); }
-}
-
-/* Deleting a message is permanent and there is no undo, so it asks first and
-   names the person - "Delete this?" is too easy to click through by habit. */
-async function remove(m) {
-  const who = m.name ? `the message from ${m.name}` : 'this message';
-  if (!confirm(`Permanently delete ${who}?\n\nThis cannot be undone.`)) { return; }
-  try { await deleteDoc(doc(db, 'messages', m.id)); }
-  catch (err) { console.error(err); alert('That did not delete. Check your internet and try again.'); }
-}
-
-document.querySelectorAll('[data-filter]').forEach((chip) => {
-  chip.addEventListener('click', () => {
-    filter = chip.dataset.filter;
-    document.querySelectorAll('[data-filter]').forEach((c) => c.classList.toggle('on', c === chip));
-    renderInbox();
   });
 });
 
@@ -667,3 +525,172 @@ window.addEventListener('beforeunload', (e) => {
 
 // Drawn straight away from the shipped promos; load() replaces them with the saved set.
 renderPromoDays(promosFromStored(P.days));
+
+/* ---- social links ------------------------------------------------------- */
+
+/* The buttons under the address on the homepage. Saved as
+   site/config.socials = { links: [{ platform, label, url }] }, in display order.
+   Platforms and icons come from Js/Socials.js, shared with the homepage. Until the
+   first save the homepage keeps the Facebook and Instagram buttons it ships with;
+   saving an empty list hides the row. */
+
+const SOC = window.AURORA_SOCIALS;
+let socialsDirty = false;
+
+function socialsFromStored(saved) {
+  if (!saved || !Array.isArray(saved.links)) { return SOC.defaults.map((l) => ({ ...l })); }
+  return saved.links.slice(0, SOC.max)
+    .filter((l) => l && typeof l.url === 'string')
+    .map((l) => ({
+      platform: SOC.platforms[l.platform] ? l.platform : 'other',
+      label: typeof l.label === 'string' ? l.label.slice(0, 30) : '',
+      url: l.url.slice(0, 300)
+    }));
+}
+
+function socialIcon(platform) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.innerHTML = SOC.platforms[platform].icon;      // trusted: from Socials.js only
+  return svg;
+}
+
+function socialRow(l) {
+  const row = el('div', { className: 'slink' });
+  const icon = el('span', { className: 'sicon' });
+
+  const plat = el('select', { className: 'splat' });
+  plat.setAttribute('aria-label', 'Which site');
+  Object.entries(SOC.platforms).forEach(([key, p]) =>
+    plat.append(el('option', { value: key, textContent: p.name, selected: key === l.platform })));
+
+  const label = el('input', { type: 'text', className: 'slabel', maxLength: 30, value: l.label });
+  label.setAttribute('aria-label', 'Button text');
+  const url = el('input', { type: 'url', className: 'surl', maxLength: 300, value: l.url, inputMode: 'url' });
+  url.setAttribute('aria-label', 'Link');
+
+  const up   = el('button', { type: 'button', className: 'btn small sup',   textContent: '↑', title: 'Move up' });
+  const down = el('button', { type: 'button', className: 'btn small sdown', textContent: '↓', title: 'Move down' });
+  const del  = el('button', { type: 'button', className: 'btn small',       textContent: 'Remove' });
+  up.setAttribute('aria-label', 'Move up');
+  down.setAttribute('aria-label', 'Move down');
+
+  /* Changing the site swaps the icon and the example link, and replaces the button
+     text if it was still the old site's name (so a custom label survives). */
+  let lastName = SOC.platforms[l.platform].name;
+  const sync = () => {
+    const p = SOC.platforms[plat.value];
+    icon.textContent = '';
+    icon.append(socialIcon(plat.value));
+    url.placeholder = p.hint;
+    label.placeholder = plat.value === 'other' ? 'Button text, e.g. Our menu' : p.name;
+    if (!label.value.trim() || label.value.trim() === lastName) {
+      label.value = plat.value === 'other' ? '' : p.name;
+    }
+    lastName = p.name;
+  };
+  plat.addEventListener('change', sync);
+  sync();
+
+  up.addEventListener('click', () => { if (row.previousElementSibling) { row.parentNode.insertBefore(row, row.previousElementSibling); socialsChanged(); } });
+  down.addEventListener('click', () => { if (row.nextElementSibling) { row.parentNode.insertBefore(row.nextElementSibling, row); socialsChanged(); } });
+  del.addEventListener('click', () => { row.remove(); socialsChanged(); });
+
+  row.append(icon, plat, label, url, el('span', { className: 'sbtns' }, [up, down, del]));
+  return row;
+}
+
+function refreshSocialButtons() {
+  const rows = [...document.querySelectorAll('.slink')];
+  rows.forEach((r, i) => {
+    r.querySelector('.sup').disabled = i === 0;
+    r.querySelector('.sdown').disabled = i === rows.length - 1;
+  });
+  $('socialAdd').hidden = rows.length >= SOC.max;
+  if (!rows.length) {
+    $('socialList').dataset.empty = 'No social buttons. The row is hidden on your website.';
+  } else {
+    delete $('socialList').dataset.empty;
+  }
+}
+
+function socialsChanged() {
+  socialsDirty = true;
+  $('socialSaved').hidden = true;
+  refreshSocialButtons();
+}
+
+function renderSocials(links) {
+  const box = $('socialList');
+  box.textContent = '';
+  links.forEach((l) => box.append(socialRow(l)));
+  socialsDirty = false;
+  $('socialMsg').hidden = true;
+  refreshSocialButtons();
+}
+
+$('socialList').addEventListener('input', socialsChanged);
+$('socialList').addEventListener('change', socialsChanged);
+
+$('socialAdd').addEventListener('click', () => {
+  const row = socialRow({ platform: 'facebook', label: '', url: '' });
+  $('socialList').append(row);
+  socialsChanged();
+  row.querySelector('.splat').focus();
+});
+
+$('socialSave').addEventListener('click', async () => {
+  const msg = $('socialMsg'), flag = $('socialSaved'), btn = $('socialSave');
+  const rows = [...document.querySelectorAll('.slink')];
+  const links = [];
+  for (const r of rows) {
+    const platform = r.querySelector('.splat').value;
+    const labelEl = r.querySelector('.slabel'), urlEl = r.querySelector('.surl');
+    let url = urlEl.value.trim();
+    // People paste "facebook.com/..." without the https:// part. Add it for them.
+    if (url && !/^[a-z]+:\/\//i.test(url)) { url = 'https://' + url; }
+    const label = labelEl.value.trim() || (platform === 'other' ? '' : SOC.platforms[platform].name);
+    let okUrl = false;
+    try { okUrl = new URL(url).protocol === 'https:' && url.includes('.'); } catch (e) { okUrl = false; }
+    if (!okUrl) {
+      say(msg, 'Each social button needs its full web address, starting with https://. Fix the highlighted one.', false);
+      urlEl.setAttribute('aria-invalid', 'true');
+      urlEl.focus();
+      return;
+    }
+    if (!label) {
+      say(msg, 'An "Other link" button needs some button text, e.g. "Our menu".', false);
+      labelEl.setAttribute('aria-invalid', 'true');
+      labelEl.focus();
+      return;
+    }
+    urlEl.removeAttribute('aria-invalid');
+    labelEl.removeAttribute('aria-invalid');
+    urlEl.value = url;
+    links.push({ platform, label, url });
+  }
+
+  msg.hidden = true;
+  flag.hidden = true;
+  btn.disabled = true;
+  try {
+    await setDoc(doc(db, 'site', 'config'), { socials: { links } }, { merge: true });
+    socialsDirty = false;
+    flag.textContent = links.length ? 'Saved. Your website shows these buttons now.' : 'Saved. The social buttons are hidden on your website.';
+    flag.hidden = false;
+  } catch (err) {
+    say(msg, err && err.code === 'permission-denied'
+      ? 'That did not save: this account is not allowed to change the website.'
+      : 'That did not save. Check your internet and try again.', false);
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+window.addEventListener('beforeunload', (e) => {
+  if (socialsDirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
+renderSocials(socialsFromStored(null));

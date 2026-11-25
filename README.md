@@ -7,9 +7,10 @@ Deployed to Firebase Hosting as static files.
 `/work/demos/aurora/dashboard` (on the demo host:
 merwinwebdesignz.com/work/demos/aurora/dashboard). Sign in with the owner account
 (Firebase email/password, project aurora-casino-mt; "Forgot your password?" sends a
-reset email). The Promos and Notice bar tabs change the homepage: it reads Firestore
-site/config (promos, notice) and falls back to `Js/Promos_Default.js` and no notice.
-The Contact info and Show/hide tabs save, but the homepage does not read those yet.
+reset email). The Promos, Notice bar and Socials tabs change the homepage: it reads Firestore
+site/config (promos, notice, socials) and falls back to `Js/Promos_Default.js`, no
+notice, and the Facebook/Instagram buttons in index.html. The Show / hide tab saves,
+but the homepage does not read it yet.
 
 ## Deploy
 1. `npm i -g firebase-tools` (once) and `firebase login`
