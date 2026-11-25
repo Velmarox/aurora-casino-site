@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="version" content="v0.4.0-alpha">
+  <meta name="version" content="v0.5.0-alpha">
   <title>Aurora Casino — Manage your site</title>
   <link rel="icon" href="/work/demos/aurora/Assets/Brand/Aurora_Badge_32.png" type="image/png" sizes="32x32">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,6 +70,7 @@
       <button role="tab" class="tab"    data-panel="pNotice"  aria-selected="false">Notice bar</button>
       <button role="tab" class="tab"    data-panel="pSocials" aria-selected="false">Socials</button>
       <button role="tab" class="tab"    data-panel="pShow"    aria-selected="false">Show / hide</button>
+      <button role="tab" class="tab"    data-panel="pAccount" aria-selected="false">Account</button>
     </nav>
     <button class="btn ghost" type="button" id="signoutBtn">Sign out</button>
   </header>
@@ -166,6 +167,44 @@
         <button class="btn primary" type="button" data-save="sections">Save changes</button>
         <span class="saved" data-saved="sections" role="status" aria-live="polite" hidden>Saved</span>
       </div>
+    </section>
+
+    <!-- ---- account ---- -->
+    <section class="panel" id="pAccount" hidden>
+      <h2>Your account</h2>
+      <p class="hint">Signed in as <strong id="acctEmail"></strong>.</p>
+
+      <form id="pwForm" class="pwform" novalidate>
+        <h3>Change your password</h3>
+        <p class="field">
+          <label for="pwCurrent">Current password</label>
+          <span class="pw">
+            <input id="pwCurrent" type="password" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" data-for="pwCurrent" aria-pressed="false">Show</button>
+          </span>
+        </p>
+        <p class="field">
+          <label for="pwNew">New password</label>
+          <span class="pw">
+            <input id="pwNew" type="password" autocomplete="new-password" minlength="8" required>
+            <button type="button" class="pw-toggle" data-for="pwNew" aria-pressed="false">Show</button>
+          </span>
+          <span class="hint">At least 8 characters. A short sentence you will remember works well.</span>
+        </p>
+        <p class="field">
+          <label for="pwConfirm">Type the new password again</label>
+          <span class="pw">
+            <input id="pwConfirm" type="password" autocomplete="new-password" required>
+            <button type="button" class="pw-toggle" data-for="pwConfirm" aria-pressed="false">Show</button>
+          </span>
+        </p>
+
+        <p class="msg" id="pwMsg" role="alert" hidden></p>
+
+        <div class="foot">
+          <button class="btn primary" type="submit" id="pwSave">Change password</button>
+        </div>
+      </form>
     </section>
 
   </div>

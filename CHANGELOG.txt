@@ -16,6 +16,19 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.5.0-alpha (2026-11-25)
+- Show / hide wired up: the homepage reads site/config.sections in the same single
+  Firestore request. Switching off This week's promos, Photos of the room or Players
+  club hides that section and every link that jumps to it (top nav, phone menu,
+  footer, the hero button, "See the whole week", the phone action bar, which then
+  sizes itself to the buttons left). Switching off the moving video means it is never
+  downloaded: the video now waits for the settings read (or the 3 s timeout) before
+  it starts. Only an explicit "off" hides anything; a failed read shows everything.
+- Dashboard: new Account tab with Change your password. Asks for the current password
+  first (Firebase needs a recent sign-in, and someone at an unattended screen cannot
+  lock the owner out), then the new one twice. At least 8 characters, must match,
+  must differ from the current one; a wrong current password says so plainly.
+
 v0.4.0-alpha (2026-11-25)
 - Dashboard: the Contact info and Messages tabs are gone, along with the inbox code
   and the "Contact form" switch on Show / hide. firestore.rules no longer has the

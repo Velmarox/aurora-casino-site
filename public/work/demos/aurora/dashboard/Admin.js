@@ -11,7 +11,8 @@
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail,
+  EmailAuthProvider, reauthenticateWithCredential, updatePassword
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
   getFirestore, doc, getDoc, setDoc
@@ -173,7 +174,7 @@ $('signoutBtn').addEventListener('click', () => {
 onAuthStateChanged(auth, (user) => {
   $('signinView').hidden = !!user;
   $('appView').hidden    = !user;
-  if (user) { load(); }
+  if (user) { $('acctEmail').textContent = user.email || ''; load(); }
   else {
     $('password').value = '';
     $('email').focus();
@@ -694,3 +695,65 @@ window.addEventListener('beforeunload', (e) => {
 });
 
 renderSocials(socialsFromStored(null));
+
+/* ---- account: change password ------------------------------------------- */
+
+/* Firebase only lets a password change through with a recent sign-in, so the
+   current password is asked for and checked first (reauthenticate). That also
+   means someone who finds the dashboard left open cannot lock the owner out
+   without knowing the password. */
+
+document.querySelectorAll('.pw-toggle[data-for]').forEach((b) => {
+  b.addEventListener('click', () => {
+    const input = $(b.dataset.for), show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    b.textContent = show ? 'Hide' : 'Show';
+    b.setAttribute('aria-pressed', String(show));
+    input.focus();
+  });
+});
+
+function pwError(text, id) {
+  say($('pwMsg'), text, false);
+  if (id) { $(id).setAttribute('aria-invalid', 'true'); $(id).focus(); }
+}
+
+['pwCurrent', 'pwNew', 'pwConfirm'].forEach((id) => {
+  $(id).addEventListener('input', () => { $(id).removeAttribute('aria-invalid'); $('pwMsg').hidden = true; });
+});
+
+$('pwForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const current = $('pwCurrent').value, next = $('pwNew').value, again = $('pwConfirm').value;
+  if (!current)             { pwError('Type your current password.', 'pwCurrent'); return; }
+  if (next.length < 8)      { pwError('The new password needs at least 8 characters.', 'pwNew'); return; }
+  if (next !== again)       { pwError('The two new passwords do not match. Type them again.', 'pwConfirm'); return; }
+  if (next === current)     { pwError('That is the same as your current password. Pick a new one.', 'pwNew'); return; }
+
+  const btn = $('pwSave'), user = auth.currentUser;
+  if (!user || !user.email) { pwError('You have been signed out. Sign in again, then change your password.'); return; }
+  btn.disabled = true;
+  $('pwMsg').hidden = true;
+  try {
+    await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, current));
+  } catch (err) {
+    const code = err && err.code;
+    btn.disabled = false;
+    if (code === 'auth/too-many-requests' || code === 'auth/network-request-failed') { pwError(authMessage(code), 'pwCurrent'); }
+    else { pwError('Your current password is not right. Check for typos (and Caps Lock) and try again.', 'pwCurrent'); $('pwCurrent').value = ''; }
+    return;
+  }
+  try {
+    await updatePassword(user, next);
+    ['pwCurrent', 'pwNew', 'pwConfirm'].forEach((id) => { $(id).value = ''; });
+    say($('pwMsg'), 'Password changed. Use the new one next time you sign in.', true);
+  } catch (err) {
+    const code = err && err.code;
+    pwError(code === 'auth/weak-password'
+      ? 'That password is too easy to guess. Make it longer.'
+      : (code === 'auth/network-request-failed' ? authMessage(code) : 'The password did not change. Try again.'), 'pwNew');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+});

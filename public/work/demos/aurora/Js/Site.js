@@ -196,6 +196,43 @@
     box.style.display = links.length ? "" : "none";
   }
 
+  /* -- 2c  show / hide sections -------------------------------------------- */
+  /* The dashboard's Show / hide tab. A section switched off disappears, and so
+     does every link that jumps to it (top nav, phone menu, footer, the hero
+     button, the phone action bar), so nothing points at a section that is not
+     there. Only an explicit false hides anything: nothing saved, a failed read or
+     a damaged value shows everything. The hero video switch is handled where the
+     video starts (section 8). */
+  var SECTION_PARTS = {
+    promos: { ids: ['week', 'now'], anchor: '#week' },
+    room:   { ids: ['room'],        anchor: '#room' },
+    club:   { ids: ['club'],        anchor: '#club' }
+  };
+
+  function applySections(sections) {
+    if (!sections || typeof sections !== 'object') { return; }
+    Object.keys(SECTION_PARTS).forEach(function (key) {
+      if (sections[key] !== false) { return; }
+      var part = SECTION_PARTS[key];
+      part.ids.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) { el.hidden = true; el.style.display = 'none'; }
+      });
+      // style.display, not hidden: several of these links have display rules
+      // in Site.css that would beat the hidden attribute.
+      var links = document.querySelectorAll('a[href="' + part.anchor + '"]');
+      for (var i = 0; i < links.length; i++) { links[i].style.display = 'none'; }
+    });
+
+    // The phone action bar is a three-column grid; size it to what is left.
+    var bar = document.querySelector('.actionbar');
+    if (bar) {
+      var left = 0, kids = bar.children;
+      for (var k = 0; k < kids.length; k++) { if (kids[k].style.display !== 'none') { left++; } }
+      bar.style.gridTemplateColumns = 'repeat(' + Math.max(left, 1) + ',1fr)';
+    }
+  }
+
   /* -- 3  open / closed sign ----------------------------------------------- */
 
   var now = localNow();
@@ -293,13 +330,14 @@
   }
 
   // One read for everything the homepage takes from the dashboard: promos, the
-  // notice bar and the social buttons. Resolves with the parsed document; rejects on any failure.
+  // notice bar, the social buttons and which sections are shown. Resolves with the parsed document; rejects on any failure.
   function fetchSaved() {
     var fb = window.AURORA_FIREBASE;
     if (!fb || !fb.projectId || !fb.apiKey || !window.fetch) { return Promise.reject(new Error('no config')); }
     var url = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(fb.projectId) +
               '/databases/(default)/documents/site/config' +
-              '?mask.fieldPaths=promos&mask.fieldPaths=notice&mask.fieldPaths=socials&key=' +
+              '?mask.fieldPaths=promos&mask.fieldPaths=notice&mask.fieldPaths=socials' +
+              '&mask.fieldPaths=sections&key=' +
               encodeURIComponent(fb.apiKey);
     return fetch(url, { cache: 'no-store' }).then(function (r) {
       if (!r.ok) { throw new Error('settings read failed: ' + r.status); }
@@ -423,21 +461,29 @@
   }
 
   // Promos render once: the saved set if it arrives in time, otherwise the shipped
-  // one. The notice bar shows whenever the read answers, late or not.
+  // one. The notice bar, social buttons and show/hide apply whenever the read
+  // answers. The hero video waits for the same answer (or the same timeout).
   (function () {
-    var done = false;
+    var done = false, videoStarted = false;
+    function video(sections) {
+      if (videoStarted) { return; }
+      videoStarted = true;
+      if (!sections || sections.heroVideo !== false) { startHeroVideo(); }
+    }
     function show(days) {
       if (done) { return; }
       done = true;
       renderPromos(cleanWeek(days));
     }
-    var timer = setTimeout(function () { show(DEFAULTS.days); }, PROMOS_WAIT_MS);
+    var timer = setTimeout(function () { show(DEFAULTS.days); video(null); }, PROMOS_WAIT_MS);
     fetchSaved().then(function (saved) {
       clearTimeout(timer);
       show(savedDays(saved) || DEFAULTS.days);
       showNotice(saved.notice);
       showSocials(saved.socials);
-    }, function () { clearTimeout(timer); show(DEFAULTS.days); });
+      applySections(saved.sections);
+      video(saved.sections);
+    }, function () { clearTimeout(timer); show(DEFAULTS.days); video(null); });
   })();
 
 
@@ -474,21 +520,26 @@
      under reduced motion, or when the browser reports Data Saver or a 2G link.
      Those visitors keep the poster still, which is already on screen. */
 
-  var hv = document.getElementById('heroVideo');
-  if (hv) {
-    var wideEnough = window.matchMedia('(min-width: 820px)').matches;
-    var motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var conn = navigator.connection || {};
-    var dataOK = conn.saveData !== true && !/2g/.test(conn.effectiveType || '');
+  /* Called once the settings read answers (section 4), so a video the owner has
+     switched off in the dashboard is never downloaded just to be thrown away.
+     A failed or slow read still starts it. */
+  function startHeroVideo() {
+    var hv = document.getElementById('heroVideo');
+    if (hv) {
+      var wideEnough = window.matchMedia('(min-width: 820px)').matches;
+      var motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var conn = navigator.connection || {};
+      var dataOK = conn.saveData !== true && !/2g/.test(conn.effectiveType || '');
 
-    if (wideEnough && motionOK && dataOK) {
-      hv.addEventListener('canplay', function () { hv.classList.add('is-ready'); }, { once: true });
-      hv.src = '/work/demos/aurora/Assets/Video/Hero_Loop.mp4';
-      var attempt = hv.play();
-      // Autoplay refused, which some power-saving modes do. Drop the download
-      // rather than stall on it.
-      if (attempt && attempt.catch) {
-        attempt.catch(function () { hv.removeAttribute('src'); hv.load(); });
+      if (wideEnough && motionOK && dataOK) {
+        hv.addEventListener('canplay', function () { hv.classList.add('is-ready'); }, { once: true });
+        hv.src = '/work/demos/aurora/Assets/Video/Hero_Loop.mp4';
+        var attempt = hv.play();
+        // Autoplay refused, which some power-saving modes do. Drop the download
+        // rather than stall on it.
+        if (attempt && attempt.catch) {
+          attempt.catch(function () { hv.removeAttribute('src'); hv.load(); });
+        }
       }
     }
   }
