@@ -20,14 +20,29 @@
 
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
-    # Override if the portfolio repo ever moves.
-    [string]$PortfolioRepo = "C:\Users\Administrator\Documents\MWD Studio\2 Active\Jamie Web Portfolio\Merwin_Web_Designz_v3.2.2",
+    # Leave blank to use the newest Merwin_Web_Designz_v* folder under
+    # $PortfolioParent. The portfolio's folder name carries its version, so a
+    # fixed path here goes stale on every portfolio bump.
+    [string]$PortfolioRepo = "",
+
+    [string]$PortfolioParent = "C:\Users\Administrator\Documents\MWD Studio\2 Active\Jamie Web Portfolio",
 
     # Folder name under /work/demos/ on the portfolio site.
     [string]$ClientFolder = "aurora"
 )
 
 $ErrorActionPreference = 'Stop'
+
+if (-not $PortfolioRepo) {
+    # Newest by version number, not by name: v3.10.0 sorts after v3.9.0.
+    $PortfolioRepo = Get-ChildItem $PortfolioParent -Directory -Filter 'Merwin_Web_Designz_v*' -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -match '_v(\d+)\.(\d+)\.(\d+)$' } |
+        Sort-Object { [version]($_.Name -replace '^.*_v', '') } -Descending |
+        Select-Object -First 1 -ExpandProperty FullName
+    if (-not $PortfolioRepo) {
+        throw "No Merwin_Web_Designz_v* folder found in $PortfolioParent`nPass -PortfolioRepo with the right path."
+    }
+}
 
 $repoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $source   = Join-Path $repoRoot "public\work\demos\$ClientFolder"
