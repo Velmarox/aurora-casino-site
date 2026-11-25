@@ -43,49 +43,10 @@
      endpoint gets the dashboard backend URL in Phase 2. */
   var CONTACT = { on: false, endpoint: '' };
 
-  /* Weekly promos, 0 = Sunday through 6 = Saturday. null means no promo that day
-     and no banner at all. Saturday and Sunday are deliberately null.
-       tags  [text, colour] where j = jade, m = magenta, p = plain outline
-       draws drawing times in MINUTES past midnight, so half hours work */
-  var WEEK = [
-    null,
-    {
-      d: 'Monday', when: 'All day', title: '3X Points All Day',
-      img: '/work/demos/aurora/Assets/Promos/Promo_Gaming_Floor.avif',
-      desc: 'Triple points on every machine, open to close. It\'s the quickest way up the tiers.',
-      tags: [['3X points all day', 'm'], ['Level up to Platinum', 'p']],
-      draws: []
-    },
-    {
-      d: 'Tuesday', when: 'All day', title: 'Loyalty Rewards Day',
-      img: '/work/demos/aurora/Assets/Promos/Promo_Cash_On_Bar.avif',
-      desc: 'Free play based on your player tier: Silver $10, Gold $20, Platinum $30, Platinum Plus $40.',
-      tags: [['Log in and get rewards', 'j'], ['All day long', 'p']],
-      draws: []
-    },
-    {
-      d: 'Wednesday', when: 'All day', title: 'Win-It Wednesdays',
-      img: '/work/demos/aurora/Assets/Promos/Promo_Drawing_Drum.avif',
-      desc: 'Every player who logs in on Wednesday is entered into a $25 cash drawing. Two winners are drawn Thursday morning.',
-      tags: [['$25 cash drawing', 'j'], ['Monthly $300 drawing', 'm'], ['$1,000 year-end drawing', 'm']],
-      draws: []
-    },
-    {
-      d: 'Thursday', when: 'All day', title: 'VIP Rewards Day',
-      img: '/work/demos/aurora/Assets/Promos/Promo_Lounge_Wine.avif',
-      desc: 'Platinum and Platinum Plus members collect their VIP free play.',
-      tags: [['Platinum $30', 'j'], ['Platinum Plus $40', 'm']],
-      draws: []
-    },
-    {
-      d: 'Friday', when: '7 – 9 PM', title: 'Nifty-Fifty Fridays',
-      img: '/work/demos/aurora/Assets/Promos/Promo_Slots_Night.avif',
-      desc: 'Drawings every thirty minutes from seven to nine. The prize amount is based on your player rank.',
-      tags: [['Win up to $50', 'j'], ['Every 30 minutes', 'p']],
-      draws: [1140, 1170, 1200, 1230, 1260]
-    },
-    null
-  ];
+  /* Weekly promos are no longer edited here. The shipped set lives in
+     Js/Promos_Default.js; the owner changes them from the dashboard, and section 4
+     below reads what was saved. */
+  var PROMOS_WAIT_MS = 3000;   // longest the promo banners wait for the saved set
 
   /* ===================== END EDIT ME ======================================= */
 
@@ -225,71 +186,172 @@
   var promoDay = afterMidnight ? (now.day + 6) % 7 : now.day;
 
 
-  /* -- 4  weekly promo banners, today first -------------------------------- */
+  /* -- 4  weekly promos: the saved set, or the shipped one ----------------- */
+  /* The owner edits promos in the dashboard, which saves them to Firestore
+     (site/config, field "promos"). This reads that document through Firestore's
+     public REST endpoint: one GET, no SDK, so the homepage still ships no
+     framework. site/config is world-readable by the rules, so no sign-in.
 
-  var grid = document.getElementById('week-grid');
-  if (grid) {
-    var html = '';
-    for (var i = 0; i < 7; i++) {
-      var p = WEEK[(promoDay + i) % 7];
-      if (!p) { continue; }                              // weekends render nothing
-      var today = i === 0;
-      var tags = p.tags.map(function (g) {
-        return '<span class="tag ' + g[1] + '">' + g[0] + '</span>';
-      }).join('');
+     Any failure - offline, a 403, a 404 because nothing was ever saved, a slow
+     answer past PROMOS_WAIT_MS - shows the shipped promos from Promos_Default.js.
+     If App Check ENFORCEMENT is ever switched on for Firestore, this read has no
+     token and fails, so the site quietly shows the shipped promos: leave
+     Firestore unenforced, or teach this read to carry a token first.
 
-      html +=
-        '<article class="day' + (today ? ' today' : '') + '">' +
-          '<img class="bg" src="' + p.img + '" alt="" loading="lazy" decoding="async">' +
-          '<div class="body">' +
-            '<div class="copy">' +
-              '<div class="top"><span class="d">' + (today ? 'Today · ' + p.d : p.d) + '</span></div>' +
-              '<h3 class="title">' + p.title + '</h3>' +
-              (p.draws.length
-                ? '<p class="draw">Drawings <span class="mono">' + p.draws.map(fmtTime).join(' · ') + '</span></p>'
-                : '') +
+     Everything read is treated as untrusted: only known fields, strings
+     length-capped, pictures only from the approved list, colours only j/m/p,
+     drawing times only whole minutes in range. Text is escaped before it goes
+     into markup, because it now comes from outside the codebase. */
+
+  var DEFAULTS = window.AURORA_PROMOS || { imageBase: '', images: [], days: [] };
+  var DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function cap(v, n) { return typeof v === 'string' ? v.trim().slice(0, n) : ''; }
+
+  // One day, cleaned. Returns null for "no promo" or anything unusable.
+  function cleanDay(p) {
+    if (!p || typeof p !== 'object' || p.on === false) { return null; }   // switched off in the dashboard
+    var title = cap(p.title, 60);
+    if (!title) { return null; }
+    var okImg = DEFAULTS.images.some(function (im) { return im.file === p.img; });
+    return {
+      when:  cap(p.when, 30),
+      title: title,
+      img:   okImg ? p.img : (DEFAULTS.images[0] ? DEFAULTS.images[0].file : ''),
+      desc:  cap(p.desc, 300),
+      tags:  (Array.isArray(p.tags) ? p.tags : []).slice(0, 4).map(function (t) {
+        return t && { text: cap(t.text, 40), color: /^[jmp]$/.test(t.color) ? t.color : 'p' };
+      }).filter(function (t) { return t && t.text; }),
+      draws: (Array.isArray(p.draws) ? p.draws : []).map(Number).filter(function (n) {
+        return n % 1 === 0 && n >= 0 && n < 1800;
+      }).sort(function (a, b) { return a - b; }).slice(0, 12)
+    };
+  }
+
+  function cleanWeek(days) {
+    var week = [];
+    for (var d = 0; d < 7; d++) { week.push(cleanDay(days && days[d])); }
+    return week;
+  }
+
+  // Firestore REST returns typed values ({stringValue: 'x'}, {arrayValue: ...}).
+  function fsValue(v) {
+    if (!v || typeof v !== 'object') { return null; }
+    if ('stringValue' in v)  { return v.stringValue; }
+    if ('integerValue' in v) { return Number(v.integerValue); }
+    if ('doubleValue' in v)  { return Number(v.doubleValue); }
+    if ('booleanValue' in v) { return !!v.booleanValue; }
+    if ('arrayValue' in v)   { return (v.arrayValue.values || []).map(fsValue); }
+    if ('mapValue' in v)     { return fsFields(v.mapValue.fields); }
+    return null;
+  }
+  function fsFields(f) {
+    var o = {};
+    for (var k in (f || {})) { if (Object.prototype.hasOwnProperty.call(f, k)) { o[k] = fsValue(f[k]); } }
+    return o;
+  }
+
+  function fetchSavedDays() {
+    var fb = window.AURORA_FIREBASE;
+    if (!fb || !fb.projectId || !fb.apiKey || !window.fetch) { return Promise.reject(new Error('no config')); }
+    var url = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(fb.projectId) +
+              '/databases/(default)/documents/site/config?mask.fieldPaths=promos&key=' +
+              encodeURIComponent(fb.apiKey);
+    return fetch(url, { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) { throw new Error('promos read failed: ' + r.status); }
+      return r.json();
+    }).then(function (docJson) {
+      var promos = fsFields(docJson.fields).promos;
+      if (!promos || !Array.isArray(promos.days) || promos.days.length !== 7) { throw new Error('no saved promos'); }
+      return promos.days;
+    });
+  }
+
+  function renderPromos(WEEK) {
+    var grid = document.getElementById('week-grid');
+    if (grid) {
+      var html = '';
+      for (var i = 0; i < 7; i++) {
+        var dayIdx = (promoDay + i) % 7, p = WEEK[dayIdx];
+        if (!p) { continue; }                            // days off render nothing
+        var today = i === 0, dName = DAY_NAMES[dayIdx];
+        var tags = p.tags.map(function (g) {
+          return '<span class="tag ' + g.color + '">' + esc(g.text) + '</span>';
+        }).join('');
+
+        html +=
+          '<article class="day' + (today ? ' today' : '') + '">' +
+            '<img class="bg" src="' + esc(DEFAULTS.imageBase + p.img) + '" alt="" loading="lazy" decoding="async">' +
+            '<div class="body">' +
+              '<div class="copy">' +
+                '<div class="top"><span class="d">' + (today ? 'Today · ' + dName : dName) + '</span></div>' +
+                '<h3 class="title">' + esc(p.title) + '</h3>' +
+                (p.draws.length
+                  ? '<p class="draw">Drawings <span class="mono">' + p.draws.map(fmtTime).join(' · ') + '</span></p>'
+                  : '') +
+              '</div>' +
+              '<p class="desc">' + esc(p.desc) + '</p>' +
+              '<div class="tags">' + tags + '</div>' +
             '</div>' +
-            '<p class="desc">' + p.desc + '</p>' +
-            '<div class="tags">' + tags + '</div>' +
-          '</div>' +
-        '</article>';
-    }
-    grid.innerHTML = html;
-  }
-
-
-  /* -- 5  the "running today" band ----------------------------------------- */
-  /* Hidden in the markup. It is only unhidden once there is something real to
-     put in it, so a weekend or a JS failure shows no empty strip. */
-
-  var band = document.getElementById('now');
-  if (band) {
-    var promo = WEEK[promoDay], off = 0;
-    if (!promo) {                                        // weekend: look ahead to Monday
-      for (off = 1; off <= 7 && !promo; off++) { promo = WEEK[(promoDay + off) % 7]; }
-      off--;
-    }
-
-    if (promo) {
-      band.querySelector('.label').textContent = off === 0 ? 'Today' : 'Next up';
-      band.querySelector('.what b').textContent = promo.title;
-      band.querySelector('.when').textContent = off === 0 ? promo.when : promo.d;
-
-      // A countdown only means anything for a drawing still to come today, on
-      // the same side of midnight as the clock.
-      var next = null;
-      if (off === 0 && isOpen && !afterMidnight) {
-        for (var j = 0; j < promo.draws.length; j++) {
-          if (promo.draws[j] > mins) { next = promo.draws[j]; break; }
-        }
+          '</article>';
       }
-      var badge = band.querySelector('.next');
-      if (next === null) { badge.remove(); }
-      else { badge.textContent = 'Next drawing in ' + fmtGap(next - mins); }
+      grid.innerHTML = html;
+    }
 
-      band.hidden = false;
+    /* -- 5  the "running today" band --------------------------------------- */
+    /* Hidden in the markup. It is only unhidden once there is something real to
+       put in it, so a day off or a JS failure shows no empty strip. */
+
+    var band = document.getElementById('now');
+    if (band) {
+      var promo = WEEK[promoDay], off = 0;
+      if (!promo) {                                      // no promo today: look ahead
+        for (off = 1; off <= 7 && !promo; off++) { promo = WEEK[(promoDay + off) % 7]; }
+        off--;
+      }
+
+      if (promo) {
+        band.querySelector('.label').textContent = off === 0 ? 'Today' : 'Next up';
+        band.querySelector('.what b').textContent = promo.title;
+        band.querySelector('.when').textContent = off === 0 ? promo.when : DAY_NAMES[(promoDay + off) % 7];
+
+        // A countdown only means anything for a drawing still to come tonight.
+        // Times past 1440 belong to after midnight, so compare against the
+        // clock on the casino-night scale.
+        var nightMins = afterMidnight ? mins + 1440 : mins;
+        var next = null;
+        if (off === 0 && isOpen) {
+          for (var j = 0; j < promo.draws.length; j++) {
+            if (promo.draws[j] > nightMins) { next = promo.draws[j]; break; }
+          }
+        }
+        var badge = band.querySelector('.next');
+        if (next === null) { badge.remove(); }
+        else { badge.textContent = 'Next drawing in ' + fmtGap(next - nightMins); }
+
+        band.hidden = false;
+      }
     }
   }
+
+  // Render once: the saved set if it arrives in time, otherwise the shipped one.
+  (function () {
+    var done = false;
+    function show(days) {
+      if (done) { return; }
+      done = true;
+      renderPromos(cleanWeek(days));
+    }
+    var timer = setTimeout(function () { show(DEFAULTS.days); }, PROMOS_WAIT_MS);
+    fetchSavedDays().then(function (days) { clearTimeout(timer); show(days); },
+                          function () { clearTimeout(timer); show(DEFAULTS.days); });
+  })();
 
 
   /* -- 6  mobile menu ------------------------------------------------------ */

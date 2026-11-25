@@ -8,6 +8,9 @@
    ========================================================================= */
 
 *{box-sizing:border-box}
+/* hidden must win over display rules like .signin{display:grid}, or a signed-in
+   owner still sees the sign-in card on top of the dashboard. */
+[hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--bg);color:var(--text);
@@ -135,4 +138,55 @@ h1,h2{font-family:var(--font-display);letter-spacing:var(--tracking-display);mar
   .bar .btn.ghost{margin-left:0;order:3}
   .panels{padding:22px 14px 80px}
   .note .when{margin-left:0;width:100%}
+}
+
+/* ---- promos ---- */
+/* One folded row per day, so the week fits on a phone screen and he opens only
+   the day he is changing. */
+.pdays{display:flex;flex-direction:column;gap:10px}
+.pday{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-ctl)}
+.pday > summary{display:flex;align-items:center;gap:12px;padding:15px 16px;min-height:56px;
+  cursor:pointer;list-style:none}
+.pday > summary::-webkit-details-marker{display:none}
+.pday > summary::after{content:'Edit';margin-left:10px;font-family:var(--font-display);font-weight:800;
+  font-size:12px;letter-spacing:var(--tracking-button);text-transform:uppercase;color:var(--text2)}
+.pday[open] > summary::after{content:'Close'}
+.pday > summary:hover{background:var(--panel3)}
+.sday{font-family:var(--font-display);font-weight:800;font-size:16px;min-width:96px}
+.stitle{color:var(--text2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sstate{font-family:var(--font-display);font-weight:800;font-size:11.5px;letter-spacing:var(--tracking-eyebrow);
+  text-transform:uppercase;padding:3px 9px;border-radius:var(--r-chip);background:var(--jade);color:#121212}
+.pday.off .sstate{background:transparent;color:var(--muted);border:1px solid var(--line3)}
+.pday.off .sday{color:var(--muted)}
+.pbody{padding:6px 16px 18px;border-top:1px solid var(--line)}
+.pbody .toggle{margin:14px 0 20px;background:var(--panel)}
+.pday.off .pbody .field{opacity:.55}
+.flabel{font-family:var(--font-display);font-weight:700;font-size:13px;
+  letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--text2)}
+
+.pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.field .pic{position:relative;display:flex;flex-direction:column;gap:6px;cursor:pointer;
+  font-family:var(--font-body);font-weight:500;font-size:13px;letter-spacing:0;text-transform:none;color:var(--text2)}
+.pic input{position:absolute;opacity:0;pointer-events:none}
+.pic img{width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;border-radius:var(--r-ctl);
+  border:2px solid transparent;background:var(--panel3)}
+.pic input:checked + img{border-color:var(--jade)}
+.pic input:checked ~ span{color:var(--text);font-weight:700}
+.pic input:focus-visible + img{outline:var(--focus-ring);outline-offset:2px}
+
+.prow{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.prow input,.prow select{font-family:var(--font-body);font-size:16px;color:var(--text);
+  background:var(--panel);border:1px solid var(--line3);border-radius:var(--r-ctl);
+  padding:10px 12px;min-height:46px}
+.prow .tagtext{flex:1;min-width:160px;width:auto}
+.draws{display:flex;flex-wrap:wrap;gap:0 18px}
+.prow .drawtime{width:150px}
+.prow input:focus-visible,.prow select:focus-visible{border-color:var(--magenta)}
+.btn.small{min-height:44px;font-size:12px;padding:0 13px;align-self:flex-start}
+.foot .reset{margin-left:auto;font-size:12px}
+.foot .saved{text-transform:none;letter-spacing:0;font-size:14px}
+@media (max-width:640px){
+  .sday{min-width:0}
+  .foot{flex-wrap:wrap}
+  .foot .reset{margin-left:0}
 }

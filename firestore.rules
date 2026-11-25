@@ -32,7 +32,7 @@ service cloud.firestore {
        "any signed-in user" means anyone on the internet. */
     function isOwner() {
       return request.auth != null
-          && request.auth.uid in ['REPLACE_WITH_OWNER_UID'];
+          && request.auth.uid in ['pXylZ2BJrtRvi8TRXXCa83JOhMT2'];
     }
 
     /* A contact message must look exactly like one. hasOnly() is the important

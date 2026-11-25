@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="version" content="v0.1.0-alpha">
+  <meta name="version" content="v0.2.0-alpha">
   <title>Aurora Casino — Manage your site</title>
   <link rel="icon" href="/work/demos/aurora/Assets/Brand/Aurora_Badge_32.png" type="image/png" sizes="32x32">
   <link rel="stylesheet" href="/work/demos/aurora/Css/Aurora_Tokens.css">
   <link rel="stylesheet" href="Admin.css">
   <script src="/work/demos/aurora/Js/Firebase_Config.js"></script>
+  <script src="/work/demos/aurora/Js/Promos_Default.js"></script>
 </head>
 <body>
 
@@ -18,7 +19,7 @@
   <form class="card signin-card" id="signinForm" novalidate>
     <img class="mark" src="/work/demos/aurora/Assets/Brand/Aurora_Badge_180.png" alt="" width="54" height="54">
     <h1>Manage your site</h1>
-    <p class="sub">Sign in to change your promos, contact details and notices.</p>
+    <p class="sub">Sign in to change your promos.</p>
 
     <p class="field">
       <label for="email">Email</label>
@@ -40,7 +41,8 @@
   <header class="bar">
     <span class="brand"><img src="/work/demos/aurora/Assets/Brand/Aurora_Badge_180.png" alt="" width="30" height="30"> Aurora Casino</span>
     <nav class="tabs" role="tablist">
-      <button role="tab" class="tab on" data-panel="pNotice"  aria-selected="true">Notice bar</button>
+      <button role="tab" class="tab on" data-panel="pPromos"  aria-selected="true">Promos</button>
+      <button role="tab" class="tab"    data-panel="pNotice"  aria-selected="false">Notice bar</button>
       <button role="tab" class="tab"    data-panel="pContact" aria-selected="false">Contact info</button>
       <button role="tab" class="tab"    data-panel="pShow"    aria-selected="false">Show / hide</button>
       <button role="tab" class="tab"    data-panel="pInbox"   aria-selected="false">
@@ -54,8 +56,26 @@
 
   <div class="panels" id="panels" hidden>
 
+    <!-- ---- promos ---- -->
+    <section class="panel" id="pPromos">
+      <h2>Weekly promos</h2>
+      <p class="hint">One promo for each day of the week. Open a day to change it, or
+        switch it off for a day with no promo. Your website shows the changes as soon
+        as you press Save.</p>
+
+      <div class="pdays" id="promoDays"></div>
+
+      <p class="msg bad" id="promoMsg" role="alert" hidden></p>
+
+      <div class="foot">
+        <button class="btn primary" type="button" id="promoSave">Save promos</button>
+        <span class="saved" id="promoSaved" role="status" aria-live="polite" hidden>Saved</span>
+        <button class="btn ghost reset" type="button" id="promoReset">Start over from the original promos</button>
+      </div>
+    </section>
+
     <!-- ---- notice bar ---- -->
-    <section class="panel" id="pNotice">
+    <section class="panel" id="pNotice" hidden>
       <h2>Notice bar</h2>
       <p class="hint">A coloured bar across the very top of your website. Use it for
         temporary things: closures, holiday hours, a burst pipe. Leave it switched

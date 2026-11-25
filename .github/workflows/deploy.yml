@@ -23,6 +23,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AURORA_CASINO_SITE }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AURORA_CASINO_MT }}
           channelId: live
-          projectId: aurora-casino-site
+          projectId: aurora-casino-mt

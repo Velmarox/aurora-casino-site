@@ -1,10 +1,10 @@
 # Firebase console setup — Aurora Casino admin dashboard
 
-Everything in `/admin` and the contact form is built and deployed, and **none of
+Everything in the dashboard (`/work/demos/aurora/dashboard-hp4dnbgcrx52/`) and the contact form is built and deployed, and **none of
 it works until this is done**. That is on purpose: the security rules fail closed,
 so an unfinished setup denies everything rather than leaving a hole.
 
-Project: **aurora-casino-site** · console: <https://console.firebase.google.com/>
+Project: **aurora-casino-mt** · console: <https://console.firebase.google.com/>
 
 **Do this whole thing under your own Google account.** Transferring ownership to
 the client is the last step, not the first — if you hand it over now you lose the
@@ -16,7 +16,7 @@ Roughly 20 minutes, minus Part 5 which needs the domain sorted first.
 
 ## Part 1 — Create the Firestore database
 
-- [ ] Console → **aurora-casino-site** → left sidebar → **Build → Firestore Database**
+- [ ] Console → **aurora-casino-mt** → left sidebar → **Build → Firestore Database**
 - [ ] **Create database**
 - [ ] **Location:** `us-central1` or `nam5 (us-central)`. Either is fine for Montana.
       ⚠️ **This is permanent.** It cannot be changed later without rebuilding the
@@ -51,6 +51,11 @@ This is the step that is currently missing. Right now the dashboard reports
       Hover the row and use the copy icon; do not retype it.
 
 ---
+
+### Allow the demo's web address to sign in
+- [ ] **Authentication → Settings → Authorized domains → Add domain**:
+      `merwinwebdesignz.com` (and `www.merwinwebdesignz.com`). Without it the
+      dashboard on the live demo says sign-in is not allowed from this address.
 
 ## Part 3 — Put the UID into the rules
 
@@ -103,8 +108,8 @@ client's.
 - [ ] Domains — add **all** of these:
       - `merwinwebdesignz.com`
       - `www.merwinwebdesignz.com`
-      - `aurora-casino-site.web.app` (where this repo deploys today)
-      - `aurora-casino-site.firebaseapp.com`
+      - `aurora-casino-mt.web.app` (where this repo deploys today)
+      - `aurora-casino-mt.firebaseapp.com`
       - `localhost` (so the form can be tested locally)
 
       Add `demo.merwinwebdesignz.com` too if you go the subdomain route.
@@ -114,7 +119,7 @@ client's.
 
 - [ ] Console → **Build → App Check → Apps** tab
 - [ ] Find the web app → **reCAPTCHA v3** → paste the **secret key** → **Save**
-- [ ] Put the **site key** into `public/Js/Firebase_Config.js` as `recaptchaSiteKey`
+- [ ] Put the **site key** into `public/work/demos/aurora/Js/Firebase_Config.js` as `recaptchaSiteKey`
 
 ### Leave enforcement OFF for now
 
@@ -145,7 +150,7 @@ When the project transfers, billing has to move to **his** card, not yours.
 
 Do these in order. Each one checks something different.
 
-- [ ] Go to `/admin` and sign in with the account from Part 2 → the dashboard loads
+- [ ] Go to the dashboard address and sign in with the account from Part 2 → the dashboard loads
       rather than an error
 - [ ] **Notice bar** → tick the toggle, type anything, **Save notice bar** →
       "Saved" appears
@@ -153,12 +158,17 @@ Do these in order. Each one checks something different.
       `config` document containing what you just typed
 - [ ] Load the public homepage → the notice bar appears at the top
 - [ ] Untick, save, reload → it disappears
-- [ ] Sign out, then visit `/admin` again → you get the login screen, not the
+- [ ] Sign out, then visit the dashboard address again → you get the login screen, not the
       dashboard
 
 If all six pass, the plumbing is sound.
 
 ---
+
+- [ ] **Promos** tab → change Monday's name → **Save promos** → reload the homepage →
+      Monday's banner shows the new name
+- [ ] **Start over from the original promos** → **Save promos** → the homepage is back
+      to the shipped set
 
 ## When something goes wrong
 
@@ -187,7 +197,7 @@ If all six pass, the plumbing is sound.
    **replaces every file on the site** - retargeting this repo at `merwinwd`
    would wipe Merwin Web Designz. Either copy `public/demo/` into the merwinwd
    repo and let that project's pipeline publish it, or point
-   `demo.merwinwebdesignz.com` at `aurora-casino-site` and leave the portfolio
+   `demo.merwinwebdesignz.com` at `aurora-casino-mt` and leave the portfolio
    untouched. The second is five minutes and carries no risk.
 
 5. **The client's own domain** — `auroracasinomt.com` is registered through Wix

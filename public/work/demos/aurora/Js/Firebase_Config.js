@@ -13,10 +13,10 @@
    change: Firebase Console > Project settings > General > Your apps.
    ========================================================================= */
 window.AURORA_FIREBASE = {
-  apiKey:     'AIzaSyAyRn635XFwZPNCpNC56lzgoshdVw97kzU',
-  authDomain: 'aurora-casino-site.firebaseapp.com',
-  projectId:  'aurora-casino-site',
-  appId:      '1:19861960466:web:d81810e80464834da3a5cb',
+  apiKey:     'AIzaSyD_ITQjhVekhyX4vKsGgMuUUlObYpigg70',
+  authDomain: 'aurora-casino-mt.firebaseapp.com',
+  projectId:  'aurora-casino-mt',
+  appId:      '1:945066847920:web:758f932645f19ba9ef9575',
 
   /* reCAPTCHA v3 SITE key for App Check - the public half of the pair. The
      SECRET key is the one that matters and it never comes near this file; it

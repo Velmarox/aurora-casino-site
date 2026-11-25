@@ -61,6 +61,11 @@ function authMessage(code) {
       return 'Sign-in has not been switched on for this site yet. In the Firebase console, '
            + 'open Authentication, then Sign-in method, and enable Email/Password.';
 
+    /* The page is open on a web address Firebase has not been told about. */
+    case 'auth/unauthorized-domain':
+      return 'Sign-in is not allowed from this web address yet. In the Firebase console, '
+           + 'open Authentication, then Settings, then Authorized domains, and add it.';
+
     default:                          return 'That email and password do not match. Check for typos and try again.';
   }
 }
@@ -89,7 +94,11 @@ $('signinForm').addEventListener('submit', async (e) => {
   }
 });
 
-$('signoutBtn').addEventListener('click', () => signOut(auth));
+$('signoutBtn').addEventListener('click', () => {
+  if (promosDirty && !confirm('Your promo changes are not saved. Sign out anyway?')) { return; }
+  promosDirty = false;
+  signOut(auth);
+});
 
 onAuthStateChanged(auth, (user) => {
   $('signinView').hidden = !!user;
@@ -112,6 +121,7 @@ async function load() {
       sections: { ...DEFAULTS.sections, ...(saved.sections || {}) }
     };
     fillForms();
+    renderPromoDays(promosFromStored(saved.promos && saved.promos.days));
     watchInbox();
     $('loading').hidden = true;
     $('panels').hidden = false;
@@ -333,3 +343,247 @@ document.querySelectorAll('[data-filter]').forEach((chip) => {
     renderInbox();
   });
 });
+
+/* ---- promos ------------------------------------------------------------- */
+
+/* The seven promo days, saved as site/config.promos.days (Sunday first). Each
+   day keeps its content even when switched off ("on": false), so a promo can be
+   paused for a week and brought back without retyping it. The homepage reads the
+   same shape (Js/Site.js, section 4) and shows Js/Promos_Default.js until the
+   first save. Firestore cannot hold an array inside an array, which is why
+   highlights are {text, color} maps rather than pairs. */
+
+const P = window.AURORA_PROMOS;
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const COLORS = [['j', 'Green'], ['m', 'Pink'], ['p', 'Outline']];
+const OPEN_HOUR = 8;            // a drawing time before this is after midnight, same night
+const MAX_TAGS = 4, MAX_DRAWS = 12;
+let promosDirty = false;
+
+const str = (v, n) => (typeof v === 'string' ? v.slice(0, n) : '');
+
+function blankDay() {
+  return { on: false, when: '', title: '', img: P.images[0].file, desc: '', tags: [], draws: [] };
+}
+
+/* Saved data is checked the same way the homepage checks it, so a damaged field
+   shows as empty rather than as "[object Object]". */
+function promosFromStored(days) {
+  return DAY_NAMES.map((_, i) => {
+    const d = Array.isArray(days) ? days[i] : null;
+    if (!d || typeof d !== 'object') { return blankDay(); }
+    return {
+      on:    d.on !== false,
+      when:  str(d.when, 30),
+      title: str(d.title, 60),
+      img:   P.images.some((im) => im.file === d.img) ? d.img : P.images[0].file,
+      desc:  str(d.desc, 300),
+      tags:  (Array.isArray(d.tags) ? d.tags : []).slice(0, MAX_TAGS)
+               .filter((t) => t && typeof t.text === 'string')
+               .map((t) => ({ text: t.text.slice(0, 40), color: /^[jmp]$/.test(t.color) ? t.color : 'p' })),
+      draws: (Array.isArray(d.draws) ? d.draws : []).map(Number)
+               .filter((n) => Number.isInteger(n) && n >= 0 && n < 1800).slice(0, MAX_DRAWS)
+    };
+  });
+}
+
+// minutes past midnight (past 1440 = after midnight) <-> "HH:MM" for <input type=time>
+function minsToInput(n) {
+  const m = n % 1440;
+  return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+}
+function inputToMins(v) {
+  const hit = /^(\d{1,2}):(\d{2})/.exec(v || '');
+  if (!hit) { return null; }
+  const h = +hit[1], m = +hit[2];
+  return h * 60 + m + (h < OPEN_HOUR ? 1440 : 0);
+}
+
+function el(tag, props, kids) {
+  const e = document.createElement(tag);
+  Object.assign(e, props || {});
+  (kids || []).forEach((k) => e.append(k));
+  return e;
+}
+
+function field(label, input, hintText) {
+  const id = input.id;
+  const lab = el('label', { htmlFor: id, textContent: label });
+  const p = el('p', { className: 'field' }, [lab, input]);
+  if (hintText) { p.append(el('span', { className: 'hint', textContent: hintText })); }
+  return p;
+}
+
+function tagRow(t) {
+  const row = el('div', { className: 'prow tagrow' });
+  const text = el('input', { type: 'text', maxLength: 40, value: t.text, placeholder: 'e.g. Win up to $50',
+                             className: 'tagtext' });
+  text.setAttribute('aria-label', 'Highlight text');
+  const sel = el('select', { className: 'tagcolor' });
+  sel.setAttribute('aria-label', 'Highlight colour');
+  COLORS.forEach(([v, name]) => sel.append(el('option', { value: v, textContent: name, selected: v === t.color })));
+  const del = el('button', { type: 'button', className: 'btn small', textContent: 'Remove' });
+  del.addEventListener('click', () => { row.remove(); markDirty(); refreshAddButtons(); });
+  row.append(text, sel, del);
+  return row;
+}
+
+function drawRow(n) {
+  const row = el('div', { className: 'prow drawrow' });
+  const time = el('input', { type: 'time', step: 300, value: n == null ? '' : minsToInput(n), className: 'drawtime' });
+  time.setAttribute('aria-label', 'Drawing time');
+  const del = el('button', { type: 'button', className: 'btn small', textContent: 'Remove' });
+  del.addEventListener('click', () => { row.remove(); markDirty(); refreshAddButtons(); });
+  row.append(time, del);
+  return row;
+}
+
+function dayCard(d, i) {
+  const name = DAY_NAMES[i];
+  const card = el('details', { className: 'pday' + (d.on ? '' : ' off') });
+  card.dataset.day = String(i);
+
+  const sumTitle = el('span', { className: 'stitle' });
+  const sumState = el('span', { className: 'sstate' });
+  card.append(el('summary', {}, [el('span', { className: 'sday', textContent: name }), sumTitle, sumState]));
+
+  const on = el('input', { type: 'checkbox', checked: d.on, className: 'pon' });
+  const body = el('div', { className: 'pbody' }, [
+    el('label', { className: 'toggle' }, [on, el('span', { textContent: `Run a promo on ${name}s` })])
+  ]);
+
+  const title = el('input', { id: `pt${i}`, type: 'text', maxLength: 60, value: d.title, className: 'ptitle',
+                              placeholder: 'e.g. Nifty-Fifty Fridays' });
+  const when  = el('input', { id: `pw${i}`, type: 'text', maxLength: 30, value: d.when, className: 'pwhen',
+                              placeholder: 'e.g. All day, or 7 – 9 PM' });
+  const desc  = el('textarea', { id: `pd${i}`, rows: 3, maxLength: 300, value: d.desc, className: 'pdesc' });
+
+  const pics = el('div', { className: 'pics', role: 'radiogroup' });
+  pics.setAttribute('aria-label', `Picture for ${name}`);
+  P.images.forEach((im) => {
+    const r = el('input', { type: 'radio', name: `pimg${i}`, value: im.file, checked: im.file === d.img });
+    const img = el('img', { src: P.imageBase + im.file, alt: '', loading: 'lazy', width: 120, height: 68 });
+    pics.append(el('label', { className: 'pic' }, [r, img, el('span', { textContent: im.label })]));
+  });
+
+  const tags = el('div', { className: 'tags' });
+  d.tags.forEach((t) => tags.append(tagRow(t)));
+  const addTag = el('button', { type: 'button', className: 'btn small addtag', textContent: 'Add a highlight' });
+  addTag.addEventListener('click', () => { tags.append(tagRow({ text: '', color: 'j' })); markDirty(); refreshAddButtons(); });
+
+  const draws = el('div', { className: 'draws' });
+  d.draws.forEach((n) => draws.append(drawRow(n)));
+  const addDraw = el('button', { type: 'button', className: 'btn small adddraw', textContent: 'Add a drawing time' });
+  addDraw.addEventListener('click', () => { draws.append(drawRow(null)); markDirty(); refreshAddButtons(); });
+
+  body.append(
+    field('Promo name', title),
+    field('When', when, 'Shown under the name, and in the "running today" strip.'),
+    field('Description', desc),
+    el('div', { className: 'field' }, [el('span', { className: 'flabel', textContent: 'Picture' }), pics]),
+    el('div', { className: 'field' }, [
+      el('span', { className: 'flabel', textContent: 'Highlights' }),
+      el('span', { className: 'hint', textContent: 'Short labels on the banner. Up to four.' }),
+      tags, addTag]),
+    el('div', { className: 'field' }, [
+      el('span', { className: 'flabel', textContent: 'Drawing times' }),
+      el('span', { className: 'hint', textContent: 'Leave empty if there is no drawing. A time after midnight counts as the same night.' }),
+      draws, addDraw])
+  );
+  card.append(body);
+
+  const refreshSummary = () => {
+    sumTitle.textContent = title.value.trim() || (on.checked ? 'No name yet' : '');
+    sumState.textContent = on.checked ? 'On' : 'Off';
+    card.classList.toggle('off', !on.checked);
+  };
+  card.addEventListener('input', refreshSummary);
+  card.addEventListener('change', refreshSummary);
+  refreshSummary();
+  return card;
+}
+
+function refreshAddButtons() {
+  document.querySelectorAll('.pday').forEach((card) => {
+    card.querySelector('.addtag').hidden  = card.querySelectorAll('.tagrow').length >= MAX_TAGS;
+    card.querySelector('.adddraw').hidden = card.querySelectorAll('.drawrow').length >= MAX_DRAWS;
+  });
+}
+
+function renderPromoDays(days) {
+  const box = $('promoDays');
+  box.textContent = '';
+  days.forEach((d, i) => box.append(dayCard(d, i)));
+  refreshAddButtons();
+  promosDirty = false;
+  $('promoMsg').hidden = true;
+}
+
+function markDirty() { promosDirty = true; $('promoSaved').hidden = true; }
+
+function collectPromos() {
+  return [...document.querySelectorAll('.pday')].map((card) => {
+    const checkedImg = card.querySelector('.pics input:checked');
+    const draws = [...card.querySelectorAll('.drawtime')].map((t) => inputToMins(t.value))
+      .filter((n) => n !== null);
+    return {
+      on:    card.querySelector('.pon').checked,
+      title: card.querySelector('.ptitle').value.trim(),
+      when:  card.querySelector('.pwhen').value.trim(),
+      desc:  card.querySelector('.pdesc').value.trim(),
+      img:   checkedImg ? checkedImg.value : P.images[0].file,
+      tags:  [...card.querySelectorAll('.tagrow')]
+               .map((r) => ({ text: r.querySelector('.tagtext').value.trim(), color: r.querySelector('.tagcolor').value }))
+               .filter((t) => t.text),
+      draws: [...new Set(draws)].sort((a, b) => a - b)
+    };
+  });
+}
+
+$('promoDays').addEventListener('input', markDirty);
+$('promoDays').addEventListener('change', markDirty);
+
+$('promoSave').addEventListener('click', async () => {
+  const btn = $('promoSave'), msg = $('promoMsg'), flag = $('promoSaved');
+  const days = collectPromos();
+
+  // A day switched on with no name would show an empty banner. Stop and open it.
+  const bad = days.findIndex((d) => d.on && !d.title);
+  if (bad !== -1) {
+    say(msg, `${DAY_NAMES[bad]} is switched on but has no promo name. Give it a name or switch it off.`, false);
+    const card = document.querySelector(`.pday[data-day="${bad}"]`);
+    card.open = true;
+    card.querySelector('.ptitle').focus();
+    return;
+  }
+
+  msg.hidden = true;
+  flag.hidden = true;
+  btn.disabled = true;
+  try {
+    await setDoc(doc(db, 'site', 'config'), { promos: { days } }, { merge: true });
+    promosDirty = false;
+    flag.textContent = 'Saved. Your website shows the new promos now.';
+    flag.hidden = false;
+  } catch (err) {
+    say(msg, err && err.code === 'permission-denied'
+      ? 'That did not save: this account is not allowed to change the website. The owner account has to be set up in the Firestore rules first.'
+      : 'That did not save. Check your internet and try again.', false);
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+$('promoReset').addEventListener('click', () => {
+  if (!confirm('Replace everything on this page with the original promos?\n\nNothing changes on your website until you press Save.')) { return; }
+  renderPromoDays(promosFromStored(P.days));
+  promosDirty = true;
+});
+
+window.addEventListener('beforeunload', (e) => {
+  if (promosDirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
+// Drawn straight away from the shipped promos; load() replaces them with the saved set.
+renderPromoDays(promosFromStored(P.days));

@@ -16,6 +16,36 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.2.0-alpha (2026-11-25)
+- Owner dashboard moved from /work/demos/aurora/admin to an unlisted address,
+  /work/demos/aurora/dashboard-hp4dnbgcrx52/. It is linked from nowhere, and
+  robots.txt no longer names it (a Disallow line publishes the path to anyone who
+  reads the file). noindex meta and the X-Robots-Tag header stay. The real lock is
+  still Firebase sign-in plus the Firestore rules: the address only hides the door.
+- Dashboard: new Promos tab, first and default. One folded row per day with On/Off;
+  inside, promo name, timing line, description, a picture picker (the seven
+  approved images), up to four highlights with colour, up to twelve drawing times.
+  A day switched off keeps its content. A day switched on with no name blocks the
+  save and opens that day. Unsaved changes warn on sign-out and on closing the tab.
+  "Start over from the original promos" reloads the shipped set (saves nothing).
+- Homepage reads the saved promos (site/config.promos) through Firestore's REST
+  endpoint, one GET, no SDK. It waits up to 3 s, then shows the shipped promos;
+  any failure (offline, 403, nothing saved yet) does the same. Looks identical to
+  before until the owner saves something. Saved text is escaped, pictures are only
+  from the approved list, colours only j/m/p, drawing times only whole minutes.
+  Drawing times after midnight are stored past 1440 so they sort after 11:30 PM and
+  the countdown runs across midnight.
+- Js/Promos_Default.js (new): the shipped promos and approved pictures, read by both
+  the homepage and the dashboard. The WEEK block in Site.js is gone.
+- Promo_Draft_Taps and Promo_Neon_Lanes deployed to Assets/Promos for the picker.
+- Firebase project switched to aurora-casino-mt (Firebase_Config.js, .firebaserc,
+  deploy workflow; its GitHub secret is now FIREBASE_SERVICE_ACCOUNT_AURORA_CASINO_MT).
+  Firestore rules deployed there 2026-11-25 with the owner account's UID filled in.
+- Fix: the dashboard's sign-in card never hid after signing in (.signin{display:grid}
+  beat the hidden attribute). [hidden] now wins in Admin.css.
+- Dashboard says plainly when a save is refused by the rules, and when sign-in is
+  blocked because the web address is not an authorized domain.
+
 v0.1.0-alpha (2026-09-04)
 - FIX, caught live: every asset path is now root-absolute (/work/demos/aurora/...) rather
   than relative. The portfolio site sets trailingSlash:false, so /work/demos/aurora/
