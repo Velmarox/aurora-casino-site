@@ -11,7 +11,7 @@
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
   getFirestore, doc, getDoc, setDoc,
@@ -66,7 +66,14 @@ function authMessage(code) {
       return 'Sign-in is not allowed from this web address yet. In the Firebase console, '
            + 'open Authentication, then Settings, then Authorized domains, and add it.';
 
-    default:                          return 'That email and password do not match. Check for typos and try again.';
+    /* Wrong email, wrong password and no such account all land here (Firebase
+       reports them as invalid-credential). Deliberately one answer for all. */
+    case 'auth/invalid-credential':
+    case 'auth/invalid-login-credentials':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+    default:
+      return 'Wrong email or password. Check for typos (and Caps Lock) and try again.';
   }
 }
 
@@ -76,21 +83,90 @@ function say(el, text, good) {
   el.hidden = false;
 }
 
+/* Wrong details: the message, a red edge on the boxes, a short shake so it is
+   noticed even when eyes are on the keyboard, and the cursor back in the box
+   that most likely needs fixing. */
+function signinError(text, focusId) {
+  const card = $('signinForm');
+  say($('signinMsg'), text, false);
+  ['email', 'password'].forEach((id) => $(id).setAttribute('aria-invalid', 'true'));
+  card.classList.remove('shake');
+  void card.offsetWidth;                 // restart the animation on a repeat miss
+  card.classList.add('shake');
+  if (focusId) { $(focusId).focus(); $(focusId).select && $(focusId).select(); }
+}
+
+function busy(on) {
+  const btn = $('signinBtn');
+  btn.disabled = on;
+  btn.classList.toggle('busy', on);
+  btn.querySelector('.label').textContent = on ? 'Signing in…' : 'Sign in';
+}
+
+['email', 'password'].forEach((id) => {
+  $(id).addEventListener('input', () => {
+    $(id).removeAttribute('aria-invalid');
+    $('signinMsg').hidden = true;
+  });
+});
+
 $('signinForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const btn = $('signinBtn'), msg = $('signinMsg');
   const email = $('email').value.trim(), pass = $('password').value;
-  if (!email || !pass) { say(msg, 'Fill in both boxes.', false); return; }
+  if (!email) { signinError('Type the email address for your account.', 'email'); return; }
+  if (!pass)  { signinError('Type your password.', 'password'); return; }
 
-  btn.disabled = true;
-  msg.hidden = true;
+  busy(true);
+  $('signinMsg').hidden = true;
   try {
     await signInWithEmailAndPassword(auth, email, pass);
   } catch (err) {
-    say(msg, authMessage(err && err.code), false);
-  } finally {
-    btn.disabled = false;
+    const code = err && err.code;
+    signinError(authMessage(code), code === 'auth/invalid-email' ? 'email' : 'password');
     $('password').value = '';
+  } finally {
+    busy(false);
+  }
+});
+
+/* Show / hide the password, so a mistyped one can be checked before trying again. */
+$('pwToggle').addEventListener('click', () => {
+  const pw = $('password'), show = pw.type === 'password';
+  pw.type = show ? 'text' : 'password';
+  $('pwToggle').textContent = show ? 'Hide' : 'Show';
+  $('pwToggle').setAttribute('aria-pressed', String(show));
+  pw.focus();
+});
+
+/* Caps Lock is the most common reason a right password is "wrong". */
+function capsCheck(e) {
+  if (e.getModifierState) { $('capsWarn').hidden = !e.getModifierState('CapsLock'); }
+}
+$('password').addEventListener('keydown', capsCheck);
+$('password').addEventListener('keyup', capsCheck);
+$('password').addEventListener('blur', () => { $('capsWarn').hidden = true; });
+
+/* Password reset by email. The answer is the same whether or not the address has
+   an account, so this cannot be used to find out who has one. */
+$('forgotBtn').addEventListener('click', async () => {
+  const email = $('email').value.trim();
+  if (!email) {
+    signinError('Type your email address above first, then press "Forgot your password?" again.', 'email');
+    return;
+  }
+  $('forgotBtn').disabled = true;
+  try {
+    await sendPasswordResetEmail(auth, email);
+    say($('signinMsg'), `If ${email} has an account, a link to set a new password is on its way. Check your inbox and spam folder.`, true);
+  } catch (err) {
+    const code = err && err.code;
+    if (code === 'auth/invalid-email' || code === 'auth/network-request-failed' || code === 'auth/too-many-requests') {
+      signinError(authMessage(code), 'email');
+    } else {
+      say($('signinMsg'), `If ${email} has an account, a link to set a new password is on its way. Check your inbox and spam folder.`, true);
+    }
+  } finally {
+    $('forgotBtn').disabled = false;
   }
 });
 
@@ -104,7 +180,11 @@ onAuthStateChanged(auth, (user) => {
   $('signinView').hidden = !!user;
   $('appView').hidden    = !user;
   if (user) { load(); }
-  else if (stopInbox) { stopInbox(); stopInbox = null; }
+  else {
+    if (stopInbox) { stopInbox(); stopInbox = null; }
+    $('password').value = '';
+    $('email').focus();
+  }
 });
 
 /* ---- load + save -------------------------------------------------------- */

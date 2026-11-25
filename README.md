@@ -4,13 +4,12 @@ Static site: plain HTML, CSS and JS. No React, no build step, no npm packages.
 Deployed to Firebase Hosting as static files.
 
 ## Owner dashboard
-Unlisted address, linked from nowhere and not in robots.txt:
-`/work/demos/aurora/dashboard-hp4dnbgcrx52/` (on the demo host, e.g.
-merwinwebdesignz.com/work/demos/aurora/dashboard-hp4dnbgcrx52/). Sign in with the owner
-account (Firebase email/password, project aurora-casino-mt). The Promos tab edits the
-weekly promos; the homepage reads them from Firestore site/config.promos and falls back
-to `Js/Promos_Default.js`. The Notice bar, Contact info and Show/hide tabs save, but the
-homepage does not read those yet.
+`/work/demos/aurora/dashboard` (on the demo host:
+merwinwebdesignz.com/work/demos/aurora/dashboard). Sign in with the owner account
+(Firebase email/password, project aurora-casino-mt; "Forgot your password?" sends a
+reset email). The Promos and Notice bar tabs change the homepage: it reads Firestore
+site/config (promos, notice) and falls back to `Js/Promos_Default.js` and no notice.
+The Contact info and Show/hide tabs save, but the homepage does not read those yet.
 
 ## Deploy
 1. `npm i -g firebase-tools` (once) and `firebase login`

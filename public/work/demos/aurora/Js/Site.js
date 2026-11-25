@@ -3,9 +3,9 @@
 
    What it does, in order:
      1. Demo disclaimer overlay, dismissed before anything else matters
-     2. Owner notice bar across the very top of the page
+     2. Owner notice bar across the very top of the page (from the dashboard)
      3. Open / closed neon sign, clocked to Billings time
-     4. Weekly promo banners, today first
+     4. Weekly promo banners, today first (from the dashboard), and the settings read
      5. The "running today" band under the hero
      6. Mobile menu
      7. Staggered button sheen
@@ -23,19 +23,9 @@
   var HOURS = { open: 8, close: 26 };   // 24h clock; 26 means 2 AM the next day
   var TZ = 'America/Denver';            // Billings, so the sign is right for everyone
 
-  /* Temporary notice bar across the very top of the page. Set on:true and give it
-     text. An empty text shows nothing even when on is true, so a half-finished
-     notice can never go live. expires is a plain YYYY-MM-DD read in Billings time:
-     after that day the bar hides itself, so a closure notice cleans up after
-     itself instead of sitting there until somebody remembers. Leave expires blank
-     to run until switched off. The link is optional and needs both of its fields. */
-  var NOTICE = {
-    on:       false,
-    text:     'Closed Monday through Wednesday, June 14 to 16, for new carpeting.',
-    expires:  '',
-    linkText: '',
-    linkUrl:  ''
-  };
+  /* The notice bar across the very top of the page is no longer edited here: the
+     owner sets it in the dashboard (Notice bar tab), and section 2 below shows
+     what was saved. */
 
   /* Contact form. The section stays hidden unless on is true AND endpoint is
      filled in, so a form that cannot actually send can never reach a visitor -
@@ -129,16 +119,24 @@
 
 
   /* -- 2  owner notice bar -------------------------------------------------- */
-  /* Fails closed on purpose: any missing or malformed piece just leaves the bar
+  /* Called with the saved notice once the settings read (section 4) answers.
+     Hidden in the markup, so a failed read, a notice switched off or an empty
+     one shows nothing.
+     Fails closed on purpose: any missing or malformed piece just leaves the bar
      hidden. That is the safe direction for something edited without a preview.
-     textContent, never innerHTML - once this string arrives from the dashboard it
-     is untrusted input and must not be able to inject markup. */
-  (function () {
+     textContent, never innerHTML - this string arrives from the dashboard, so it
+     is untrusted input and must not be able to inject markup.
+     expires is a plain YYYY-MM-DD read in Billings time: after that day the bar
+     hides itself. The link is optional, needs both of its fields, and only
+     web, on-site or phone links are accepted. */
+  function showNotice(NOTICE) {
     var bar = document.getElementById('notice');
-    if (!bar || !NOTICE.on) { return; }
+    if (!bar || !NOTICE || typeof NOTICE !== 'object' || NOTICE.on !== true) { return; }
 
-    var text = String(NOTICE.text || '').trim();
+    var text = typeof NOTICE.text === 'string' ? NOTICE.text.trim().slice(0, 200) : '';
     if (!text) { return; }
+
+    if (NOTICE.expires && !/^\d{4}-\d{2}-\d{2}$/.test(NOTICE.expires)) { return; }
 
     if (NOTICE.expires) {
       // en-CA formats as YYYY-MM-DD, so a string compare is a date compare, and
@@ -149,9 +147,9 @@
 
     document.getElementById('noticeText').textContent = text;
 
-    var url = String(NOTICE.linkUrl || '').trim();
-    var label = String(NOTICE.linkText || '').trim();
-    if (url && label) {
+    var url = typeof NOTICE.linkUrl === 'string' ? NOTICE.linkUrl.trim() : '';
+    var label = typeof NOTICE.linkText === 'string' ? NOTICE.linkText.trim().slice(0, 40) : '';
+    if (url && label && /^(https?:\/\/|\/|tel:)/i.test(url)) {
       var link = document.getElementById('noticeLink');
       link.href = url;
       link.textContent = label;
@@ -159,7 +157,7 @@
     }
 
     bar.hidden = false;
-  })();
+  }
 
   /* -- 3  open / closed sign ----------------------------------------------- */
 
@@ -257,20 +255,23 @@
     return o;
   }
 
-  function fetchSavedDays() {
+  // One read for everything the homepage takes from the dashboard: promos and the
+  // notice bar. Resolves with the parsed document; rejects on any failure.
+  function fetchSaved() {
     var fb = window.AURORA_FIREBASE;
     if (!fb || !fb.projectId || !fb.apiKey || !window.fetch) { return Promise.reject(new Error('no config')); }
     var url = 'https://firestore.googleapis.com/v1/projects/' + encodeURIComponent(fb.projectId) +
-              '/databases/(default)/documents/site/config?mask.fieldPaths=promos&key=' +
-              encodeURIComponent(fb.apiKey);
+              '/databases/(default)/documents/site/config' +
+              '?mask.fieldPaths=promos&mask.fieldPaths=notice&key=' + encodeURIComponent(fb.apiKey);
     return fetch(url, { cache: 'no-store' }).then(function (r) {
-      if (!r.ok) { throw new Error('promos read failed: ' + r.status); }
+      if (!r.ok) { throw new Error('settings read failed: ' + r.status); }
       return r.json();
-    }).then(function (docJson) {
-      var promos = fsFields(docJson.fields).promos;
-      if (!promos || !Array.isArray(promos.days) || promos.days.length !== 7) { throw new Error('no saved promos'); }
-      return promos.days;
-    });
+    }).then(function (docJson) { return fsFields(docJson.fields); });
+  }
+
+  function savedDays(saved) {
+    var promos = saved && saved.promos;
+    return promos && Array.isArray(promos.days) && promos.days.length === 7 ? promos.days : null;
   }
 
   /* The line under "This week at Aurora", written from the days that actually
@@ -383,7 +384,8 @@
     }
   }
 
-  // Render once: the saved set if it arrives in time, otherwise the shipped one.
+  // Promos render once: the saved set if it arrives in time, otherwise the shipped
+  // one. The notice bar shows whenever the read answers, late or not.
   (function () {
     var done = false;
     function show(days) {
@@ -392,8 +394,11 @@
       renderPromos(cleanWeek(days));
     }
     var timer = setTimeout(function () { show(DEFAULTS.days); }, PROMOS_WAIT_MS);
-    fetchSavedDays().then(function (days) { clearTimeout(timer); show(days); },
-                          function () { clearTimeout(timer); show(DEFAULTS.days); });
+    fetchSaved().then(function (saved) {
+      clearTimeout(timer);
+      show(savedDays(saved) || DEFAULTS.days);
+      showNotice(saved.notice);
+    }, function () { clearTimeout(timer); show(DEFAULTS.days); });
   })();
 
 

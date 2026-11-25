@@ -4,35 +4,59 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="version" content="v0.2.1-alpha">
+  <meta name="version" content="v0.3.0-alpha">
   <title>Aurora Casino — Manage your site</title>
   <link rel="icon" href="/work/demos/aurora/Assets/Brand/Aurora_Badge_32.png" type="image/png" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&amp;family=Manrope:wght@400;600;700&amp;display=swap">
   <link rel="stylesheet" href="/work/demos/aurora/Css/Aurora_Tokens.css">
-  <link rel="stylesheet" href="Admin.css">
+  <link rel="stylesheet" href="/work/demos/aurora/dashboard/Admin.css">
   <script src="/work/demos/aurora/Js/Firebase_Config.js"></script>
   <script src="/work/demos/aurora/Js/Promos_Default.js"></script>
 </head>
 <body>
 
 <!-- ===== SIGN IN ========================================================== -->
-<main class="signin" id="signinView">
-  <form class="card signin-card" id="signinForm" novalidate>
-    <img class="mark" src="/work/demos/aurora/Assets/Brand/Aurora_Badge_180.png" alt="" width="54" height="54">
-    <h1>Manage your site</h1>
-    <p class="sub">Sign in to change your promos.</p>
+<!-- Hidden until Firebase says whether someone is already signed in, so a signed-in
+     owner never sees the sign-in card flash up first. -->
+<main class="signin" id="signinView" hidden>
+  <div class="signin-glow" aria-hidden="true"></div>
+
+  <form class="signin-card" id="signinForm" novalidate>
+    <div class="brandmark">
+      <img src="/work/demos/aurora/Assets/Brand/Aurora_Badge_180.png" alt="" width="64" height="64">
+      <span class="wordmark">Aurora<small>Casino</small></span>
+    </div>
+
+    <h1>Owner sign in</h1>
+    <p class="sub">Change your weekly promos and the notice bar on your website.</p>
 
     <p class="field">
       <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="username" required>
+      <input id="email" type="email" autocomplete="username" inputmode="email" required>
     </p>
     <p class="field">
       <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" required>
+      <span class="pw">
+        <input id="password" type="password" autocomplete="current-password" required>
+        <button type="button" class="pw-toggle" id="pwToggle" aria-controls="password" aria-pressed="false">Show</button>
+      </span>
+      <span class="caps" id="capsWarn" hidden>Caps Lock is on</span>
     </p>
 
-    <button class="btn primary" type="submit" id="signinBtn">Sign in</button>
-    <p class="msg" id="signinMsg" role="status" aria-live="polite" hidden></p>
+    <p class="msg" id="signinMsg" role="alert" aria-live="assertive" hidden></p>
+
+    <button class="btn primary signin-btn" type="submit" id="signinBtn">
+      <span class="spinner" aria-hidden="true"></span><span class="label">Sign in</span>
+    </button>
+
+    <button type="button" class="linkish" id="forgotBtn">Forgot your password?</button>
   </form>
+
+  <p class="signin-foot">
+    <a href="/work/demos/aurora/">&larr; Back to the website</a>
+  </p>
 </main>
 
 <!-- ===== DASHBOARD ======================================================= -->
@@ -176,6 +200,20 @@
   </div>
 </div>
 
-<script type="module" src="Admin.js"></script>
+<script type="module" src="/work/demos/aurora/dashboard/Admin.js"></script>
+<script>
+  /* If Firebase never answers (its scripts blocked or offline), show the sign-in
+     card anyway with a plain explanation, instead of a blank page. */
+  setTimeout(function () {
+    var si = document.getElementById('signinView'), app = document.getElementById('appView');
+    if (si.hidden && app.hidden) {
+      si.hidden = false;
+      var m = document.getElementById('signinMsg');
+      m.textContent = 'This page could not reach the sign-in service. Check your internet and refresh.';
+      m.className = 'msg bad';
+      m.hidden = false;
+    }
+  }, 8000);
+</script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Firebase console setup — Aurora Casino admin dashboard
 
-Everything in the dashboard (`/work/demos/aurora/dashboard-hp4dnbgcrx52/`) and the contact form is built and deployed, and **none of
+Everything in the dashboard (`/work/demos/aurora/dashboard`) and the contact form is built and deployed, and **none of
 it works until this is done**. That is on purpose: the security rules fail closed,
 so an unfinished setup denies everything rather than leaving a hole.
 

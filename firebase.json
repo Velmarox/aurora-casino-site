@@ -8,7 +8,7 @@
     "cleanUrls": true,
     "headers": [
       {
-        "source": "/work/demos/aurora/dashboard-hp4dnbgcrx52/**",
+        "source": "/work/demos/aurora/dashboard{,/**}",
         "headers": [
           {
             "key": "Cache-Control",

@@ -16,6 +16,30 @@ Folder organization (Firebase-native repo):
   _version_archive/       frozen copies of outgoing versions — never edit
   firebase.json, .firebaserc, .gitignore, README.md, CHANGELOG.txt at the root
 
+v0.3.0-alpha (2026-11-25)
+- Notice bar wired up: the homepage shows what the dashboard's Notice bar tab
+  saves (site/config.notice), read in the same single Firestore request as the
+  promos. Hidden unless switched on with text; hides itself after its expiry date
+  (Billings time). Text goes in with textContent; a link shows only with both a
+  label and a web, on-site or tel: address. The hard-coded NOTICE block in Site.js
+  is gone. A failed read shows no bar.
+- Dashboard moved to /work/demos/aurora/dashboard (was an unlisted random path).
+  Its stylesheet and script are now root-absolute, so the trailing-slash redirect
+  on the portfolio host cannot break them. robots.txt disallows it again, since the
+  address is no longer a secret; the firebase.json no-store/noindex header covers
+  /dashboard itself as well as files under it.
+- Sign-in screen redesigned: the gaming floor behind a dark scrim with the brand's
+  magenta and jade glow, badge and wordmark, a card with the brand gradient edge.
+  Show/hide password, a Caps Lock warning, a spinner and "Signing in..." while it
+  works, and "Forgot your password?" (reset email; same answer whether or not the
+  address has an account).
+- Wrong email or password now says so plainly ("Wrong email or password. Check for
+  typos (and Caps Lock) and try again."), turns both boxes red, shakes the card,
+  clears the password and puts the cursor back. Empty boxes get their own message.
+- The sign-in card no longer flashes up for an owner who is already signed in. If
+  the sign-in service cannot be reached at all, the card appears after 8 s with a
+  plain message instead of a blank page.
+
 v0.2.1-alpha (2026-11-25)
 - The line under "This week at Aurora" is written from the promos that are switched
   on, so it stays true when the owner changes them in the dashboard: "Five promos,
