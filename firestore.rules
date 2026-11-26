@@ -13,18 +13,22 @@ rules_version = '2';
    The contact form inbox (messages/*) was removed in v0.4.0-alpha along with
    the dashboard's Messages tab; anything under it is now denied.
 
-   The owner is named by UID below (Firebase Console > Authentication > Users).
+   The accounts allowed to edit are named by UID below (Firebase Console >
+   Authentication > Users).
    ========================================================================= */
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /* The one account allowed to change anything. A UID allowlist rather than
+    /* The accounts allowed to change anything. A UID allowlist rather than
        "any signed-in user", because if signup is ever left open by accident,
-       "any signed-in user" means anyone on the internet. */
+       "any signed-in user" means anyone on the internet.
+         pXylZ2BJrtRvi8TRXXCa83JOhMT2   Jamie (site builder)
+         eDMvgvHrnUO0tzNR9L96GzzYiD33   Jason (owner), added 2026-11-25 */
     function isOwner() {
       return request.auth != null
-          && request.auth.uid in ['pXylZ2BJrtRvi8TRXXCa83JOhMT2'];
+          && request.auth.uid in ['pXylZ2BJrtRvi8TRXXCa83JOhMT2',
+                                  'eDMvgvHrnUO0tzNR9L96GzzYiD33'];
     }
 
     /* ---- public site config ---- */
